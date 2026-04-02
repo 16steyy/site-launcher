@@ -1,0 +1,218 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #000;
+  color: #fff;
+  font-family: Inter, Roboto, system-ui, sans-serif;
+}
+
+#root {
+  position: relative;
+  overflow: hidden;
+}
+
+#root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(44, 96, 255, 0.4), transparent 24%),
+    radial-gradient(circle at 84% 30%, rgba(86, 115, 255, 0.35), transparent 23%),
+    radial-gradient(circle at 50% 55%, rgba(62, 88, 214, 0.26), transparent 25%),
+    radial-gradient(circle at 35% 82%, rgba(27, 72, 221, 0.3), transparent 20%),
+    #000;
+}
+
+.glass {
+  background: rgba(22, 29, 48, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.interactive-feature-card {
+  --mx: 50%;
+  --my: 50%;
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  overflow: hidden;
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+  will-change: transform;
+}
+
+.interactive-feature-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 18%,
+    rgba(110, 144, 255, 0.08) 34%,
+    rgba(148, 175, 255, 0.36) 50%,
+    rgba(110, 144, 255, 0.1) 66%,
+    transparent 82%
+  );
+  transform: translateX(-140%);
+  opacity: 0;
+}
+
+.interactive-feature-card::after {
+  content: "";
+  position: absolute;
+  left: var(--mx);
+  top: var(--my);
+  width: 280px;
+  height: 280px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(124, 155, 255, 0.34), transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.interactive-feature-card:hover {
+  border-color: rgba(170, 193, 255, 0.55);
+  box-shadow: 0 18px 54px rgba(51, 97, 255, 0.22);
+}
+
+.interactive-feature-card:hover::before {
+  opacity: 1;
+  animation: featureShine 1300ms ease-out;
+}
+
+.interactive-feature-card:hover::after,
+.interactive-feature-card.is-active::after {
+  opacity: 1;
+}
+
+.interactive-cta,
+.interactive-row {
+  position: relative;
+  transition:
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    filter 220ms ease;
+}
+
+.interactive-cta {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.interactive-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    transparent 65%
+  );
+  opacity: 0;
+  transform: scale(0.15);
+  z-index: 0;
+}
+
+.interactive-cta > * {
+  position: relative;
+  z-index: 1;
+}
+
+.interactive-cta:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 20px 50px rgba(44, 96, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+  filter: brightness(1.06);
+}
+
+.interactive-cta:hover::after {
+  animation: ctaRipple 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.interactive-row:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 52px rgba(67, 109, 255, 0.35),
+    0 0 0 1px rgba(170, 195, 255, 0.45),
+    0 0 28px rgba(90, 130, 255, 0.25);
+}
+
+@keyframes ctaRipple {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: revealUp 750ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: opacity, transform;
+}
+
+@keyframes revealUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes featureShine {
+  to {
+    transform: translateX(140%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .interactive-feature-card,
+  .interactive-cta,
+  .interactive-row {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .interactive-feature-card::before,
+  .interactive-feature-card::after,
+  .interactive-cta::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+}
