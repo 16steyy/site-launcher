@@ -74,9 +74,12 @@
   display: flex;
   border-top: 1px solid var(--border);
   text-align: left;
+  justify-content: center;
+  gap: 24px;
 
   & > div {
-    flex: 1 1 0;
+    flex: 0 0 260px;
+    max-width: 260px;
     padding: 32px;
     @media (max-width: 1024px) {
       padding: 24px 20px;
@@ -92,6 +95,12 @@
   @media (max-width: 1024px) {
     flex-direction: column;
     text-align: center;
+    align-items: center;
+
+    & > div {
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
   }
 }
 

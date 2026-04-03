@@ -139,6 +139,7 @@ export default function App() {
   const [linuxOpen, setLinuxOpen] = useState(false);
   const [activeFeature, setActiveFeature] = useState(null);
   const [userOS, setUserOS] = useState("unknown");
+  const [lightboxImage, setLightboxImage] = useState(null);
   const [links, setLinks] = useState({
     windows: FALLBACK_RELEASES_URL,
     macos: FALLBACK_RELEASES_URL,
@@ -346,11 +347,18 @@ export default function App() {
                   />
                 </div>
                 <div className="min-w-0 flex-[1_1_72%] md:basis-[72%]">
-                  <img
-                    src={section.image}
-                    alt=""
-                    className="h-full w-full rounded-xl object-cover object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
-                  />
+                  <button
+                    type="button"
+                    className="group relative block h-full w-full"
+                    onClick={() => setLightboxImage(section.image)}
+                  >
+                    <img
+                      src={section.image}
+                      alt=""
+                      className="h-full w-full rounded-xl object-cover object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-[1.02]"
+                    />
+                    <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -366,6 +374,20 @@ export default function App() {
           </section>
         );
       })}
+
+      {lightboxImage && (
+        <div
+          className="lightbox-backdrop"
+          onClick={() => setLightboxImage(null)}
+        >
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img src={lightboxImage} alt="" className="lightbox-image" />
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <section className="py-24 md:py-32">
