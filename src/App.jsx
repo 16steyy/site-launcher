@@ -14,11 +14,32 @@ import styleCharacter from "../assets/style.png";
 import windowsIcon from "../assets/windows.png";
 import macosIcon from "../assets/macos.png";
 import linuxIcon from "../assets/linux.png";
+import githubIcon from "../assets/github.png";
+import discordIcon from "../assets/discord.png";
+import telegramIcon from "../assets/telegram.png";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
 const LATEST_RELEASE_API =
   "https://api.github.com/repos/launcherdev11/rust-launcher/releases/latest";
+
+const SOCIAL_LINKS = [
+  {
+    href: "https://github.com/launcherdev11",
+    icon: githubIcon,
+    label: "GitHub",
+  },
+  {
+    href: "https://discord.gg/55Y95EfsHM",
+    icon: discordIcon,
+    label: "Discord",
+  },
+  {
+    href: "https://t.me/of16launcher",
+    icon: telegramIcon,
+    label: "Telegram",
+  },
+];
 
 const CHARACTER_SHOT_CLASSES =
   "h-auto w-full max-w-[500px] object-contain object-bottom md:max-h-[min(600px,82vh)] md:max-w-[min(860px,38vw)]";
@@ -446,6 +467,25 @@ export default function App() {
 
         <footer className="pt-4 text-center text-base font-semibold text-white/60">
           16Launcher не является официальным продуктом Mojang или Microsoft.
+
+          <div className="mt-4 flex items-center justify-center gap-3">
+            {SOCIAL_LINKS.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={item.label}
+                className="group inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 p-2 transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5 hover:rotate-3"
+              >
+                <img
+                  src={item.icon}
+                  alt=""
+                  className="h-7 w-7 transition-transform duration-200 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(134,59,255,0.65)]"
+                />
+              </a>
+            ))}
+          </div>
         </footer>
       </div>
     </main>
