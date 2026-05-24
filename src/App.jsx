@@ -17,6 +17,7 @@ import linuxIcon from "../assets/linux.png";
 import githubIcon from "../assets/github.png";
 import discordIcon from "../assets/discord.png";
 import telegramIcon from "../assets/telegram.png";
+import boostyIcon from "../assets/boosty.png";
 import newsData from "./content/news.json";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useRevealScroll } from "./hooks/useRevealScroll";
@@ -48,6 +49,11 @@ const SOCIAL_LINKS = [
     href: "https://t.me/of16launcher",
     icon: telegramIcon,
     label: "Telegram",
+  },
+  {
+    href: "https://boosty.to/16steyy",
+    icon: boostyIcon,
+    label: "Boosty",
   },
 ];
 
@@ -699,21 +705,21 @@ function HomePage({ onNavigate, path }) {
                   <a
                     href={links.linuxDeb}
                     className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 220}ms` }}
+                    style={{ animationDelay: `${downloadBaseDelay + 5}ms` }}
                   >
                     .deb
                   </a>
                   <a
                     href={links.linuxRpm}
                     className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 270}ms` }}
+                    style={{ animationDelay: `${downloadBaseDelay + 10}ms` }}
                   >
                     .rpm
                   </a>
                   <a
                     href={links.linuxAppImage}
                     className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 320}ms` }}
+                    style={{ animationDelay: `${downloadBaseDelay + 15}ms` }}
                   >
                     .AppImage
                   </a>
