@@ -480,6 +480,187 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* Language switcher */
+.language-switcher-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.03)
+  );
+  padding: 0.45rem 0.7rem 0.45rem 0.55rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.language-switcher.is-open .language-switcher-trigger,
+.language-switcher-trigger:hover {
+  border-color: rgba(44, 96, 255, 0.24);
+  color: #fff;
+  box-shadow:
+    0 10px 28px rgba(44, 96, 255, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.language-switcher-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.55rem;
+  background: rgba(72, 118, 255, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(92, 132, 255, 0.28);
+}
+
+.language-switcher-icon {
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.95;
+}
+
+.language-switcher-chevron {
+  width: 1rem;
+  height: 1rem;
+  color: rgba(255, 255, 255, 0.55);
+  transition: transform 0.22s ease, color 0.2s ease;
+}
+
+.language-switcher.is-open .language-switcher-chevron {
+  transform: rotate(180deg);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.language-switcher-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.55rem);
+  z-index: 60;
+  min-width: 12.5rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(
+    165deg,
+    rgba(14, 22, 46, 0.97),
+    rgba(8, 14, 32, 0.98)
+  );
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(72, 118, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+  transform-origin: top right;
+  transition:
+    opacity 0.2s ease,
+    transform 0.22s cubic-bezier(0.22, 0.85, 0.22, 1);
+}
+
+.language-switcher.is-open .language-switcher-menu {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.language-switcher-menu-title {
+  margin: 0;
+  padding: 0.7rem 0.95rem 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.language-switcher-list {
+  margin: 0;
+  padding: 0.25rem 0.4rem 0.45rem;
+  list-style: none;
+}
+
+.language-switcher-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.7rem;
+  background: transparent;
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.language-switcher-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.language-switcher-option.is-active {
+  background: linear-gradient(
+    90deg,
+    rgba(72, 118, 255, 0.26),
+    rgba(44, 96, 255, 0.16)
+  );
+  box-shadow: inset 2px 0 0 rgba(44, 96, 255, 0.26);
+}
+
+.language-switcher-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.2rem 0.35rem;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.language-switcher-option.is-active .language-switcher-code {
+  background: rgba(72, 118, 255, 0.38);
+  color: #fff;
+}
+
+.language-switcher-option-label {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.language-switcher-option.is-active .language-switcher-option-label {
+  color: #fff;
+}
+
+.language-switcher-check {
+  width: 1rem;
+  height: 1rem;
+  color: rgba(156, 186, 255, 0.95);
+  flex-shrink: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lightbox-backdrop,
   .lightbox-content {
@@ -488,5 +669,21 @@ body {
 
   .linux-chevron {
     transition: none;
+  }
+
+  .language-switcher-menu,
+  .language-switcher-chevron,
+  .language-switcher-option {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .language-switcher-menu {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .language-switcher:not(.is-open) .language-switcher-menu {
+    display: none;
   }
 }

@@ -18,6 +18,9 @@ import githubIcon from "../assets/github.png";
 import discordIcon from "../assets/discord.png";
 import telegramIcon from "../assets/telegram.png";
 import newsData from "./content/news.json";
+import LanguageSwitcher from "./components/LanguageSwitcher";
+import { useRevealScroll } from "./hooks/useRevealScroll";
+import { useI18n } from "./i18n/I18nProvider";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
@@ -60,33 +63,13 @@ const CHARACTER_SHOT_CLASSES_STYLE_RUN =
 const CHARACTER_WRAP_CLASSES_STYLE_RUN =
   "relative flex min-h-[300px] flex-[1_1_33%] flex-col items-center justify-end px-1 md:min-h-0 md:basis-[33%] md:justify-end md:px-2";
 
-const FEATURES = [
-  {
-    title: "Оптимизация",
-    text: "Максимальная оптимизация, лаунчер будет работать даже на слабых ПК.",
-    icon: rocketIcon,
-  },
-  {
-    title: "Контент",
-    text: "Удобный поиск контента прямо в лаунчере, а также простое создание и управление сборками.",
-    icon: modsIcon,
-  },
-  {
-    title: "Безопасность",
-    text: "Лаунчер абсолютно безопасен: он не содержит вредоносного ПО. Кроме того, его исходный код открыт.",
-    icon: shieldIcon,
-  },
-];
+const FEATURE_ICONS = [rocketIcon, modsIcon, shieldIcon];
 
-const SHOTS = [
+const SHOT_LAYOUT = [
   {
     id: "mods",
     headlinePosition: "top",
     headingAlign: "center",
-    lines: [
-      { accent: "Скачивание", rest: "контента прямо в лаунчере." },
-      { accent: "Удобный", rest: "поиск, фильтры, простор для ваших сборок!" },
-    ],
     image: modsShot,
     character: coolCharacter,
     characterClasses: CHARACTER_SHOT_CLASSES,
@@ -94,8 +77,6 @@ const SHOTS = [
   {
     id: "settings",
     headlinePosition: "top",
-    accentPart: "Настройка внешнего вида под ваш вкус.",
-    restPart: "Самовыражайтесь!",
     image: settingsShot,
     character: styleCharacter,
     characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
@@ -106,12 +87,6 @@ const SHOTS = [
     id: "modpacks",
     headlinePosition: "top",
     headingAlign: "center",
-    lines: [
-      {
-        accent: "Удобное",
-        rest: "управление профилями, создание сборок и их настройка.",
-      },
-    ],
     image: modpacksShot,
     character: armCharacter,
     characterClasses: CHARACTER_SHOT_CLASSES,
@@ -119,8 +94,6 @@ const SHOTS = [
   {
     id: "java",
     headlinePosition: "top",
-    accentPart: "Детальная",
-    restPart: "настройка игры под ваши нужды.",
     image: javaShot,
     character: runCharacter,
     characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
@@ -219,7 +192,7 @@ function normalizeNewsData(input, sourceUrl = "") {
     ? sourceUrl.substring(0, sourceUrl.lastIndexOf("/") + 1)
     : "";
   const page = input?.page || {
-    title: input?.title || "Новости лаунчера",
+    title: input?.title || "",
     subtitle: input?.subtitle || "",
   };
   const sourceItems = Array.isArray(input?.posts)
@@ -328,6 +301,7 @@ function parseMarkdown(markdown, assetBaseUrl) {
 }
 
 function HomePage({ onNavigate, path }) {
+  const { locale, messages } = useI18n();
   const [linuxOpen, setLinuxOpen] = useState(false);
   const [userOS, setUserOS] = useState("unknown");
   const [lightboxImage, setLightboxImage] = useState(null);
@@ -377,38 +351,7 @@ function HomePage({ onNavigate, path }) {
     loadLatestRelease();
   }, []);
 
-  useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduced) {
-      document.querySelectorAll(".reveal-scroll").forEach((el) => {
-        el.classList.add("is-in-view");
-      });
-      return;
-    }
-
-    const nodes = document.querySelectorAll(".reveal-scroll");
-    if (!nodes.length) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in-view");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
-    );
-
-    document.querySelectorAll(".reveal-scroll:not(.is-in-view)").forEach((n) =>
-      io.observe(n)
-    );
-    return () => io.disconnect();
-  }, [linuxOpen]);
+  useRevealScroll([linuxOpen, locale]);
 
   useEffect(() => {
     if (!lightboxImage) return;
@@ -424,7 +367,25 @@ function HomePage({ onNavigate, path }) {
     return FALLBACK_RELEASES_URL;
   }, [links.windows, userOS]);
 
-  const downloadBaseDelay = 160 + SHOTS.length * 120;
+  const features = useMemo(
+    () =>
+      (messages.features || []).map((feature, index) => ({
+        ...feature,
+        icon: FEATURE_ICONS[index],
+      })),
+    [messages.features]
+  );
+
+  const shots = useMemo(
+    () =>
+      SHOT_LAYOUT.map((layout) => ({
+        ...layout,
+        ...(messages.shots?.[layout.id] || {}),
+      })),
+    [messages.shots]
+  );
+
+  const downloadBaseDelay = 160 + shots.length * 120;
 
   function renderShotHeadline(section) {
     if (section.lines) {
@@ -467,6 +428,7 @@ function HomePage({ onNavigate, path }) {
     <main className="w-full min-w-0 pb-16 pt-10">
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <header className="mb-6 flex items-center justify-end gap-3">
+          <LanguageSwitcher />
           <a
             href="/"
             className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
@@ -479,7 +441,7 @@ function HomePage({ onNavigate, path }) {
               onNavigate("/");
             }}
           >
-            Главная
+            {messages.nav.home}
           </a>
           <a
             href="/news"
@@ -493,7 +455,7 @@ function HomePage({ onNavigate, path }) {
               onNavigate("/news");
             }}
           >
-            News
+            {messages.nav.news}
           </a>
         </header>
         <section className="py-16 text-center md:py-24">
@@ -507,22 +469,22 @@ function HomePage({ onNavigate, path }) {
             className="reveal mt-3 text-2xl font-semibold text-white/70 md:text-4xl"
             style={{ animationDelay: "110ms" }}
           >
-            Лучший выбор для игры в Minecraft
+            {messages.hero.tagline}
           </p>
           <a
             href={mainDownloadLink}
             className="reveal interactive-cta mx-auto mt-12 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow"
             style={{ animationDelay: "160ms" }}
           >
-            <span className="relative z-[1]">Установить лаунчер</span>
+            <span className="relative z-[1]">{messages.hero.install}</span>
           </a>
         </section>
 
         <section className="py-20 md:py-28">
           <div className="grid gap-6 md:grid-cols-3">
-            {FEATURES.map((feature, i) => (
+            {features.map((feature, i) => (
               <article
-                key={feature.title}
+                key={`feature-${i}`}
                 className="reveal reveal-scroll glass interactive-feature-card rounded-3xl p-8 text-center"
                 style={{ animationDelay: `${60 + i * 70}ms` }}
                 onMouseMove={handleFeatureCursor}
@@ -537,7 +499,7 @@ function HomePage({ onNavigate, path }) {
         </section>
       </div>
 
-      {SHOTS.map((section, index) => {
+      {shots.map((section, index) => {
         const isModsBlock = section.id === "mods";
         const alignClass =
           section.headingAlign === "right" ? "text-right" : "text-center";
@@ -654,7 +616,7 @@ function HomePage({ onNavigate, path }) {
             className="reveal reveal-scroll text-center text-6xl font-extrabold"
             style={{ animationDelay: `${downloadBaseDelay}ms` }}
           >
-            Скачать
+            {messages.download.title}
           </h2>
           <div className="mx-auto mt-12 max-w-5xl space-y-5">
             <a
@@ -667,12 +629,12 @@ function HomePage({ onNavigate, path }) {
                 <span className="text-5xl font-extrabold">Windows</span>
                 {userOS === "windows" && (
                   <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                    для вас
+                    {messages.download.forYou}
                   </span>
                 )}
               </div>
               <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                Установить
+                {messages.download.install}
               </span>
             </a>
 
@@ -686,12 +648,12 @@ function HomePage({ onNavigate, path }) {
                 <span className="text-5xl font-extrabold">macOS</span>
                 {userOS === "macos" && (
                   <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                    для вас
+                    {messages.download.forYou}
                   </span>
                 )}
               </div>
               <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                Установить
+                {messages.download.install}
               </span>
             </a>
 
@@ -709,7 +671,7 @@ function HomePage({ onNavigate, path }) {
                   <span className="text-5xl font-extrabold">Linux</span>
                   {userOS === "linux" && (
                     <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                      рекомендовано
+                      {messages.download.recommended}
                     </span>
                   )}
                 </span>
@@ -727,7 +689,7 @@ function HomePage({ onNavigate, path }) {
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                   <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                    {linuxOpen ? "Скрыть" : "Выбрать"}
+                    {linuxOpen ? messages.download.hide : messages.download.choose}
                   </span>
                 </span>
               </button>
@@ -762,7 +724,7 @@ function HomePage({ onNavigate, path }) {
         </section>
 
         <footer className="pt-4 text-center text-base font-semibold text-white/60">
-          16Launcher не является официальным продуктом Mojang или Microsoft.
+          {messages.footer.disclaimer}
 
           <div className="mt-4 flex items-center justify-center gap-3">
             {SOCIAL_LINKS.map((item) => (
@@ -789,10 +751,9 @@ function HomePage({ onNavigate, path }) {
 }
 
 function NewsListPage({ onNavigate, news, isLoading, loadError }) {
-  const pageTitle = news.page?.title || "Новости лаунчера";
-  const pageSubtitle =
-    news.page?.subtitle ||
-    "Все обновления в одном месте. Нажми на карточку, чтобы открыть changelog.";
+  const { messages } = useI18n();
+  const pageTitle = news.page?.title || messages.news.defaultTitle;
+  const pageSubtitle = news.page?.subtitle || messages.news.defaultSubtitle;
   const posts = Array.isArray(news.posts) ? news.posts : [];
 
   return (
@@ -806,8 +767,9 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
             onNavigate("/");
           }}
         >
-          На главную
+          {messages.news.backHome}
         </a>
+        <LanguageSwitcher />
       </header>
 
       <section className="text-center">
@@ -819,12 +781,12 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
         </p>
         {isLoading && (
           <p className="mx-auto mt-4 max-w-3xl text-base text-white/50">
-            Загружаю новости из GitHub...
+            {messages.news.loading}
           </p>
         )}
         {loadError && (
           <p className="mx-auto mt-4 max-w-3xl text-base text-amber-300/95">
-            Не удалось загрузить удаленные новости, показаны локальные данные.
+            {messages.news.loadError}
           </p>
         )}
       </section>
@@ -845,7 +807,7 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
                 onNavigate(`/news/${post.slug}`);
               }}
             >
-              Открыть
+              {messages.news.open}
             </a>
           </article>
         ))}
@@ -855,6 +817,7 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
 }
 
 function NewsArticlePage({ slug, onNavigate, news }) {
+  const { messages } = useI18n();
   const posts = Array.isArray(news.posts) ? news.posts : [];
   const post = posts.find((item) => item.slug === slug);
   const [articleState, setArticleState] = useState({
@@ -930,18 +893,21 @@ function NewsArticlePage({ slug, onNavigate, news }) {
   if (!post) {
     return (
       <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
-        <a
-          href="/news"
-          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
-          onClick={(event) => {
-            event.preventDefault();
-            onNavigate("/news");
-          }}
-        >
-          Назад к новостям
-        </a>
+        <header className="flex items-center justify-between gap-3">
+          <a
+            href="/news"
+            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate("/news");
+            }}
+          >
+            {messages.news.backToNews}
+          </a>
+          <LanguageSwitcher />
+        </header>
         <div className="mt-12 rounded-3xl border border-white/15 bg-white/5 p-8">
-          <h1 className="text-4xl font-extrabold">Новость не найдена</h1>
+          <h1 className="text-4xl font-extrabold">{messages.news.notFound}</h1>
           <p className="mt-4 text-white/70">
             
           </p>
@@ -975,16 +941,19 @@ function NewsArticlePage({ slug, onNavigate, news }) {
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
-      <a
-        href="/news"
-        className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
-        onClick={(event) => {
-          event.preventDefault();
-          onNavigate("/news");
-        }}
-      >
-        Назад к новостям
-      </a>
+      <header className="flex items-center justify-between gap-3">
+        <a
+          href="/news"
+          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate("/news");
+          }}
+        >
+          {messages.news.backToNews}
+        </a>
+        <LanguageSwitcher />
+      </header>
 
       <article className="mt-8 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-10">
         <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
@@ -995,13 +964,11 @@ function NewsArticlePage({ slug, onNavigate, news }) {
         </h1>
 
         {articleState.loading && (
-          <p className="mt-8 text-base text-white/55">Загружаю статью из репозитория...</p>
+          <p className="mt-8 text-base text-white/55">{messages.news.articleLoading}</p>
         )}
 
         {articleState.error && (
-          <p className="mt-8 text-base text-amber-300/95">
-            Не удалось загрузить `meta.json` или `post.md`. Показан локальный fallback.
-          </p>
+          <p className="mt-8 text-base text-amber-300/95">{messages.news.articleError}</p>
         )}
 
         {markdownBlocks.length > 0 ? (
@@ -1063,7 +1030,7 @@ function NewsArticlePage({ slug, onNavigate, news }) {
             </section>
 
             <section className="mt-10">
-              <h2 className="text-2xl font-extrabold">Изменения</h2>
+              <h2 className="text-2xl font-extrabold">{messages.news.changes}</h2>
               <ul className="mt-4 space-y-3 text-white/85">
                 {mergedChangelog.map((item, index) => (
                   <li

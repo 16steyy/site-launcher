@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "16Launcher — launcher para Minecraft",
+    "description": "16Launcher — la mejor opción para jugar Minecraft: un launcher rápido y moderno con búsqueda de contenido cómoda y descargas seguras de modpacks."
+  },
+  "language": {
+    "label": "Selección de idioma"
+  },
+  "nav": {
+    "home": "Inicio",
+    "news": "Noticias"
+  },
+  "hero": {
+    "tagline": "La mejor opción para jugar Minecraft",
+    "install": "Instalar launcher"
+  },
+  "features": [
+    {
+      "title": "Optimización",
+      "text": "Máxima optimización: el launcher funciona incluso en PCs modestos."
+    },
+    {
+      "title": "Contenido",
+      "text": "Búsqueda cómoda de contenido en el launcher y creación y gestión sencilla de modpacks."
+    },
+    {
+      "title": "Seguridad",
+      "text": "El launcher es totalmente seguro: sin malware. Además, su código fuente es abierto."
+    }
+  ],
+  "shots": {
+    "mods": {
+      "lines": [
+        { "accent": "Descarga", "rest": "contenido directamente en el launcher." },
+        { "accent": "Búsqueda", "rest": "cómoda, filtros y espacio para tus modpacks." }
+      ]
+    },
+    "settings": {
+      "accentPart": "Personaliza la apariencia a tu gusto.",
+      "restPart": "¡Exprésate!"
+    },
+    "modpacks": {
+      "lines": [
+        {
+          "accent": "Gestión",
+          "rest": "cómoda de perfiles, creación y configuración de modpacks."
+        }
+      ]
+    },
+    "java": {
+      "accentPart": "Ajustes",
+      "restPart": "detallados del juego según tus necesidades."
+    }
+  },
+  "download": {
+    "title": "Descargar",
+    "forYou": "para ti",
+    "recommended": "recomendado",
+    "install": "Instalar",
+    "hide": "Ocultar",
+    "choose": "Elegir"
+  },
+  "footer": {
+    "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft."
+  },
+  "news": {
+    "defaultTitle": "Noticias del launcher",
+    "defaultSubtitle": "Todas las actualizaciones en un solo lugar. Haz clic en una tarjeta para ver el changelog.",
+    "backHome": "Volver al inicio",
+    "loading": "Cargando noticias desde GitHub...",
+    "loadError": "No se pudieron cargar las noticias remotas; se muestran datos locales.",
+    "open": "Abrir",
+    "backToNews": "Volver a noticias",
+    "notFound": "Noticia no encontrada",
+    "articleLoading": "Cargando artículo desde el repositorio...",
+    "articleError": "No se pudo cargar meta.json o post.md. Se muestra el respaldo local.",
+    "changes": "Cambios"
+  }
+}

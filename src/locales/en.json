@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "16Launcher — Minecraft launcher",
+    "description": "16Launcher — the best choice for playing Minecraft: a fast, modern launcher with convenient content search and safe modpack downloads."
+  },
+  "language": {
+    "label": "Language selection"
+  },
+  "nav": {
+    "home": "Home",
+    "news": "News"
+  },
+  "hero": {
+    "tagline": "The best choice for playing Minecraft",
+    "install": "Install launcher"
+  },
+  "features": [
+    {
+      "title": "Optimization",
+      "text": "Maximum optimization — the launcher runs smoothly even on low-end PCs."
+    },
+    {
+      "title": "Content",
+      "text": "Convenient in-launcher content search, plus easy creation and management of modpacks."
+    },
+    {
+      "title": "Security",
+      "text": "The launcher is completely safe: no malware. Its source code is also open."
+    }
+  ],
+  "shots": {
+    "mods": {
+      "lines": [
+        { "accent": "Download", "rest": "content right in the launcher." },
+        { "accent": "Convenient", "rest": "search, filters, and room for your modpacks!" }
+      ]
+    },
+    "settings": {
+      "accentPart": "Customize the look to your taste.",
+      "restPart": "Express yourself!"
+    },
+    "modpacks": {
+      "lines": [
+        {
+          "accent": "Easy",
+          "rest": "profile management, modpack creation, and configuration."
+        }
+      ]
+    },
+    "java": {
+      "accentPart": "Detailed",
+      "restPart": "game settings tailored to your needs."
+    }
+  },
+  "download": {
+    "title": "Download",
+    "forYou": "for you",
+    "recommended": "recommended",
+    "install": "Install",
+    "hide": "Hide",
+    "choose": "Choose"
+  },
+  "footer": {
+    "disclaimer": "16Launcher is not an official product of Mojang or Microsoft."
+  },
+  "news": {
+    "defaultTitle": "Launcher news",
+    "defaultSubtitle": "All updates in one place. Click a card to open the changelog.",
+    "backHome": "Back to home",
+    "loading": "Loading news from GitHub...",
+    "loadError": "Could not load remote news; showing local data.",
+    "open": "Open",
+    "backToNews": "Back to news",
+    "notFound": "Post not found",
+    "articleLoading": "Loading article from the repository...",
+    "articleError": "Could not load meta.json or post.md. Showing local fallback.",
+    "changes": "Changes"
+  }
+}

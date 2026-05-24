@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "16Launcher — Minecraft-Launcher",
+    "description": "16Launcher — die beste Wahl für Minecraft: ein schneller, moderner Launcher mit bequemer Inhaltssuche und sicherem Modpack-Download."
+  },
+  "language": {
+    "label": "Sprache wählen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "news": "Neuigkeiten"
+  },
+  "hero": {
+    "tagline": "Die beste Wahl für Minecraft",
+    "install": "Launcher installieren"
+  },
+  "features": [
+    {
+      "title": "Optimierung",
+      "text": "Maximale Optimierung — der Launcher läuft auch auf schwachen PCs flüssig."
+    },
+    {
+      "title": "Inhalte",
+      "text": "Bequeme Inhaltssuche direkt im Launcher sowie einfaches Erstellen und Verwalten von Modpacks."
+    },
+    {
+      "title": "Sicherheit",
+      "text": "Der Launcher ist absolut sicher: keine Schadsoftware. Außerdem ist der Quellcode offen."
+    }
+  ],
+  "shots": {
+    "mods": {
+      "lines": [
+        { "accent": "Inhalte", "rest": "direkt im Launcher herunterladen." },
+        { "accent": "Bequeme", "rest": "Suche, Filter und Platz für deine Modpacks!" }
+      ]
+    },
+    "settings": {
+      "accentPart": "Passe das Aussehen nach deinem Geschmack an.",
+      "restPart": "Drück dich aus!"
+    },
+    "modpacks": {
+      "lines": [
+        {
+          "accent": "Bequemes",
+          "rest": "Profilmanagement, Erstellen und Konfigurieren von Modpacks."
+        }
+      ]
+    },
+    "java": {
+      "accentPart": "Detaillierte",
+      "restPart": "Spieleinstellungen nach deinen Bedürfnissen."
+    }
+  },
+  "download": {
+    "title": "Herunterladen",
+    "forYou": "für dich",
+    "recommended": "empfohlen",
+    "install": "Installieren",
+    "hide": "Ausblenden",
+    "choose": "Auswählen"
+  },
+  "footer": {
+    "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft."
+  },
+  "news": {
+    "defaultTitle": "Launcher-Neuigkeiten",
+    "defaultSubtitle": "Alle Updates an einem Ort. Klicke auf eine Karte, um das Changelog zu öffnen.",
+    "backHome": "Zur Startseite",
+    "loading": "Neuigkeiten werden von GitHub geladen...",
+    "loadError": "Remote-Neuigkeiten konnten nicht geladen werden; lokale Daten werden angezeigt.",
+    "open": "Öffnen",
+    "backToNews": "Zurück zu den Neuigkeiten",
+    "notFound": "Beitrag nicht gefunden",
+    "articleLoading": "Artikel wird aus dem Repository geladen...",
+    "articleError": "meta.json oder post.md konnte nicht geladen werden. Lokaler Fallback wird angezeigt.",
+    "changes": "Änderungen"
+  }
+}
