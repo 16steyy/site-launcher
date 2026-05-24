@@ -17,11 +17,18 @@ import linuxIcon from "../assets/linux.png";
 import githubIcon from "../assets/github.png";
 import discordIcon from "../assets/discord.png";
 import telegramIcon from "../assets/telegram.png";
+import newsData from "./content/news.json";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
 const LATEST_RELEASE_API =
   "https://api.github.com/repos/launcherdev11/rust-launcher/releases/latest";
+const NEWS_CDN_BASE =
+  "https://cdn.jsdelivr.net/gh/16steyy/16Launcher-Site-News@main";
+const NEWS_RAW_BASE =
+  "https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main";
+const NEWS_INDEX_PATH = "news/index.json";
+const NEWS_REFRESH_INTERVAL_MS = 1 * 60 * 1000;
 
 const SOCIAL_LINKS = [
   {
@@ -135,9 +142,193 @@ function pickAssetUrl(assets, matcher) {
   return found?.browser_download_url || FALLBACK_RELEASES_URL;
 }
 
-export default function App() {
+function toAbsoluteUrl(baseUrl, path) {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) return path;
+  const normalizedPath = path.replace(/^\/+/, "");
+  return `${baseUrl}/${normalizedPath}`;
+}
+
+function withCacheBust(url) {
+  if (!url) return url;
+  const divider = url.includes("?") ? "&" : "?";
+  return `${url}${divider}t=${Date.now()}`;
+}
+
+async function fetchJsonWithFallback(relativePath) {
+  const isAbsolute = /^https?:\/\//i.test(relativePath || "");
+  const candidates = isAbsolute
+    ? [relativePath]
+    : [
+        toAbsoluteUrl(NEWS_RAW_BASE, relativePath),
+        toAbsoluteUrl(NEWS_CDN_BASE, relativePath),
+      ];
+
+  for (const candidate of candidates) {
+    try {
+      const url = withCacheBust(candidate);
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) continue;
+      const data = await response.json();
+      return { data, url };
+    } catch {
+      continue;
+    }
+  }
+
+  throw new Error("news_json_load_failed");
+}
+
+async function fetchTextWithFallback(relativePathOrAbsolute) {
+  const isAbsolute = /^https?:\/\//i.test(relativePathOrAbsolute || "");
+  const candidates = isAbsolute
+    ? [relativePathOrAbsolute]
+    : [
+        toAbsoluteUrl(NEWS_RAW_BASE, relativePathOrAbsolute),
+        toAbsoluteUrl(NEWS_CDN_BASE, relativePathOrAbsolute),
+      ];
+
+  for (const candidate of candidates) {
+    try {
+      const url = withCacheBust(candidate);
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) continue;
+      const text = await response.text();
+      return { text, url };
+    } catch {
+      continue;
+    }
+  }
+
+  throw new Error("news_text_load_failed");
+}
+
+function resolveRelativeUrl(path, baseUrl) {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) return path;
+  if (!baseUrl) return path;
+  try {
+    return new URL(path, `${baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`}`).toString();
+  } catch {
+    return path;
+  }
+}
+
+function normalizeNewsData(input, sourceUrl = "") {
+  const sourceBaseUrl = sourceUrl
+    ? sourceUrl.substring(0, sourceUrl.lastIndexOf("/") + 1)
+    : "";
+  const page = input?.page || {
+    title: input?.title || "Новости лаунчера",
+    subtitle: input?.subtitle || "",
+  };
+  const sourceItems = Array.isArray(input?.posts)
+    ? input.posts
+    : Array.isArray(input?.items)
+      ? input.items
+      : [];
+
+  const posts = sourceItems
+    .map((item, index) => {
+      const slug = item?.slug || item?.version || `update-${index + 1}`;
+      return {
+        slug,
+        title: item?.title || slug,
+        excerpt: item?.excerpt || "",
+        date: item?.date || "",
+        version: item?.version || "",
+        description: Array.isArray(item?.description) ? item.description : [],
+        changelog: Array.isArray(item?.changelog) ? item.changelog : [],
+        cover: resolveRelativeUrl(item?.cover || "", sourceBaseUrl),
+        metaPath: resolveRelativeUrl(
+          item?.meta || item?.metaPath || "",
+          sourceBaseUrl
+        ),
+        postPath: resolveRelativeUrl(
+          item?.post || item?.postPath || "",
+          sourceBaseUrl
+        ),
+      };
+    })
+    .filter((post) => post.slug);
+
+  return { page, posts };
+}
+
+function parseMarkdown(markdown, assetBaseUrl) {
+  if (!markdown) return [];
+  const lines = markdown.replace(/\r/g, "").split("\n");
+  const blocks = [];
+  let paragraphBuffer = [];
+  let listBuffer = [];
+
+  function flushParagraph() {
+    if (!paragraphBuffer.length) return;
+    blocks.push({ type: "paragraph", text: paragraphBuffer.join(" ").trim() });
+    paragraphBuffer = [];
+  }
+
+  function flushList() {
+    if (!listBuffer.length) return;
+    blocks.push({ type: "list", items: [...listBuffer] });
+    listBuffer = [];
+  }
+
+  lines.forEach((rawLine) => {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
+      return;
+    }
+
+    if (line.startsWith("### ")) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "h3", text: line.slice(4).trim() });
+      return;
+    }
+    if (line.startsWith("## ")) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "h2", text: line.slice(3).trim() });
+      return;
+    }
+    if (line.startsWith("# ")) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "h1", text: line.slice(2).trim() });
+      return;
+    }
+
+    if (line.startsWith("- ")) {
+      flushParagraph();
+      listBuffer.push(line.slice(2).trim());
+      return;
+    }
+
+    const imageMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imageMatch) {
+      flushParagraph();
+      flushList();
+      blocks.push({
+        type: "image",
+        alt: imageMatch[1] || "",
+        src: resolveRelativeUrl(imageMatch[2], assetBaseUrl),
+      });
+      return;
+    }
+
+    paragraphBuffer.push(line);
+  });
+
+  flushParagraph();
+  flushList();
+  return blocks;
+}
+
+function HomePage({ onNavigate, path }) {
   const [linuxOpen, setLinuxOpen] = useState(false);
-  const [activeFeature, setActiveFeature] = useState(null);
   const [userOS, setUserOS] = useState("unknown");
   const [lightboxImage, setLightboxImage] = useState(null);
   const [links, setLinks] = useState({
@@ -186,12 +377,54 @@ export default function App() {
     loadLatestRelease();
   }, []);
 
+  useEffect(() => {
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduced) {
+      document.querySelectorAll(".reveal-scroll").forEach((el) => {
+        el.classList.add("is-in-view");
+      });
+      return;
+    }
+
+    const nodes = document.querySelectorAll(".reveal-scroll");
+    if (!nodes.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in-view");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    document.querySelectorAll(".reveal-scroll:not(.is-in-view)").forEach((n) =>
+      io.observe(n)
+    );
+    return () => io.disconnect();
+  }, [linuxOpen]);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+    function onKey(event) {
+      if (event.key === "Escape") setLightboxImage(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxImage]);
+
   const mainDownloadLink = useMemo(() => {
     if (userOS === "windows") return links.windows;
     return FALLBACK_RELEASES_URL;
   }, [links.windows, userOS]);
 
-  const downloadBaseDelay = 260 + SHOTS.length * 180;
+  const downloadBaseDelay = 160 + SHOTS.length * 120;
 
   function renderShotHeadline(section) {
     if (section.lines) {
@@ -210,7 +443,7 @@ export default function App() {
     );
   }
 
-  function handleFeatureCursor(event, index) {
+  function handleFeatureCursor(event) {
     const card = event.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -222,36 +455,64 @@ export default function App() {
     card.style.setProperty("--my", `${y}px`);
     card.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
     card.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    setActiveFeature(index);
   }
 
   function resetFeatureCursor(event) {
     const card = event.currentTarget;
     card.style.setProperty("--rx", "0deg");
     card.style.setProperty("--ry", "0deg");
-    setActiveFeature(null);
   }
 
   return (
     <main className="w-full min-w-0 pb-16 pt-10">
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
+        <header className="mb-6 flex items-center justify-end gap-3">
+          <a
+            href="/"
+            className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
+              path === "/"
+                ? "border-accent bg-accent/20 text-white"
+                : "border-white/20 bg-white/5 text-white/70 hover:text-white"
+            }`}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate("/");
+            }}
+          >
+            Главная
+          </a>
+          <a
+            href="/news"
+            className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
+              path.startsWith("/news")
+                ? "border-accent bg-accent/20 text-white"
+                : "border-white/20 bg-white/5 text-white/70 hover:text-white"
+            }`}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate("/news");
+            }}
+          >
+            News
+          </a>
+        </header>
         <section className="py-16 text-center md:py-24">
           <h1
-            className="reveal text-5xl font-extrabold tracking-tight md:text-7xl"
-            style={{ animationDelay: "120ms" }}
+            className="reveal hero-title text-5xl font-extrabold tracking-tight md:text-7xl"
+            style={{ animationDelay: "60ms" }}
           >
             16Launcher
           </h1>
           <p
             className="reveal mt-3 text-2xl font-semibold text-white/70 md:text-4xl"
-            style={{ animationDelay: "200ms" }}
+            style={{ animationDelay: "110ms" }}
           >
             Лучший выбор для игры в Minecraft
           </p>
           <a
             href={mainDownloadLink}
             className="reveal interactive-cta mx-auto mt-12 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow"
-            style={{ animationDelay: "280ms" }}
+            style={{ animationDelay: "160ms" }}
           >
             <span className="relative z-[1]">Установить лаунчер</span>
           </a>
@@ -262,11 +523,9 @@ export default function App() {
             {FEATURES.map((feature, i) => (
               <article
                 key={feature.title}
-                className={`reveal glass interactive-feature-card rounded-3xl p-8 text-center ${
-                  activeFeature === i ? "is-active" : ""
-                }`}
-                style={{ animationDelay: `${120 + i * 120}ms` }}
-                onMouseMove={(event) => handleFeatureCursor(event, i)}
+                className="reveal reveal-scroll glass interactive-feature-card rounded-3xl p-8 text-center"
+                style={{ animationDelay: `${60 + i * 70}ms` }}
+                onMouseMove={handleFeatureCursor}
                 onMouseLeave={resetFeatureCursor}
               >
                 <img src={feature.icon} alt="" className="mx-auto h-11 w-11" />
@@ -298,7 +557,7 @@ export default function App() {
           ? "pl-4 pr-8 sm:pl-6 sm:pr-12 md:pl-10 md:pr-20 lg:pl-16 lg:pr-28 xl:pl-24 xl:pr-36"
           : "pl-8 pr-4 sm:pl-12 sm:pr-6 md:pl-20 md:pr-10 lg:pl-28 lg:pr-16 xl:pl-36 xl:pr-24";
 
-        const baseDelay = 260 + index * 180;
+        const baseDelay = 160 + index * 120;
 
         return (
           <section
@@ -320,7 +579,7 @@ export default function App() {
             )}
             {headlineTop && (
               <h2
-                className={`${headlineBlock} ${headlineMarginBottom} reveal`}
+                className={`${headlineBlock} ${headlineMarginBottom} reveal reveal-scroll`}
                 style={{ animationDelay: `${baseDelay}ms` }}
               >
                 {renderShotHeadline(section)}
@@ -329,10 +588,10 @@ export default function App() {
 
             <div className={sectionPad}>
               <div
-                className={`glass relative reveal flex w-full max-w-[min(1920px,100%)] flex-col gap-4 rounded-2xl p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:flex-row md:items-stretch md:gap-0 md:p-5 ${
+                className={`glass shot-glass-panel relative reveal reveal-scroll flex w-full max-w-[min(1920px,100%)] flex-col gap-4 rounded-2xl p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:flex-row md:items-stretch md:gap-0 md:p-5 ${
                   biasLeft ? "ml-0 mr-auto" : "ml-auto mr-0"
                 }`}
-                style={{ animationDelay: `${baseDelay + 120}ms` }}
+                style={{ animationDelay: `${baseDelay + 70}ms` }}
               >
                 <div
                   className={
@@ -355,7 +614,7 @@ export default function App() {
                     <img
                       src={section.image}
                       alt=""
-                      className="h-full w-full rounded-xl object-cover object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-[1.02]"
+                      className="h-full w-full rounded-xl object-cover object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-[1.03] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
                   </button>
@@ -365,7 +624,7 @@ export default function App() {
 
             {!headlineTop && (
               <h2
-                className={`${headlineBlock} ${headlineMarginTop} reveal`}
+                className={`${headlineBlock} ${headlineMarginTop} reveal reveal-scroll`}
                 style={{ animationDelay: `${baseDelay}ms` }}
               >
                 {renderShotHeadline(section)}
@@ -392,7 +651,7 @@ export default function App() {
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <section className="py-24 md:py-32">
           <h2
-            className="reveal text-center text-6xl font-extrabold"
+            className="reveal reveal-scroll text-center text-6xl font-extrabold"
             style={{ animationDelay: `${downloadBaseDelay}ms` }}
           >
             Скачать
@@ -400,8 +659,8 @@ export default function App() {
           <div className="mx-auto mt-12 max-w-5xl space-y-5">
             <a
               href={links.windows}
-              className="glass reveal interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
-              style={{ animationDelay: `${downloadBaseDelay + 80}ms` }}
+              className="glass reveal reveal-scroll interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
+              style={{ animationDelay: `${downloadBaseDelay + 50}ms` }}
             >
               <div className="flex items-center gap-4">
                 <img src={windowsIcon} alt="" className="h-9 w-9" />
@@ -419,8 +678,8 @@ export default function App() {
 
             <a
               href={links.macos}
-              className="glass reveal interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
-              style={{ animationDelay: `${downloadBaseDelay + 160}ms` }}
+              className="glass reveal reveal-scroll interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
+              style={{ animationDelay: `${downloadBaseDelay + 100}ms` }}
             >
               <div className="flex items-center gap-4">
                 <img src={macosIcon} alt="" className="h-9 w-9" />
@@ -437,12 +696,13 @@ export default function App() {
             </a>
 
             <div
-              className="glass rounded-3xl px-7 py-5 reveal"
-              style={{ animationDelay: `${downloadBaseDelay + 240}ms` }}
+              className="glass rounded-3xl px-7 py-5 reveal reveal-scroll"
+              style={{ animationDelay: `${downloadBaseDelay + 150}ms` }}
             >
               <button
+                type="button"
                 onClick={() => setLinuxOpen((prev) => !prev)}
-                className="interactive-row flex w-full items-center justify-between rounded-2xl"
+                className="interactive-row flex w-full items-center justify-between rounded-2xl text-left"
               >
                 <span className="flex items-center gap-4">
                   <img src={linuxIcon} alt="" className="h-9 w-9" />
@@ -453,8 +713,22 @@ export default function App() {
                     </span>
                   )}
                 </span>
-                <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                  {linuxOpen ? "Скрыть" : "Выбрать"}
+                <span className="flex items-center gap-3">
+                  <svg
+                    className={`linux-chevron h-6 w-6 shrink-0 text-white/70 ${linuxOpen ? "is-open" : ""}`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                  <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
+                    {linuxOpen ? "Скрыть" : "Выбрать"}
+                  </span>
                 </span>
               </button>
 
@@ -462,22 +736,22 @@ export default function App() {
                 <div className="mt-5 grid gap-3 md:grid-cols-3">
                   <a
                     href={links.linuxDeb}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal"
-                    style={{ animationDelay: `${downloadBaseDelay + 360}ms` }}
+                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
+                    style={{ animationDelay: `${downloadBaseDelay + 220}ms` }}
                   >
                     .deb
                   </a>
                   <a
                     href={links.linuxRpm}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal"
-                    style={{ animationDelay: `${downloadBaseDelay + 420}ms` }}
+                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
+                    style={{ animationDelay: `${downloadBaseDelay + 270}ms` }}
                   >
                     .rpm
                   </a>
                   <a
                     href={links.linuxAppImage}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal"
-                    style={{ animationDelay: `${downloadBaseDelay + 480}ms` }}
+                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
+                    style={{ animationDelay: `${downloadBaseDelay + 320}ms` }}
                   >
                     .AppImage
                   </a>
@@ -512,4 +786,382 @@ export default function App() {
       </div>
     </main>
   );
+}
+
+function NewsListPage({ onNavigate, news, isLoading, loadError }) {
+  const pageTitle = news.page?.title || "Новости лаунчера";
+  const pageSubtitle =
+    news.page?.subtitle ||
+    "Все обновления в одном месте. Нажми на карточку, чтобы открыть changelog.";
+  const posts = Array.isArray(news.posts) ? news.posts : [];
+
+  return (
+    <main className="mx-auto min-h-screen w-full max-w-[1240px] px-4 pb-20 pt-10 md:px-6">
+      <header className="mb-10 flex items-center justify-between gap-3">
+        <a
+          href="/"
+          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate("/");
+          }}
+        >
+          На главную
+        </a>
+      </header>
+
+      <section className="text-center">
+        <h1 className="hero-title text-5xl font-extrabold tracking-tight md:text-7xl">
+          {pageTitle}
+        </h1>
+        <p className="mx-auto mt-4 max-w-3xl text-lg text-white/70 md:text-2xl">
+          {pageSubtitle}
+        </p>
+        {isLoading && (
+          <p className="mx-auto mt-4 max-w-3xl text-base text-white/50">
+            Загружаю новости из GitHub...
+          </p>
+        )}
+        {loadError && (
+          <p className="mx-auto mt-4 max-w-3xl text-base text-amber-300/95">
+            Не удалось загрузить удаленные новости, показаны локальные данные.
+          </p>
+        )}
+      </section>
+
+      <section className="mt-14 grid gap-6 md:grid-cols-2">
+        {posts.map((post) => (
+          <article key={post.slug} className="news-card rounded-3xl p-6 md:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
+              {post.date} {post.version ? `• ${post.version}` : ""}
+            </p>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight">{post.title}</h2>
+            <p className="mt-4 text-lg text-white/70">{post.excerpt}</p>
+            <a
+              href={`/news/${post.slug}`}
+              className="mt-8 inline-flex rounded-xl bg-accent px-5 py-3 text-base font-bold text-white transition hover:brightness-110"
+              onClick={(event) => {
+                event.preventDefault();
+                onNavigate(`/news/${post.slug}`);
+              }}
+            >
+              Открыть
+            </a>
+          </article>
+        ))}
+      </section>
+    </main>
+  );
+}
+
+function NewsArticlePage({ slug, onNavigate, news }) {
+  const posts = Array.isArray(news.posts) ? news.posts : [];
+  const post = posts.find((item) => item.slug === slug);
+  const [articleState, setArticleState] = useState({
+    loading: false,
+    error: false,
+    markdown: "",
+    meta: null,
+    markdownUrl: "",
+    metaUrl: "",
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!post) return;
+
+    async function loadRemoteArticle() {
+      const hasRemoteSources = post.postPath || post.metaPath;
+      if (!hasRemoteSources) {
+        setArticleState({
+          loading: false,
+          error: false,
+          markdown: "",
+          meta: null,
+          markdownUrl: "",
+          metaUrl: "",
+        });
+        return;
+      }
+
+      setArticleState((prev) => ({ ...prev, loading: true, error: false }));
+
+      try {
+        let markdown = "";
+        let markdownUrl = "";
+        let meta = null;
+        let metaUrl = "";
+
+        if (post.postPath) {
+          const markdownResult = await fetchTextWithFallback(post.postPath);
+          markdown = markdownResult.text;
+          markdownUrl = markdownResult.url;
+        }
+
+        if (post.metaPath) {
+          const metaResult = await fetchJsonWithFallback(post.metaPath);
+          meta = metaResult.data;
+          metaUrl = metaResult.url;
+        }
+
+        if (!cancelled) {
+          setArticleState({
+            loading: false,
+            error: false,
+            markdown,
+            meta,
+            markdownUrl,
+            metaUrl,
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setArticleState((prev) => ({ ...prev, loading: false, error: true }));
+        }
+      }
+    }
+
+    loadRemoteArticle();
+    return () => {
+      cancelled = true;
+    };
+  }, [post]);
+
+  if (!post) {
+    return (
+      <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
+        <a
+          href="/news"
+          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate("/news");
+          }}
+        >
+          Назад к новостям
+        </a>
+        <div className="mt-12 rounded-3xl border border-white/15 bg-white/5 p-8">
+          <h1 className="text-4xl font-extrabold">Новость не найдена</h1>
+          <p className="mt-4 text-white/70">
+            
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  const resolvedMeta = articleState.meta || {};
+  const mergedDescription =
+    Array.isArray(resolvedMeta.description) && resolvedMeta.description.length
+      ? resolvedMeta.description
+      : Array.isArray(post.description)
+        ? post.description
+        : [];
+  const mergedChangelog =
+    Array.isArray(resolvedMeta.changelog) && resolvedMeta.changelog.length
+      ? resolvedMeta.changelog
+      : Array.isArray(post.changelog)
+        ? post.changelog
+        : [];
+  const markdownBlocks = parseMarkdown(
+    articleState.markdown,
+    articleState.markdownUrl
+      ? articleState.markdownUrl.substring(
+          0,
+          articleState.markdownUrl.lastIndexOf("/") + 1
+        )
+      : ""
+  );
+
+  return (
+    <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
+      <a
+        href="/news"
+        className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+        onClick={(event) => {
+          event.preventDefault();
+          onNavigate("/news");
+        }}
+      >
+        Назад к новостям
+      </a>
+
+      <article className="mt-8 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
+          {post.date} {post.version ? `• ${post.version}` : ""}
+        </p>
+        <h1 className="mt-2 text-4xl font-extrabold leading-tight md:text-5xl">
+          {post.title}
+        </h1>
+
+        {articleState.loading && (
+          <p className="mt-8 text-base text-white/55">Загружаю статью из репозитория...</p>
+        )}
+
+        {articleState.error && (
+          <p className="mt-8 text-base text-amber-300/95">
+            Не удалось загрузить `meta.json` или `post.md`. Показан локальный fallback.
+          </p>
+        )}
+
+        {markdownBlocks.length > 0 ? (
+          <section className="news-markdown mt-8 space-y-4 text-lg text-white/80">
+            {markdownBlocks.map((block, index) => {
+              if (block.type === "h1")
+                return (
+                  <h2 key={index} className="text-3xl font-extrabold">
+                    {block.text}
+                  </h2>
+                );
+              if (block.type === "h2")
+                return (
+                  <h3 key={index} className="text-2xl font-extrabold">
+                    {block.text}
+                  </h3>
+                );
+              if (block.type === "h3")
+                return (
+                  <h4 key={index} className="text-xl font-bold">
+                    {block.text}
+                  </h4>
+                );
+              if (block.type === "list")
+                return (
+                  <ul key={index} className="space-y-3">
+                    {block.items.map((item, itemIndex) => (
+                      <li
+                        key={itemIndex}
+                        className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                );
+              if (block.type === "image")
+                return (
+                  <img
+                    key={index}
+                    src={block.src}
+                    alt={block.alt}
+                    className="news-inline-image mt-4 rounded-2xl border border-white/15"
+                  />
+                );
+              return (
+                <p key={index} className="news-markdown-paragraph">
+                  {block.text}
+                </p>
+              );
+            })}
+          </section>
+        ) : (
+          <>
+            <section className="mt-8 space-y-4 text-lg text-white/80">
+              {mergedDescription.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </section>
+
+            <section className="mt-10">
+              <h2 className="text-2xl font-extrabold">Изменения</h2>
+              <ul className="mt-4 space-y-3 text-white/85">
+                {mergedChangelog.map((item, index) => (
+                  <li
+                    key={index}
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </>
+        )}
+      </article>
+    </main>
+  );
+}
+
+export default function App() {
+  const [path, setPath] = useState(window.location.pathname || "/");
+  const [news, setNews] = useState(() => normalizeNewsData(newsData));
+  const [newsLoading, setNewsLoading] = useState(true);
+  const [newsLoadError, setNewsLoadError] = useState(false);
+
+  async function refreshNews({ isBackground = false } = {}) {
+    if (!isBackground) {
+      setNewsLoading(true);
+    }
+    setNewsLoadError(false);
+    try {
+      const remote = await fetchJsonWithFallback(NEWS_INDEX_PATH);
+      setNews(normalizeNewsData(remote.data, remote.url));
+      if (!isBackground) {
+        setNewsLoading(false);
+      }
+    } catch {
+      setNews(normalizeNewsData(newsData));
+      if (!isBackground) {
+        setNewsLoading(false);
+      }
+      setNewsLoadError(true);
+    }
+  }
+
+  useEffect(() => {
+    function handlePopState() {
+      setPath(window.location.pathname || "/");
+    }
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    refreshNews();
+
+    const intervalId = window.setInterval(() => {
+      if (!cancelled) {
+        refreshNews({ isBackground: true });
+      }
+    }, NEWS_REFRESH_INTERVAL_MS);
+
+    function onVisibilityChange() {
+      if (!cancelled && document.visibilityState === "visible") {
+        refreshNews({ isBackground: true });
+      }
+    }
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, []);
+
+  function navigate(nextPath) {
+    if (nextPath === window.location.pathname) return;
+    window.history.pushState({}, "", nextPath);
+    setPath(nextPath);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (path === "/news") {
+    return (
+      <NewsListPage
+        onNavigate={navigate}
+        news={news}
+        isLoading={newsLoading}
+        loadError={newsLoadError}
+      />
+    );
+  }
+
+  if (path.startsWith("/news/")) {
+    const slug = path.replace("/news/", "");
+    return <NewsArticlePage slug={slug} onNavigate={navigate} news={news} />;
+  }
+
+  return <HomePage onNavigate={navigate} path={path} />;
 }
