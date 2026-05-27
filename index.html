@@ -1,26 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>16Launcher - лаунчер для Minecraft</title>
-    <meta
-      name="description"
-      content="16Launcher — лучший выбор для игры в Minecraft: быстрый и современный лаунчер, удобный поиск контента и безопасная загрузка модпаков."
-    />
-    <link rel="canonical" href="https://16-launcher.ru/" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <meta property="og:title" content="16Launcher - лаунчер для Minecraft" />
-    <meta
-      property="og:description"
-      content="16Launcher - быстрый лаунчер для Minecraft: удобный поиск контента и настройка сборок."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://16-launcher.ru/" />
+    <title>16Launcher - лаунчер для Minecraft</title>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){
+              (m[i].a=m[i].a||[]).push(arguments)
+          };
+          m[i].l=1 * new Date();
+
+          for (var j = 0; j < document.scripts.length; j++) {
+              if (document.scripts[j].src === r) {
+                  return;
+              }
+          }
+
+          k=e.createElement(t),
+          a=e.getElementsByTagName(t)[0],
+          k.async=1,
+          k.src=r,
+          a.parentNode.insertBefore(k,a)
+
+      })(window, document, "script",
+      "https://mc.yandex.ru/metrika/tag.js?id=109451983", "ym");
+
+      ym(109451983, "init", {
+          clickmap:true,
+          trackLinks:true,
+          accurateTrackBounce:true,
+          webvisor:true
+      });
+    </script>
+    <!-- /Yandex.Metrika counter -->
   </head>
+
   <body>
+    <!-- Yandex.Metrika noscript -->
+    <noscript>
+      <div>
+        <img
+          src="https://mc.yandex.ru/watch/109451983"
+          style="position:absolute; left:-9999px;"
+          alt=""
+        />
+      </div>
+    </noscript>
+    <!-- /Yandex.Metrika noscript -->
+
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
