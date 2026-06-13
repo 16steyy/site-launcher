@@ -62,7 +62,6 @@ export function getInitialLocale() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && SUPPORTED_LOCALES.includes(saved)) return saved;
   } catch {
-    /* ignore */
   }
 
   return detectSystemLocale();

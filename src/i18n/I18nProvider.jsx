@@ -35,7 +35,6 @@ export function I18nProvider({ children }) {
     try {
       localStorage.setItem(STORAGE_KEY, nextLocale);
     } catch {
-      /* ignore */
     }
   }, []);
 

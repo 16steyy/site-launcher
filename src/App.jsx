@@ -20,6 +20,7 @@ import telegramIcon from "../assets/telegram.png";
 import boostyIcon from "../assets/boosty.png";
 import newsData from "./content/news.json";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import NewsMarkdown from "./components/NewsMarkdown";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useI18n } from "./i18n/I18nProvider";
 
@@ -232,78 +233,6 @@ function normalizeNewsData(input, sourceUrl = "") {
     .filter((post) => post.slug);
 
   return { page, posts };
-}
-
-function parseMarkdown(markdown, assetBaseUrl) {
-  if (!markdown) return [];
-  const lines = markdown.replace(/\r/g, "").split("\n");
-  const blocks = [];
-  let paragraphBuffer = [];
-  let listBuffer = [];
-
-  function flushParagraph() {
-    if (!paragraphBuffer.length) return;
-    blocks.push({ type: "paragraph", text: paragraphBuffer.join(" ").trim() });
-    paragraphBuffer = [];
-  }
-
-  function flushList() {
-    if (!listBuffer.length) return;
-    blocks.push({ type: "list", items: [...listBuffer] });
-    listBuffer = [];
-  }
-
-  lines.forEach((rawLine) => {
-    const line = rawLine.trim();
-    if (!line) {
-      flushParagraph();
-      flushList();
-      return;
-    }
-
-    if (line.startsWith("### ")) {
-      flushParagraph();
-      flushList();
-      blocks.push({ type: "h3", text: line.slice(4).trim() });
-      return;
-    }
-    if (line.startsWith("## ")) {
-      flushParagraph();
-      flushList();
-      blocks.push({ type: "h2", text: line.slice(3).trim() });
-      return;
-    }
-    if (line.startsWith("# ")) {
-      flushParagraph();
-      flushList();
-      blocks.push({ type: "h1", text: line.slice(2).trim() });
-      return;
-    }
-
-    if (line.startsWith("- ")) {
-      flushParagraph();
-      listBuffer.push(line.slice(2).trim());
-      return;
-    }
-
-    const imageMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
-    if (imageMatch) {
-      flushParagraph();
-      flushList();
-      blocks.push({
-        type: "image",
-        alt: imageMatch[1] || "",
-        src: resolveRelativeUrl(imageMatch[2], assetBaseUrl),
-      });
-      return;
-    }
-
-    paragraphBuffer.push(line);
-  });
-
-  flushParagraph();
-  flushList();
-  return blocks;
 }
 
 function HomePage({ onNavigate, path }) {
@@ -935,15 +864,9 @@ function NewsArticlePage({ slug, onNavigate, news }) {
       : Array.isArray(post.changelog)
         ? post.changelog
         : [];
-  const markdownBlocks = parseMarkdown(
-    articleState.markdown,
-    articleState.markdownUrl
-      ? articleState.markdownUrl.substring(
-          0,
-          articleState.markdownUrl.lastIndexOf("/") + 1
-        )
-      : ""
-  );
+  const markdownAssetBaseUrl = articleState.markdownUrl
+    ? articleState.markdownUrl.substring(0, articleState.markdownUrl.lastIndexOf("/") + 1)
+    : "";
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
@@ -977,56 +900,8 @@ function NewsArticlePage({ slug, onNavigate, news }) {
           <p className="mt-8 text-base text-amber-300/95">{messages.news.articleError}</p>
         )}
 
-        {markdownBlocks.length > 0 ? (
-          <section className="news-markdown mt-8 space-y-4 text-lg text-white/80">
-            {markdownBlocks.map((block, index) => {
-              if (block.type === "h1")
-                return (
-                  <h2 key={index} className="text-3xl font-extrabold">
-                    {block.text}
-                  </h2>
-                );
-              if (block.type === "h2")
-                return (
-                  <h3 key={index} className="text-2xl font-extrabold">
-                    {block.text}
-                  </h3>
-                );
-              if (block.type === "h3")
-                return (
-                  <h4 key={index} className="text-xl font-bold">
-                    {block.text}
-                  </h4>
-                );
-              if (block.type === "list")
-                return (
-                  <ul key={index} className="space-y-3">
-                    {block.items.map((item, itemIndex) => (
-                      <li
-                        key={itemIndex}
-                        className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                );
-              if (block.type === "image")
-                return (
-                  <img
-                    key={index}
-                    src={block.src}
-                    alt={block.alt}
-                    className="news-inline-image mt-4 rounded-2xl border border-white/15"
-                  />
-                );
-              return (
-                <p key={index} className="news-markdown-paragraph">
-                  {block.text}
-                </p>
-              );
-            })}
-          </section>
+        {articleState.markdown?.trim() ? (
+          <NewsMarkdown markdown={articleState.markdown} assetBaseUrl={markdownAssetBaseUrl} />
         ) : (
           <>
             <section className="mt-8 space-y-4 text-lg text-white/80">
