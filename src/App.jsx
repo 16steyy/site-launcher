@@ -35,6 +35,13 @@ const NEWS_RAW_BASE =
 const NEWS_INDEX_PATH = "news/index.json";
 const NEWS_REFRESH_INTERVAL_MS = 1 * 60 * 1000;
 
+const HOME_ANCHOR_SECTIONS = [
+  { id: "features", labelKey: "features" },
+  { id: "screenshots", labelKey: "screenshots" },
+  { id: "faq", labelKey: "faq" },
+  { id: "download", labelKey: "download" },
+];
+
 const SOCIAL_LINKS = [
   {
     href: "https://github.com/launcherdev11",
@@ -108,6 +115,14 @@ const SHOT_LAYOUT = [
     headingAlign: "center",
   },
 ];
+
+function scrollToSection(event, sectionId) {
+  event.preventDefault();
+  document.getElementById(sectionId)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
 
 function detectOS() {
   const ua = navigator.userAgent.toLowerCase();
@@ -238,8 +253,10 @@ function normalizeNewsData(input, sourceUrl = "") {
 function HomePage({ onNavigate, path }) {
   const { locale, messages } = useI18n();
   const [linuxOpen, setLinuxOpen] = useState(false);
+  const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
   const [userOS, setUserOS] = useState("unknown");
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [activeSection, setActiveSection] = useState("");
   const [links, setLinks] = useState({
     windows: FALLBACK_RELEASES_URL,
     macos: FALLBACK_RELEASES_URL,
@@ -286,7 +303,29 @@ function HomePage({ onNavigate, path }) {
     loadLatestRelease();
   }, []);
 
-  useRevealScroll([linuxOpen, locale]);
+  useEffect(() => {
+    const sections = HOME_ANCHOR_SECTIONS.map(({ id }) =>
+      document.getElementById(id)
+    ).filter(Boolean);
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.15, 0.35, 0.55] }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [locale]);
+
+  useRevealScroll([linuxOpen, openFaqItems, locale]);
 
   useEffect(() => {
     if (!lightboxImage) return;
@@ -320,7 +359,21 @@ function HomePage({ onNavigate, path }) {
     [messages.shots]
   );
 
-  const downloadBaseDelay = 160 + shots.length * 120;
+  const faqItems = messages.faq?.items || [];
+  const faqBaseDelay = 160 + shots.length * 120;
+  const downloadBaseDelay = faqBaseDelay + 120 + faqItems.length * 60;
+
+  function toggleFaqItem(index) {
+    setOpenFaqItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  }
 
   function renderShotHeadline(section) {
     if (section.lines) {
@@ -360,39 +413,69 @@ function HomePage({ onNavigate, path }) {
   }
 
   return (
-    <main className="w-full min-w-0 pb-16 pt-10">
-      <div className="mx-auto max-w-[1240px] px-4 md:px-6">
-        <header className="mb-6 flex items-center justify-end gap-3">
-          <LanguageSwitcher />
-          <a
-            href="/"
-            className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
-              path === "/"
-                ? "border-accent bg-accent/20 text-white"
-                : "border-white/20 bg-white/5 text-white/70 hover:text-white"
-            }`}
-            onClick={(event) => {
-              event.preventDefault();
-              onNavigate("/");
-            }}
+    <main className="home-page-main w-full min-w-0 pb-16">
+      <div className="site-header-shell px-4 pt-3 pb-2 md:px-6">
+        <header className="site-header glass mx-auto flex max-w-[1240px] flex-col gap-3 rounded-2xl px-3 py-2.5 sm:rounded-[1.35rem] md:flex-row md:items-center md:justify-between md:px-5 md:py-3">
+          <nav
+            className="site-nav-pills flex items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1"
+            aria-label={messages.nav.sections}
           >
-            {messages.nav.home}
-          </a>
-          <a
-            href="/news"
-            className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
-              path.startsWith("/news")
-                ? "border-accent bg-accent/20 text-white"
-                : "border-white/20 bg-white/5 text-white/70 hover:text-white"
-            }`}
-            onClick={(event) => {
-              event.preventDefault();
-              onNavigate("/news");
-            }}
-          >
-            {messages.nav.news}
-          </a>
+            {HOME_ANCHOR_SECTIONS.map(({ id, labelKey }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`site-nav-anchor whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold sm:px-4 ${
+                  activeSection === id
+                    ? "is-active"
+                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
+                }`}
+                onClick={(event) => {
+                  scrollToSection(event, id);
+                  setActiveSection(id);
+                }}
+              >
+                {messages.nav[labelKey]}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
+            <LanguageSwitcher />
+            <nav className="site-nav-pages flex items-center gap-0.5 rounded-full border border-white/[0.08] bg-white/[0.03] p-1">
+              <a
+                href="/"
+                className={`site-nav-page whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition sm:px-4 ${
+                  path === "/"
+                    ? "is-active"
+                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
+                }`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate("/");
+                }}
+              >
+                {messages.nav.home}
+              </a>
+              <a
+                href="/news"
+                className={`site-nav-page whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition sm:px-4 ${
+                  path.startsWith("/news")
+                    ? "is-active"
+                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
+                }`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate("/news");
+                }}
+              >
+                {messages.nav.news}
+              </a>
+            </nav>
+          </div>
         </header>
+      </div>
+
+      <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <section className="py-16 text-center md:py-24">
           <h1
             className="reveal hero-title text-5xl font-extrabold tracking-tight md:text-7xl"
@@ -415,7 +498,7 @@ function HomePage({ onNavigate, path }) {
           </a>
         </section>
 
-        <section className="py-20 md:py-28">
+        <section id="features" className="scroll-anchor py-20 md:py-28">
           <div className="grid gap-6 md:grid-cols-3">
             {features.map((feature, i) => (
               <article
@@ -459,7 +542,8 @@ function HomePage({ onNavigate, path }) {
         return (
           <section
             key={section.id}
-            className={`feature-shot-section relative isolate w-full overflow-hidden py-20 md:py-28 ${
+            id={index === 0 ? "screenshots" : undefined}
+            className={`feature-shot-section scroll-anchor relative isolate w-full overflow-hidden py-20 md:py-28 ${
               index === 0 ? "mt-5 md:mt-20" : ""
             }`}
           >
@@ -546,7 +630,54 @@ function HomePage({ onNavigate, path }) {
       )}
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
-        <section className="py-24 md:py-32">
+        <section id="faq" className="scroll-anchor py-20 md:py-28">
+          <h2
+            className="reveal reveal-scroll text-center text-5xl font-extrabold md:text-6xl"
+            style={{ animationDelay: `${faqBaseDelay}ms` }}
+          >
+            {messages.faq?.title}
+          </h2>
+          <div className="mx-auto mt-12 max-w-5xl space-y-4">
+            {faqItems.map((item, index) => {
+              const isOpen = openFaqItems.has(index);
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  className="faq-item glass reveal reveal-scroll rounded-3xl px-6 py-5 text-left md:px-7"
+                  style={{ animationDelay: `${faqBaseDelay + 50 + index * 55}ms` }}
+                  onClick={() => toggleFaqItem(index)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="relative z-[1] flex w-full items-center justify-between gap-4">
+                    <span className="text-2xl font-extrabold leading-snug md:text-3xl">
+                      {item.question}
+                    </span>
+                    <svg
+                      className={`linux-chevron h-6 w-6 shrink-0 text-white/70 ${isOpen ? "is-open" : ""}`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </span>
+                  {isOpen && (
+                    <p className="faq-answer relative z-[1] mt-4 text-lg font-semibold leading-relaxed text-white/70 md:text-xl">
+                      {item.answer}
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="download" className="scroll-anchor py-24 md:py-32">
           <h2
             className="reveal reveal-scroll text-center text-6xl font-extrabold"
             style={{ animationDelay: `${downloadBaseDelay}ms` }}

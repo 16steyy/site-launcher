@@ -8,7 +8,12 @@
   },
   "nav": {
     "home": "首页",
-    "news": "新闻"
+    "news": "新闻",
+    "features": "关于启动器",
+    "screenshots": "截图",
+    "faq": "常见问题",
+    "download": "下载",
+    "sections": "页面章节"
   },
   "hero": {
     "tagline": "畅玩 Minecraft 的最佳选择",
@@ -51,6 +56,35 @@
       "accentPart": "详细的",
       "restPart": "游戏设置，满足你的需求。"
     }
+  },
+  "faq": {
+    "title": "常见问题",
+    "items": [
+      {
+        "question": "安全吗？",
+        "answer": "是的。启动器不含恶意软件，且源代码开放。任何人都可以查看项目代码并自行验证其安全性。"
+      },
+      {
+        "question": "适合低配电脑吗？",
+        "answer": "适合。启动器经过充分优化，占用极少的系统资源，即使在性能较弱的设备上也能稳定运行。"
+      },
+      {
+        "question": "支持哪些 Minecraft 版本？",
+        "answer": "支持所有 Vanilla Minecraft 版本，以及流行的模组加载器：Forge、Fabric、Quilt 和 NeoForge。你还可以导入自己的版本和整合包，通过启动器方便地管理它们。"
+      },
+      {
+        "question": "可以安装模组吗？",
+        "answer": "当然可以。内置内容搜索支持一键安装模组，并自动检查兼容性。你也可以创建和管理自己的整合包。"
+      },
+      {
+        "question": "需要单独安装 Java 吗？",
+        "answer": "不需要。启动器会在需要时自动下载并配置合适的 Java 版本。"
+      },
+      {
+        "question": "可以创建多个档案吗？",
+        "answer": "可以。为不同的游戏版本、整合包和设置创建独立的档案。"
+      }
+    ]
   },
   "download": {
     "title": "下载",

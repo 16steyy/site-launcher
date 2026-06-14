@@ -8,7 +8,12 @@
   },
   "nav": {
     "home": "Startseite",
-    "news": "Neuigkeiten"
+    "news": "Neuigkeiten",
+    "features": "Über den Launcher",
+    "screenshots": "Screenshots",
+    "faq": "FAQ",
+    "download": "Download",
+    "sections": "Seitenabschnitte"
   },
   "hero": {
     "tagline": "Die beste Wahl für Minecraft",
@@ -51,6 +56,35 @@
       "accentPart": "Detaillierte",
       "restPart": "Spieleinstellungen nach deinen Bedürfnissen."
     }
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "items": [
+      {
+        "question": "Ist es sicher?",
+        "answer": "Ja. Der Launcher enthält keine Schadsoftware und hat offenen Quellcode. Jeder kann den Projektcode einsehen und die Sicherheit selbst überprüfen."
+      },
+      {
+        "question": "Eignet er sich für schwache PCs?",
+        "answer": "Ja. Der Launcher ist maximal optimiert und verbraucht minimale Systemressourcen, sodass er auch auf schwachen Geräten stabil läuft."
+      },
+      {
+        "question": "Welche Minecraft-Versionen werden unterstützt?",
+        "answer": "Alle Vanilla-Minecraft-Versionen sowie beliebte Mod-Loader: Forge, Fabric, Quilt und NeoForge. Außerdem kannst du eigene Versionen und Modpacks importieren und bequem über den Launcher verwalten."
+      },
+      {
+        "question": "Kann ich Mods installieren?",
+        "answer": "Natürlich. Die integrierte Inhaltssuche ermöglicht die Installation von Mods mit einem Klick und automatischer Kompatibilitätsprüfung. Du kannst auch eigene Modpacks erstellen und verwalten."
+      },
+      {
+        "question": "Muss ich Java separat installieren?",
+        "answer": "Nein. Der Launcher lädt bei Bedarf automatisch die passende Java-Version herunter und richtet sie ein."
+      },
+      {
+        "question": "Kann ich mehrere Profile erstellen?",
+        "answer": "Ja. Erstelle separate Profile für verschiedene Spielversionen, Modpacks und Einstellungen."
+      }
+    ]
   },
   "download": {
     "title": "Herunterladen",

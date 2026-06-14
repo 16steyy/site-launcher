@@ -8,7 +8,12 @@
   },
   "nav": {
     "home": "Home",
-    "news": "News"
+    "news": "News",
+    "features": "About the launcher",
+    "screenshots": "Screenshots",
+    "faq": "FAQ",
+    "download": "Download",
+    "sections": "Page sections"
   },
   "hero": {
     "tagline": "The best choice for playing Minecraft",
@@ -51,6 +56,35 @@
       "accentPart": "Detailed",
       "restPart": "game settings tailored to your needs."
     }
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "question": "Is it safe?",
+        "answer": "Yes. The launcher contains no malware and has open source code. Anyone can review the project code and verify its safety themselves."
+      },
+      {
+        "question": "Is it suitable for low-end PCs?",
+        "answer": "Yes. The launcher is highly optimized and uses minimal system resources, ensuring stable performance even on weak devices."
+      },
+      {
+        "question": "Which Minecraft versions are supported?",
+        "answer": "All Vanilla Minecraft versions are supported, as well as popular mod loaders: Forge, Fabric, Quilt, and NeoForge. You can also import your own versions and builds for convenient management through the launcher."
+      },
+      {
+        "question": "Can I install mods?",
+        "answer": "Of course. Built-in content search lets you install mods in one click with automatic compatibility checks. You can also create and manage your own modpacks."
+      },
+      {
+        "question": "Do I need to install Java separately?",
+        "answer": "No. The launcher will automatically download and configure the appropriate Java version when needed."
+      },
+      {
+        "question": "Can I create multiple profiles?",
+        "answer": "Yes. Create separate profiles for different game versions, modpacks, and settings."
+      }
+    ]
   },
   "download": {
     "title": "Download",

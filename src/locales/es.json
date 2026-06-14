@@ -8,7 +8,12 @@
   },
   "nav": {
     "home": "Inicio",
-    "news": "Noticias"
+    "news": "Noticias",
+    "features": "Sobre el launcher",
+    "screenshots": "Capturas",
+    "faq": "FAQ",
+    "download": "Descargar",
+    "sections": "Secciones de la página"
   },
   "hero": {
     "tagline": "La mejor opción para jugar Minecraft",
@@ -51,6 +56,35 @@
       "accentPart": "Ajustes",
       "restPart": "detallados del juego según tus necesidades."
     }
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "items": [
+      {
+        "question": "¿Es seguro?",
+        "answer": "Sí. El launcher no contiene malware y tiene código abierto. Cualquiera puede revisar el código del proyecto y comprobar su seguridad por sí mismo."
+      },
+      {
+        "question": "¿Sirve para PCs modestos?",
+        "answer": "Sí. El launcher está muy optimizado y consume un mínimo de recursos del sistema, garantizando un funcionamiento estable incluso en dispositivos débiles."
+      },
+      {
+        "question": "¿Qué versiones de Minecraft se admiten?",
+        "answer": "Se admiten todas las versiones Vanilla de Minecraft, así como los cargadores de mods populares: Forge, Fabric, Quilt y NeoForge. También puedes importar tus propias versiones y modpacks para gestionarlos cómodamente desde el launcher."
+      },
+      {
+        "question": "¿Se pueden instalar mods?",
+        "answer": "Por supuesto. La búsqueda de contenido integrada permite instalar mods con un clic y comprobación automática de compatibilidad. También puedes crear y gestionar tus propios modpacks."
+      },
+      {
+        "question": "¿Hay que instalar Java por separado?",
+        "answer": "No. El launcher descargará y configurará automáticamente la versión de Java adecuada cuando sea necesario."
+      },
+      {
+        "question": "¿Se pueden crear varios perfiles?",
+        "answer": "Sí. Crea perfiles separados para distintas versiones del juego, modpacks y configuraciones."
+      }
+    ]
   },
   "download": {
     "title": "Descargar",
