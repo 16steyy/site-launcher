@@ -47,7 +47,7 @@ export default function SectionNav({
   return (
     <nav
       ref={navRef}
-      className={`site-nav-pills relative flex w-full min-w-0 max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1 ${className}`}
+      className={`site-nav-pills relative flex w-full min-w-0 max-w-full shrink-0 items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1 md:w-auto md:max-w-none md:overflow-visible ${className}`}
       aria-label={ariaLabel}
     >
       <span

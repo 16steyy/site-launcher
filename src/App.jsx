@@ -432,7 +432,18 @@ function HomePage({ onNavigate, path }) {
     <main className="home-page-main w-full min-w-0 pb-16">
       <div className="site-header-shell min-w-0 px-3 pt-2.5 pb-2 sm:px-4 sm:pt-3 md:px-6">
         <header className="site-header glass mx-auto flex w-full min-w-0 max-w-[1240px] flex-col gap-2 rounded-2xl px-2.5 py-2 sm:gap-2.5 sm:rounded-[1.35rem] sm:px-3 sm:py-2.5 md:flex-row md:items-center md:justify-between md:gap-3 md:px-5 md:py-3">
-          <div className="order-1 flex min-w-0 items-center justify-between gap-2 md:order-2 md:w-auto md:shrink-0">
+          <SectionNav
+            className="order-2 md:order-none"
+            sections={navSections}
+            activeSection={activeSection}
+            onSectionClick={(event, id) => {
+              scrollToSection(event, id);
+              setActiveSection(id);
+            }}
+            ariaLabel={messages.nav.sections}
+          />
+
+          <div className="order-1 flex min-w-0 items-center justify-between gap-2 md:order-none md:shrink-0 md:justify-end md:gap-3">
             <LanguageSwitcher />
             <nav className="site-nav-pages flex shrink-0 items-center gap-0.5 rounded-full border border-white/[0.08] bg-white/[0.03] p-1">
               <a
@@ -464,18 +475,6 @@ function HomePage({ onNavigate, path }) {
                 {messages.nav.news}
               </a>
             </nav>
-          </div>
-
-          <div className="order-2 min-w-0 md:order-1 md:min-w-0 md:flex-1">
-            <SectionNav
-              sections={navSections}
-              activeSection={activeSection}
-              onSectionClick={(event, id) => {
-                scrollToSection(event, id);
-                setActiveSection(id);
-              }}
-              ariaLabel={messages.nav.sections}
-            />
           </div>
         </header>
       </div>

@@ -80,6 +80,15 @@ body {
   scroll-snap-type: x proximity;
 }
 
+@media (min-width: 768px) {
+  .site-nav-pills {
+    width: auto;
+    max-width: none;
+    overflow: visible;
+    flex: none;
+  }
+}
+
 .site-nav-anchor {
   position: relative;
   z-index: 1;
