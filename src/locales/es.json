@@ -3,6 +3,10 @@
     "title": "16Launcher — launcher para Minecraft",
     "description": "16Launcher — la mejor opción para jugar Minecraft: un launcher rápido y moderno con búsqueda de contenido cómoda y descargas seguras de modpacks."
   },
+  "seo": {
+    "titleSuffix": " — 16Launcher",
+    "articleNotFoundDescription": "La noticia solicitada no se encontró. Vuelve a la lista de actualizaciones del launcher."
+  },
   "language": {
     "label": "Selección de idioma"
   },
@@ -16,7 +20,8 @@
     "sections": "Secciones de la página"
   },
   "hero": {
-    "tagline": "La mejor opción para jugar Minecraft",
+    "taglineHighlight": "Tu elección",
+    "taglineRest": " para jugar Minecraft",
     "install": "Instalar launcher"
   },
   "features": [

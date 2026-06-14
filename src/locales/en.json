@@ -3,6 +3,10 @@
     "title": "16Launcher — Minecraft launcher",
     "description": "16Launcher — the best choice for playing Minecraft: a fast, modern launcher with convenient content search and safe modpack downloads."
   },
+  "seo": {
+    "titleSuffix": " — 16Launcher",
+    "articleNotFoundDescription": "The requested news post was not found. Return to the launcher updates list."
+  },
   "language": {
     "label": "Language selection"
   },
@@ -16,7 +20,8 @@
     "sections": "Page sections"
   },
   "hero": {
-    "tagline": "The best choice for playing Minecraft",
+    "taglineHighlight": "Your choice",
+    "taglineRest": " for playing Minecraft",
     "install": "Install launcher"
   },
   "features": [

@@ -3,6 +3,10 @@
     "title": "16Launcher — Minecraft 启动器",
     "description": "16Launcher — 畅玩 Minecraft 的最佳选择：快速现代的启动器，便捷的内容搜索与安全的整合包下载。"
   },
+  "seo": {
+    "titleSuffix": " — 16Launcher",
+    "articleNotFoundDescription": "未找到请求的新闻。请返回启动器更新列表。"
+  },
   "language": {
     "label": "选择语言"
   },
@@ -16,7 +20,8 @@
     "sections": "页面章节"
   },
   "hero": {
-    "tagline": "畅玩 Minecraft 的最佳选择",
+    "taglineHighlight": "你的选择",
+    "taglineRest": "，畅玩 Minecraft",
     "install": "安装启动器"
   },
   "features": [

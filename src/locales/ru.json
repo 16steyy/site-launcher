@@ -3,6 +3,10 @@
     "title": "16Launcher — лаунчер для Minecraft",
     "description": "16Launcher — лучший выбор для игры в Minecraft: быстрый и современный лаунчер, удобный поиск контента и безопасная загрузка модпаков."
   },
+  "seo": {
+    "titleSuffix": " — 16Launcher",
+    "articleNotFoundDescription": "Запрошенная новость не найдена. Вернитесь к списку обновлений лаунчера."
+  },
   "language": {
     "label": "Выбор языка"
   },
@@ -16,7 +20,8 @@
     "sections": "Разделы страницы"
   },
   "hero": {
-    "tagline": "Лучший выбор для игры в Minecraft",
+    "taglineHighlight": "Твой выбор",
+    "taglineRest": " для игры в Minecraft",
     "install": "Установить лаунчер"
   },
   "features": [

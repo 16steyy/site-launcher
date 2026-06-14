@@ -19,8 +19,12 @@ import discordIcon from "../assets/discord.png";
 import telegramIcon from "../assets/telegram.png";
 import boostyIcon from "../assets/boosty.png";
 import newsData from "./content/news.json";
+import HeroTagline from "./components/HeroTagline";
+import HeroTitle from "./components/HeroTitle";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import SectionNav from "./components/SectionNav";
 import NewsMarkdown from "./components/NewsMarkdown";
+import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useI18n } from "./i18n/I18nProvider";
 
@@ -363,6 +367,15 @@ function HomePage({ onNavigate, path }) {
   const faqBaseDelay = 160 + shots.length * 120;
   const downloadBaseDelay = faqBaseDelay + 120 + faqItems.length * 60;
 
+  const navSections = useMemo(
+    () =>
+      HOME_ANCHOR_SECTIONS.map(({ id, labelKey }) => ({
+        id,
+        label: messages.nav[labelKey],
+      })),
+    [messages.nav]
+  );
+
   function toggleFaqItem(index) {
     setOpenFaqItems((prev) => {
       const next = new Set(prev);
@@ -416,28 +429,15 @@ function HomePage({ onNavigate, path }) {
     <main className="home-page-main w-full min-w-0 pb-16">
       <div className="site-header-shell px-4 pt-3 pb-2 md:px-6">
         <header className="site-header glass mx-auto flex max-w-[1240px] flex-col gap-3 rounded-2xl px-3 py-2.5 sm:rounded-[1.35rem] md:flex-row md:items-center md:justify-between md:px-5 md:py-3">
-          <nav
-            className="site-nav-pills flex items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1"
-            aria-label={messages.nav.sections}
-          >
-            {HOME_ANCHOR_SECTIONS.map(({ id, labelKey }) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className={`site-nav-anchor whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold sm:px-4 ${
-                  activeSection === id
-                    ? "is-active"
-                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
-                }`}
-                onClick={(event) => {
-                  scrollToSection(event, id);
-                  setActiveSection(id);
-                }}
-              >
-                {messages.nav[labelKey]}
-              </a>
-            ))}
-          </nav>
+          <SectionNav
+            sections={navSections}
+            activeSection={activeSection}
+            onSectionClick={(event, id) => {
+              scrollToSection(event, id);
+              setActiveSection(id);
+            }}
+            ariaLabel={messages.nav.sections}
+          />
 
           <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
             <LanguageSwitcher />
@@ -477,18 +477,13 @@ function HomePage({ onNavigate, path }) {
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <section className="py-16 text-center md:py-24">
-          <h1
-            className="reveal hero-title text-5xl font-extrabold tracking-tight md:text-7xl"
-            style={{ animationDelay: "60ms" }}
-          >
-            16Launcher
-          </h1>
-          <p
+          <HeroTitle className="text-5xl font-extrabold tracking-tight md:text-7xl" />
+          <HeroTagline
+            highlight={messages.hero.taglineHighlight}
+            rest={messages.hero.taglineRest}
             className="reveal mt-3 text-2xl font-semibold text-white/70 md:text-4xl"
             style={{ animationDelay: "110ms" }}
-          >
-            {messages.hero.tagline}
-          </p>
+          />
           <a
             href={mainDownloadLink}
             className="reveal interactive-cta mx-auto mt-12 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow"
@@ -654,7 +649,7 @@ function HomePage({ onNavigate, path }) {
                       {item.question}
                     </span>
                     <svg
-                      className={`linux-chevron h-6 w-6 shrink-0 text-white/70 ${isOpen ? "is-open" : ""}`}
+                      className={`faq-chevron linux-chevron h-6 w-6 shrink-0 text-white/70 ${isOpen ? "is-open" : ""}`}
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -666,11 +661,13 @@ function HomePage({ onNavigate, path }) {
                       <path d="M6 9l6 6 6-6" />
                     </svg>
                   </span>
-                  {isOpen && (
-                    <p className="faq-answer relative z-[1] mt-4 text-lg font-semibold leading-relaxed text-white/70 md:text-xl">
-                      {item.answer}
-                    </p>
-                  )}
+                  <div className={`faq-answer-wrap${isOpen ? " is-open" : ""}`}>
+                    <div className="faq-answer-inner">
+                      <p className="faq-answer relative z-[1] mt-4 text-lg font-semibold leading-relaxed text-white/70 md:text-xl">
+                        {item.answer}
+                      </p>
+                    </div>
+                  </div>
                 </button>
               );
             })}
@@ -1066,6 +1063,7 @@ export default function App() {
   const [news, setNews] = useState(() => normalizeNewsData(newsData));
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsLoadError, setNewsLoadError] = useState(false);
+  const [releaseVersion, setReleaseVersion] = useState("");
 
   async function refreshNews({ isBackground = false } = {}) {
     if (!isBackground) {
@@ -1119,28 +1117,62 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    async function loadReleaseVersion() {
+      try {
+        const response = await fetch(LATEST_RELEASE_API);
+        if (!response.ok) return;
+        const release = await response.json();
+        if (release?.tag_name) {
+          setReleaseVersion(String(release.tag_name).replace(/^v/i, ""));
+        }
+      } catch {
+      }
+    }
+
+    loadReleaseVersion();
+  }, []);
+
   function navigate(nextPath) {
     if (nextPath === window.location.pathname) return;
-    window.history.pushState({}, "", nextPath);
+    const nextUrl = new URL(nextPath, window.location.origin);
+    const lang = new URLSearchParams(window.location.search).get("lang");
+    if (lang) {
+      nextUrl.searchParams.set("lang", lang);
+    }
+    window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}`);
     setPath(nextPath);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (path === "/news") {
     return (
-      <NewsListPage
-        onNavigate={navigate}
-        news={news}
-        isLoading={newsLoading}
-        loadError={newsLoadError}
-      />
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <NewsListPage
+          onNavigate={navigate}
+          news={news}
+          isLoading={newsLoading}
+          loadError={newsLoadError}
+        />
+      </>
     );
   }
 
   if (path.startsWith("/news/")) {
     const slug = path.replace("/news/", "");
-    return <NewsArticlePage slug={slug} onNavigate={navigate} news={news} />;
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <NewsArticlePage slug={slug} onNavigate={navigate} news={news} />
+      </>
+    );
   }
 
-  return <HomePage onNavigate={navigate} path={path} />;
+  return (
+    <>
+      <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+      <HomePage onNavigate={navigate} path={path} />
+    </>
+  );
 }

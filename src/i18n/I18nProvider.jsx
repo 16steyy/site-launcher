@@ -18,6 +18,7 @@ import {
   LOCALE_LABELS,
   SUPPORTED_LOCALES,
   STORAGE_KEY,
+  syncLocaleToUrl,
 } from "./config";
 
 const MESSAGES = { ru, en, zh, de, es };
@@ -32,6 +33,7 @@ export function I18nProvider({ children }) {
   const setLocale = useCallback((nextLocale) => {
     if (!SUPPORTED_LOCALES.includes(nextLocale)) return;
     setLocaleState(nextLocale);
+    syncLocaleToUrl(nextLocale);
     try {
       localStorage.setItem(STORAGE_KEY, nextLocale);
     } catch {
@@ -40,15 +42,8 @@ export function I18nProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-
-    const title = messages.meta?.title;
-    const description = messages.meta?.description;
-    if (title) document.title = title;
-    if (description) {
-      const meta = document.querySelector('meta[name="description"]');
-      if (meta) meta.setAttribute("content", description);
-    }
-  }, [locale, messages]);
+    syncLocaleToUrl(locale);
+  }, [locale]);
 
   const value = useMemo(
     () => ({

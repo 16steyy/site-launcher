@@ -3,6 +3,10 @@
     "title": "16Launcher — Minecraft-Launcher",
     "description": "16Launcher — die beste Wahl für Minecraft: ein schneller, moderner Launcher mit bequemer Inhaltssuche und sicherem Modpack-Download."
   },
+  "seo": {
+    "titleSuffix": " — 16Launcher",
+    "articleNotFoundDescription": "Der angeforderte News-Beitrag wurde nicht gefunden. Kehren Sie zur Liste der Launcher-Updates zurück."
+  },
   "language": {
     "label": "Sprache wählen"
   },
@@ -16,7 +20,8 @@
     "sections": "Seitenabschnitte"
   },
   "hero": {
-    "tagline": "Die beste Wahl für Minecraft",
+    "taglineHighlight": "Deine Wahl",
+    "taglineRest": " für Minecraft",
     "install": "Launcher installieren"
   },
   "features": [

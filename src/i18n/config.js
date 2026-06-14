@@ -55,7 +55,18 @@ export function detectSystemLocale() {
   return DEFAULT_LOCALE;
 }
 
+export function getLocaleFromSearch() {
+  if (typeof window === "undefined") return null;
+
+  const lang = new URLSearchParams(window.location.search).get("lang");
+  if (lang && SUPPORTED_LOCALES.includes(lang)) return lang;
+  return null;
+}
+
 export function getInitialLocale() {
+  const fromUrl = getLocaleFromSearch();
+  if (fromUrl) return fromUrl;
+
   if (typeof localStorage === "undefined") return detectSystemLocale();
 
   try {
@@ -65,4 +76,12 @@ export function getInitialLocale() {
   }
 
   return detectSystemLocale();
+}
+
+export function syncLocaleToUrl(locale) {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("lang", locale);
+  window.history.replaceState(window.history.state, "", url);
 }
