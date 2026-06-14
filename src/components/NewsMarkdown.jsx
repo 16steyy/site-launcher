@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import ImageLightbox, { useImageLightbox } from "./ImageLightbox";
 
 function resolveRelativeUrl(path, baseUrl) {
   if (!path) return "";
@@ -18,6 +19,8 @@ function normalizeMarkdownLinks(markdown) {
 }
 
 export default function NewsMarkdown({ markdown, assetBaseUrl }) {
+  const { image, openImage, closeImage } = useImageLightbox();
+
   const components = useMemo(
     () => ({
       h1: ({ children }) => <h2 className="text-3xl font-extrabold">{children}</h2>,
@@ -29,13 +32,23 @@ export default function NewsMarkdown({ markdown, assetBaseUrl }) {
       li: ({ children }) => (
         <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">{children}</li>
       ),
-      img: ({ src, alt }) => (
-        <img
-          src={resolveRelativeUrl(src, assetBaseUrl)}
-          alt={alt || ""}
-          className="news-inline-image mt-4 rounded-2xl border border-white/15"
-        />
-      ),
+      img: ({ src, alt }) => {
+        const resolvedSrc = resolveRelativeUrl(src, assetBaseUrl);
+        return (
+          <button
+            type="button"
+            className="group relative mt-4 block w-full cursor-zoom-in"
+            onClick={() => openImage(resolvedSrc)}
+          >
+            <img
+              src={resolvedSrc}
+              alt={alt || ""}
+              className="news-inline-image rounded-2xl border border-white/15 transition-transform duration-300 ease-out group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
+            />
+            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
+          </button>
+        );
+      },
       a: ({ href, children }) => (
         <a
           href={href}
@@ -62,7 +75,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl }) {
         </pre>
       ),
     }),
-    [assetBaseUrl]
+    [assetBaseUrl, openImage]
   );
 
   const normalizedMarkdown = useMemo(
@@ -73,10 +86,13 @@ export default function NewsMarkdown({ markdown, assetBaseUrl }) {
   if (!normalizedMarkdown.trim()) return null;
 
   return (
-    <section className="news-markdown mt-8 space-y-4 text-lg text-white/80">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-        {normalizedMarkdown}
-      </ReactMarkdown>
-    </section>
+    <>
+      <section className="news-markdown mt-8 space-y-4 text-lg text-white/80">
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+          {normalizedMarkdown}
+        </ReactMarkdown>
+      </section>
+      <ImageLightbox image={image} onClose={closeImage} />
+    </>
   );
 }

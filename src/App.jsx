@@ -23,6 +23,7 @@ import HeroTagline from "./components/HeroTagline";
 import HeroTitle from "./components/HeroTitle";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import SectionNav from "./components/SectionNav";
+import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NewsMarkdown from "./components/NewsMarkdown";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
@@ -259,7 +260,8 @@ function HomePage({ onNavigate, path }) {
   const [linuxOpen, setLinuxOpen] = useState(false);
   const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
   const [userOS, setUserOS] = useState("unknown");
-  const [lightboxImage, setLightboxImage] = useState(null);
+  const { image: lightboxImage, openImage: openLightboxImage, closeImage: closeLightboxImage } =
+    useImageLightbox();
   const [activeSection, setActiveSection] = useState("");
   const [links, setLinks] = useState({
     windows: FALLBACK_RELEASES_URL,
@@ -330,15 +332,6 @@ function HomePage({ onNavigate, path }) {
   }, [locale]);
 
   useRevealScroll([linuxOpen, openFaqItems, locale]);
-
-  useEffect(() => {
-    if (!lightboxImage) return;
-    function onKey(event) {
-      if (event.key === "Escape") setLightboxImage(null);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [lightboxImage]);
 
   const mainDownloadLink = useMemo(() => {
     if (userOS === "windows") return links.windows;
@@ -585,7 +578,7 @@ function HomePage({ onNavigate, path }) {
                   <button
                     type="button"
                     className="group relative block h-full w-full"
-                    onClick={() => setLightboxImage(section.image)}
+                    onClick={() => openLightboxImage(section.image)}
                   >
                     <img
                       src={section.image}
@@ -610,19 +603,7 @@ function HomePage({ onNavigate, path }) {
         );
       })}
 
-      {lightboxImage && (
-        <div
-          className="lightbox-backdrop"
-          onClick={() => setLightboxImage(null)}
-        >
-          <div
-            className="lightbox-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img src={lightboxImage} alt="" className="lightbox-image" />
-          </div>
-        </div>
-      )}
+      <ImageLightbox image={lightboxImage} onClose={closeLightboxImage} />
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <section id="faq" className="scroll-anchor py-20 md:py-28">
