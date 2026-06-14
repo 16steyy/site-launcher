@@ -28,11 +28,21 @@ export default function HeroTitle({ className = "" }) {
 
   return (
     <h1 className={`hero-title ${className}`.trim()} aria-label={TITLE}>
-      {TITLE.slice(0, typedCount).split("").map((char, index) => (
-        <span key={`${index}-${char}`} className="hero-title-char" aria-hidden="true">
-          {char}
-        </span>
-      ))}
+      <span
+        className="hero-title-gradient"
+        style={{ "--char-count": TITLE.length }}
+        aria-hidden="true"
+      >
+        {TITLE.slice(0, typedCount).split("").map((char, index) => (
+          <span
+            key={`${index}-${char}`}
+            className="hero-title-char"
+            style={{ "--char-index": index }}
+          >
+            {char}
+          </span>
+        ))}
+      </span>
     </h1>
   );
 }

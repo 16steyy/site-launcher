@@ -188,7 +188,7 @@ body {
 .hero-title {
   font-family: Outfit, Inter, system-ui, sans-serif;
   letter-spacing: -0.03em;
-  background: linear-gradient(
+  --hero-gradient: linear-gradient(
     125deg,
     #ffffff 0%,
     #e8ecff 32%,
@@ -196,16 +196,38 @@ body {
     #c4c7ff 82%,
     #ffffff 100%
   );
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: heroGradient 10s ease-in-out infinite;
+  --hero-gradient-size: 220%;
+}
+
+.hero-title-gradient {
+  display: inline-block;
 }
 
 .hero-title-char {
+  --char-index: 0;
+  --char-count: 10;
   display: inline-block;
-  animation: heroCharIn 240ms cubic-bezier(0.22, 0.85, 0.22, 1) both;
+  background: var(--hero-gradient);
+  background-size: calc(var(--char-count) * var(--hero-gradient-size)) auto;
+  background-position: calc(var(--char-index) * 100% / max(var(--char-count) - 1, 1)) 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation:
+    heroCharIn 240ms cubic-bezier(0.22, 0.85, 0.22, 1) both,
+    heroGradientSynced 10s ease-in-out infinite;
+}
+
+.hero-title:not(:has(.hero-title-gradient)) {
+  display: inline-block;
+  background: var(--hero-gradient);
+  background-size: var(--hero-gradient-size) auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: heroGradientStandalone 10s ease-in-out infinite;
 }
 
 @keyframes heroCharIn {
@@ -221,7 +243,26 @@ body {
   }
 }
 
-@keyframes heroGradient {
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-title-char,
+  .hero-title:not(:has(.hero-title-gradient)) {
+    background: none;
+    -webkit-text-fill-color: #fff;
+    color: #fff;
+  }
+}
+
+@keyframes heroGradientSynced {
+  0%,
+  100% {
+    background-position: calc(var(--char-index) * 100% / max(var(--char-count) - 1, 1)) 50%;
+  }
+  50% {
+    background-position: calc(var(--char-index) * 100% / max(var(--char-count) - 1, 1) + 100%) 50%;
+  }
+}
+
+@keyframes heroGradientStandalone {
   0%,
   100% {
     background-position: 0% 50%;
@@ -508,11 +549,18 @@ body {
     animation: none !important;
   }
 
-  .hero-title {
+  .hero-title-char,
+  .hero-title:not(:has(.hero-title-gradient)) {
     animation: none !important;
     background: none;
     -webkit-text-fill-color: #fff;
     color: #fff;
+  }
+
+  .hero-title-char {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
   }
 
   .character-float {
@@ -537,13 +585,6 @@ body {
   .hero-tagline-highlight.is-selected::before {
     animation: none !important;
     transform: scaleX(1);
-  }
-
-  .hero-title-char {
-    animation: none !important;
-    opacity: 1 !important;
-    filter: none !important;
-    transform: none !important;
   }
 
   .site-nav-indicator {
