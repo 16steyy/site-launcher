@@ -5,6 +5,7 @@ export default function SectionNav({
   activeSection,
   onSectionClick,
   ariaLabel,
+  className = "",
 }) {
   const navRef = useRef(null);
   const itemRefs = useRef({});
@@ -38,10 +39,15 @@ export default function SectionNav({
     };
   }, [activeSection, sections]);
 
+  useEffect(() => {
+    const item = itemRefs.current[activeSection];
+    item?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [activeSection]);
+
   return (
     <nav
       ref={navRef}
-      className="site-nav-pills relative flex items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1"
+      className={`site-nav-pills relative flex w-full min-w-0 max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1 ${className}`}
       aria-label={ariaLabel}
     >
       <span
@@ -60,7 +66,7 @@ export default function SectionNav({
             itemRefs.current[id] = el;
           }}
           href={`#${id}`}
-          className={`site-nav-anchor whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold sm:px-4 ${
+          className={`site-nav-anchor shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold sm:px-3.5 sm:text-sm md:px-4 ${
             activeSection === id
               ? "is-active"
               : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
