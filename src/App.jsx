@@ -369,6 +369,16 @@ function HomePage({ onNavigate, path }) {
     [messages.nav]
   );
 
+  const downloadCardClass =
+    "glass reveal reveal-scroll interactive-row flex min-w-0 flex-col gap-4 rounded-2xl px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:rounded-3xl sm:px-6 sm:py-5 md:px-7";
+  const downloadInfoClass = "flex min-w-0 flex-wrap items-center gap-2.5 sm:gap-4";
+  const downloadIconClass = "h-8 w-8 shrink-0 sm:h-9 sm:w-9";
+  const downloadOsClass = "text-2xl font-extrabold sm:text-4xl md:text-5xl";
+  const downloadBadgeClass =
+    "rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold sm:px-3 sm:py-1 sm:text-sm";
+  const downloadActionClass =
+    "inline-flex shrink-0 items-center justify-center self-stretch rounded-full bg-accent px-6 py-2.5 text-base font-bold sm:self-auto sm:px-8 sm:py-2.5 sm:text-xl md:px-10 md:py-3 md:text-2xl";
+
   function toggleFaqItem(index) {
     setOpenFaqItems((prev) => {
       const next = new Set(prev);
@@ -659,71 +669,64 @@ function HomePage({ onNavigate, path }) {
 
         <section id="download" className="scroll-anchor py-24 md:py-32">
           <h2
-            className="reveal reveal-scroll text-center text-6xl font-extrabold"
+            className="reveal reveal-scroll text-center text-4xl font-extrabold sm:text-5xl md:text-6xl"
             style={{ animationDelay: `${downloadBaseDelay}ms` }}
           >
             {messages.download.title}
           </h2>
-          <div className="mx-auto mt-12 max-w-5xl space-y-5">
+          <div className="mx-auto mt-8 max-w-5xl space-y-4 sm:mt-12 sm:space-y-5">
             <a
               href={links.windows}
-              className="glass reveal reveal-scroll interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
+              className={downloadCardClass}
               style={{ animationDelay: `${downloadBaseDelay + 50}ms` }}
             >
-              <div className="flex items-center gap-4">
-                <img src={windowsIcon} alt="" className="h-9 w-9" />
-                <span className="text-5xl font-extrabold">Windows</span>
+              <div className={downloadInfoClass}>
+                <img src={windowsIcon} alt="" className={downloadIconClass} />
+                <span className={downloadOsClass}>Windows</span>
                 {userOS === "windows" && (
-                  <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                    {messages.download.forYou}
-                  </span>
+                  <span className={downloadBadgeClass}>{messages.download.forYou}</span>
                 )}
               </div>
-              <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                {messages.download.install}
-              </span>
+              <span className={downloadActionClass}>{messages.download.install}</span>
             </a>
 
             <a
               href={links.macos}
-              className="glass reveal reveal-scroll interactive-row flex items-center justify-between rounded-3xl px-7 py-5"
+              className={downloadCardClass}
               style={{ animationDelay: `${downloadBaseDelay + 100}ms` }}
             >
-              <div className="flex items-center gap-4">
-                <img src={macosIcon} alt="" className="h-9 w-9" />
-                <span className="text-5xl font-extrabold">macOS</span>
+              <div className={downloadInfoClass}>
+                <img src={macosIcon} alt="" className={downloadIconClass} />
+                <span className={downloadOsClass}>macOS</span>
                 {userOS === "macos" && (
-                  <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                    {messages.download.forYou}
-                  </span>
+                  <span className={downloadBadgeClass}>{messages.download.forYou}</span>
                 )}
               </div>
-              <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                {messages.download.install}
-              </span>
+              <span className={downloadActionClass}>{messages.download.install}</span>
             </a>
 
             <div
-              className="glass rounded-3xl px-7 py-5 reveal reveal-scroll"
+              className="glass reveal reveal-scroll min-w-0 rounded-2xl px-4 py-4 sm:rounded-3xl sm:px-6 sm:py-5 md:px-7"
               style={{ animationDelay: `${downloadBaseDelay + 150}ms` }}
             >
               <button
                 type="button"
                 onClick={() => setLinuxOpen((prev) => !prev)}
-                className="interactive-row flex w-full items-center justify-between rounded-2xl text-left"
+                className="interactive-row flex w-full min-w-0 flex-col gap-4 rounded-2xl text-left sm:flex-row sm:items-center sm:justify-between sm:gap-3"
               >
-                <span className="flex items-center gap-4">
-                  <img src={linuxIcon} alt="" className="h-9 w-9" />
-                  <span className="text-5xl font-extrabold">Linux</span>
+                <span className={downloadInfoClass}>
+                  <img src={linuxIcon} alt="" className={downloadIconClass} />
+                  <span className={downloadOsClass}>Linux</span>
                   {userOS === "linux" && (
-                    <span className="rounded-full bg-accent px-3 py-1 text-sm font-bold">
-                      {messages.download.recommended}
-                    </span>
+                    <span className={downloadBadgeClass}>{messages.download.recommended}</span>
                   )}
                 </span>
-                <span className="flex items-center gap-3">
+                <span className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:shrink-0 sm:gap-3">
+                  <span className={`${downloadActionClass} min-w-0 flex-1 sm:flex-none`}>
+                    {linuxOpen ? messages.download.hide : messages.download.choose}
+                  </span>
                   <svg
-                    className={`linux-chevron h-6 w-6 shrink-0 text-white/70 ${linuxOpen ? "is-open" : ""}`}
+                    className={`linux-chevron h-5 w-5 shrink-0 text-white/70 sm:h-6 sm:w-6 ${linuxOpen ? "is-open" : ""}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -734,14 +737,11 @@ function HomePage({ onNavigate, path }) {
                   >
                     <path d="M6 9l6 6 6-6" />
                   </svg>
-                  <span className="rounded-full bg-accent px-10 py-3 text-2xl font-bold">
-                    {linuxOpen ? messages.download.hide : messages.download.choose}
-                  </span>
                 </span>
               </button>
 
               {linuxOpen && (
-                <div className="mt-5 grid gap-3 md:grid-cols-3">
+                <div className="mt-4 grid gap-3 sm:mt-5 md:grid-cols-3">
                   <a
                     href={links.linuxDeb}
                     className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
