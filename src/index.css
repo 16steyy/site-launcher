@@ -1064,9 +1064,190 @@ body {
   flex-shrink: 0;
 }
 
+.news-share-qr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.news-share-qr-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.news-share-qr-btn:active {
+  transform: scale(0.96);
+}
+
+.news-share-qr-btn-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.news-share-qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  animation: lightboxBackdropIn 280ms ease forwards;
+}
+
+.news-share-qr-panel {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(28, 30, 44, 0.98), rgba(18, 19, 30, 0.98));
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 60px rgba(140, 144, 255, 0.12);
+  cursor: default;
+  text-align: center;
+  animation: lightboxPop 380ms cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+.news-share-qr-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1.35rem;
+  line-height: 1;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.news-share-qr-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.news-share-qr-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.news-share-qr-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.news-share-qr-frame {
+  margin: 1.25rem auto 0;
+  width: fit-content;
+  padding: 0.85rem;
+  border-radius: 1.1rem;
+  background: #f4f4f8;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.news-share-qr-canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.news-share-qr-canvas svg {
+  display: block;
+  border-radius: 0.65rem;
+}
+
+.news-share-qr-hint {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.news-share-qr-url {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  word-break: break-all;
+  color: rgba(156, 186, 255, 0.9);
+}
+
+.news-share-qr-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.news-share-qr-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.news-share-qr-social-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.news-share-qr-social-btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.news-share-qr-social-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+  object-fit: contain;
+}
+
+.news-share-qr-copied {
+  margin: 0.65rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(156, 186, 255, 0.95);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lightbox-backdrop,
-  .lightbox-content {
+  .lightbox-content,
+  .news-share-qr-backdrop,
+  .news-share-qr-panel {
     animation: none !important;
   }
 

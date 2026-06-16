@@ -113,6 +113,14 @@
     "notFound": "Noticia no encontrada",
     "articleLoading": "Cargando artículo desde el repositorio...",
     "articleError": "No se pudo cargar meta.json o post.md. Se muestra el respaldo local.",
-    "changes": "Cambios"
+    "changes": "Cambios",
+    "shareQr": "Compartir con código QR",
+    "shareQrTitle": "Compartir noticia",
+    "shareQrHint": "Escanea el código QR para abrir esta noticia",
+    "shareQrClose": "Cerrar",
+    "shareTelegram": "Compartir en Telegram",
+    "shareDiscord": "Compartir en Discord",
+    "shareCopied": "Enlace copiado — pégalo en Discord",
+    "shareCopyPrompt": "Copia el enlace para Discord"
   }
 }

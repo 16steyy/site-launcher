@@ -113,6 +113,14 @@
     "notFound": "Новость не найдена",
     "articleLoading": "Загружаю статью из репозитория...",
     "articleError": "Не удалось загрузить meta.json или post.md. Показан локальный fallback.",
-    "changes": "Изменения"
+    "changes": "Изменения",
+    "shareQr": "Поделиться QR-кодом",
+    "shareQrTitle": "Поделиться новостью",
+    "shareQrHint": "Отсканируйте QR-код, чтобы открыть эту новость",
+    "shareQrClose": "Закрыть",
+    "shareTelegram": "Поделиться в Telegram",
+    "shareDiscord": "Поделиться в Discord",
+    "shareCopied": "Ссылка скопирована — вставьте в Discord",
+    "shareCopyPrompt": "Скопируйте ссылку для Discord"
   }
 }

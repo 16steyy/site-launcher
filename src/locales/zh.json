@@ -113,6 +113,14 @@
     "notFound": "未找到该新闻",
     "articleLoading": "正在从仓库加载文章...",
     "articleError": "无法加载 meta.json 或 post.md，显示本地备用内容。",
-    "changes": "更新内容"
+    "changes": "更新内容",
+    "shareQr": "通过二维码分享",
+    "shareQrTitle": "分享这篇新闻",
+    "shareQrHint": "扫描二维码即可打开这篇新闻",
+    "shareQrClose": "关闭",
+    "shareTelegram": "分享到 Telegram",
+    "shareDiscord": "分享到 Discord",
+    "shareCopied": "链接已复制 — 请粘贴到 Discord",
+    "shareCopyPrompt": "复制 Discord 分享链接"
   }
 }

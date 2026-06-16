@@ -113,6 +113,14 @@
     "notFound": "Post not found",
     "articleLoading": "Loading article from the repository...",
     "articleError": "Could not load meta.json or post.md. Showing local fallback.",
-    "changes": "Changes"
+    "changes": "Changes",
+    "shareQr": "Share via QR code",
+    "shareQrTitle": "Share this post",
+    "shareQrHint": "Scan the QR code to open this post",
+    "shareQrClose": "Close",
+    "shareTelegram": "Share on Telegram",
+    "shareDiscord": "Share on Discord",
+    "shareCopied": "Link copied — paste it in Discord",
+    "shareCopyPrompt": "Copy the link for Discord"
   }
 }

@@ -113,6 +113,14 @@
     "notFound": "Beitrag nicht gefunden",
     "articleLoading": "Artikel wird aus dem Repository geladen...",
     "articleError": "meta.json oder post.md konnte nicht geladen werden. Lokaler Fallback wird angezeigt.",
-    "changes": "Änderungen"
+    "changes": "Änderungen",
+    "shareQr": "Per QR-Code teilen",
+    "shareQrTitle": "Beitrag teilen",
+    "shareQrHint": "QR-Code scannen, um diesen Beitrag zu öffnen",
+    "shareQrClose": "Schließen",
+    "shareTelegram": "In Telegram teilen",
+    "shareDiscord": "In Discord teilen",
+    "shareCopied": "Link kopiert — in Discord einfügen",
+    "shareCopyPrompt": "Link für Discord kopieren"
   }
 }

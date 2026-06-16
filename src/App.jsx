@@ -25,6 +25,7 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import SectionNav from "./components/SectionNav";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NewsMarkdown from "./components/NewsMarkdown";
+import NewsShareQr from "./components/NewsShareQr";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useI18n } from "./i18n/I18nProvider";
@@ -995,9 +996,12 @@ function NewsArticlePage({ slug, onNavigate, news }) {
       </header>
 
       <article className="mt-8 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-10">
-        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
-          {post.date} {post.version ? `• ${post.version}` : ""}
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
+            {post.date} {post.version ? `• ${post.version}` : ""}
+          </p>
+          <NewsShareQr slug={post.slug} title={post.title} />
+        </div>
         <h1 className="mt-2 text-4xl font-extrabold leading-tight md:text-5xl">
           {post.title}
         </h1>
