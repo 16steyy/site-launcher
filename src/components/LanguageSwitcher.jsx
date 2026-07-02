@@ -11,10 +11,40 @@ const LOCALE_CODES = {
   es: "ES",
 };
 
+const MENU_VIEWPORT_PADDING = 12;
+
+function positionLanguageMenu(root, menu) {
+  menu.style.left = "0";
+  menu.style.right = "auto";
+  menu.style.transformOrigin = "top left";
+
+  let rect = menu.getBoundingClientRect();
+
+  if (rect.right > window.innerWidth - MENU_VIEWPORT_PADDING) {
+    menu.style.left = "auto";
+    menu.style.right = "0";
+    menu.style.transformOrigin = "top right";
+    rect = menu.getBoundingClientRect();
+  }
+
+  if (rect.left < MENU_VIEWPORT_PADDING) {
+    menu.style.right = "auto";
+    menu.style.left = `${MENU_VIEWPORT_PADDING - root.getBoundingClientRect().left}px`;
+    menu.style.transformOrigin = "top left";
+  }
+}
+
+function resetLanguageMenuPosition(menu) {
+  menu.style.left = "";
+  menu.style.right = "";
+  menu.style.transformOrigin = "";
+}
+
 export default function LanguageSwitcher() {
   const { locale, setLocale, locales, localeLabels, messages } = useI18n();
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
@@ -34,6 +64,25 @@ export default function LanguageSwitcher() {
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const root = rootRef.current;
+    const menu = menuRef.current;
+    if (!root || !menu) return;
+
+    function syncMenuPosition() {
+      positionLanguageMenu(root, menu);
+    }
+
+    syncMenuPosition();
+    window.addEventListener("resize", syncMenuPosition);
+    return () => {
+      window.removeEventListener("resize", syncMenuPosition);
+      resetLanguageMenuPosition(menu);
     };
   }, [open]);
 
@@ -68,6 +117,7 @@ export default function LanguageSwitcher() {
       </button>
 
       <div
+        ref={menuRef}
         className="language-switcher-menu"
         role="listbox"
         aria-label={messages.language?.label}

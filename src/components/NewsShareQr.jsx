@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import QRCodeStyling from "qr-code-styling";
 
 import discordIcon from "../../assets/discord.png";
@@ -27,14 +28,37 @@ function buildShareText(url, title) {
   return title ? `${title}\n${url}` : url;
 }
 
-function QrCodeCanvas({ url }) {
+const QR_MAX_SIZE = 280;
+const QR_MIN_SIZE = 200;
+
+function useQrRenderSize() {
+  const [size, setSize] = useState(QR_MAX_SIZE);
+
+  useEffect(() => {
+    function syncSize() {
+      const next = Math.min(
+        QR_MAX_SIZE,
+        Math.max(QR_MIN_SIZE, window.innerWidth - 96),
+      );
+      setSize(next);
+    }
+
+    syncSize();
+    window.addEventListener("resize", syncSize);
+    return () => window.removeEventListener("resize", syncSize);
+  }, []);
+
+  return size;
+}
+
+function QrCodeCanvas({ url, size }) {
   const containerRef = useRef(null);
 
   const qrCode = useMemo(
     () =>
       new QRCodeStyling({
-        width: 280,
-        height: 280,
+        width: size,
+        height: size,
         type: "svg",
         data: url,
         image: SITE_ICON_URL,
@@ -63,7 +87,7 @@ function QrCodeCanvas({ url }) {
           color: "#14141f",
         },
       }),
-    [url],
+    [size],
   );
 
   useEffect(() => {
@@ -71,9 +95,9 @@ function QrCodeCanvas({ url }) {
     if (!node) return;
 
     node.replaceChildren();
-    qrCode.update({ data: url });
+    qrCode.update({ data: url, width: size, height: size });
     qrCode.append(node);
-  }, [qrCode, url]);
+  }, [qrCode, url, size]);
 
   return <div ref={containerRef} className="news-share-qr-canvas" aria-hidden="true" />;
 }
@@ -82,6 +106,7 @@ export default function NewsShareQr({ slug, title }) {
   const { messages } = useI18n();
   const [open, setOpen] = useState(false);
   const [discordCopied, setDiscordCopied] = useState(false);
+  const qrSize = useQrRenderSize();
   const shareUrl = buildShareUrl(slug);
   const telegramShareUrl = buildTelegramShareUrl(shareUrl, title);
   const shareText = buildShareText(shareUrl, title);
@@ -142,63 +167,68 @@ export default function NewsShareQr({ slug, title }) {
         <img src={qrIcon} alt="" className="news-share-qr-btn-icon" />
       </button>
 
-      {open && (
-        <div className="news-share-qr-backdrop" onClick={() => setOpen(false)}>
-          <div
-            className="news-share-qr-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="news-share-qr-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="news-share-qr-close"
-              aria-label={messages.news.shareQrClose}
-              onClick={() => setOpen(false)}
+      {open &&
+        createPortal(
+          <div className="news-share-qr-backdrop" onClick={() => setOpen(false)}>
+            <div
+              className="news-share-qr-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="news-share-qr-title"
+              onClick={(event) => event.stopPropagation()}
             >
-              ×
-            </button>
-
-            <h2 id="news-share-qr-title" className="news-share-qr-title">
-              {messages.news.shareQrTitle}
-            </h2>
-            {title ? <p className="news-share-qr-subtitle">{title}</p> : null}
-
-            <div className="news-share-qr-frame">
-              <QrCodeCanvas url={shareUrl} />
-            </div>
-
-            <p className="news-share-qr-hint">{messages.news.shareQrHint}</p>
-            <p className="news-share-qr-url">{shareUrl}</p>
-
-            <div className="news-share-qr-social">
-              <a
-                href={telegramShareUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="news-share-qr-social-btn"
-                aria-label={messages.news.shareTelegram}
-                title={messages.news.shareTelegram}
-              >
-                <img src={telegramIcon} alt="" className="news-share-qr-social-icon" />
-              </a>
               <button
                 type="button"
-                className="news-share-qr-social-btn"
-                aria-label={messages.news.shareDiscord}
-                title={discordCopied ? messages.news.shareCopied : messages.news.shareDiscord}
-                onClick={shareToDiscord}
+                className="news-share-qr-close"
+                aria-label={messages.news.shareQrClose}
+                onClick={() => setOpen(false)}
               >
-                <img src={discordIcon} alt="" className="news-share-qr-social-icon" />
+                ×
               </button>
+
+              <h2 id="news-share-qr-title" className="news-share-qr-title">
+                {messages.news.shareQrTitle}
+              </h2>
+              {title ? <p className="news-share-qr-subtitle">{title}</p> : null}
+
+              <div
+                className="news-share-qr-frame"
+                style={{ "--qr-size": `${qrSize}px` }}
+              >
+                <QrCodeCanvas url={shareUrl} size={qrSize} />
+              </div>
+
+              <p className="news-share-qr-hint">{messages.news.shareQrHint}</p>
+              <p className="news-share-qr-url">{shareUrl}</p>
+
+              <div className="news-share-qr-social">
+                <a
+                  href={telegramShareUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="news-share-qr-social-btn"
+                  aria-label={messages.news.shareTelegram}
+                  title={messages.news.shareTelegram}
+                >
+                  <img src={telegramIcon} alt="" className="news-share-qr-social-icon" />
+                </a>
+                <button
+                  type="button"
+                  className="news-share-qr-social-btn"
+                  aria-label={messages.news.shareDiscord}
+                  title={discordCopied ? messages.news.shareCopied : messages.news.shareDiscord}
+                  onClick={shareToDiscord}
+                >
+                  <img src={discordIcon} alt="" className="news-share-qr-social-icon" />
+                </button>
+              </div>
+              {discordCopied ? (
+                <p className="news-share-qr-copied">{messages.news.shareCopied}</p>
+              ) : null}
             </div>
-            {discordCopied ? (
-              <p className="news-share-qr-copied">{messages.news.shareCopied}</p>
-            ) : null}
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

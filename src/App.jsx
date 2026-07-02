@@ -72,16 +72,16 @@ const SOCIAL_LINKS = [
 ];
 
 const CHARACTER_SHOT_CLASSES =
-  "h-auto w-full max-w-[500px] object-contain object-bottom md:max-h-[min(600px,82vh)] md:max-w-[min(860px,38vw)]";
+  "mx-auto h-auto max-h-[min(200px,34vh)] w-auto max-w-[min(280px,72vw)] object-contain object-bottom md:mx-0 md:max-h-[min(600px,82vh)] md:w-full md:max-w-[min(860px,38vw)]";
 
 const CHARACTER_WRAP_DEFAULT_CLASSES =
-  "relative flex min-h-[260px] flex-[1_1_28%] flex-col items-center justify-end px-1 md:min-h-0 md:basis-[28%] md:justify-end md:px-2";
+  "relative order-2 flex min-h-0 flex-[0_0_auto] flex-col items-center justify-end px-1 md:order-1 md:min-h-0 md:flex-[1_1_28%] md:basis-[28%] md:justify-end md:px-2";
 
 const CHARACTER_SHOT_CLASSES_STYLE_RUN =
-  "h-auto w-full max-w-[980px] object-contain object-bottom md:max-h-[min(1020px,86vh)] md:max-w-[min(980px,45vw)]";
+  "mx-auto h-auto max-h-[min(200px,34vh)] w-auto max-w-[min(300px,78vw)] object-contain object-bottom md:mx-0 md:max-h-[min(1020px,86vh)] md:w-full md:max-w-[min(980px,45vw)]";
 
 const CHARACTER_WRAP_CLASSES_STYLE_RUN =
-  "relative flex min-h-[300px] flex-[1_1_33%] flex-col items-center justify-end px-1 md:min-h-0 md:basis-[33%] md:justify-end md:px-2";
+  "relative order-2 flex min-h-0 flex-[0_0_auto] flex-col items-center justify-end px-1 md:order-1 md:min-h-0 md:flex-[1_1_33%] md:basis-[33%] md:justify-end md:px-2";
 
 const FEATURE_ICONS = [rocketIcon, modsIcon, shieldIcon];
 
@@ -332,7 +332,7 @@ function HomePage({ onNavigate, path }) {
     return () => observer.disconnect();
   }, [locale]);
 
-  useRevealScroll([linuxOpen, openFaqItems, locale]);
+  useRevealScroll([linuxOpen, locale]);
 
   const mainDownloadLink = useMemo(() => {
     if (userOS === "windows") return links.windows;
@@ -534,8 +534,8 @@ function HomePage({ onNavigate, path }) {
           ? `mx-auto w-full max-w-7xl px-2 md:px-4 ${headlineText} ${alignClass}`
           : `mx-auto w-full max-w-6xl px-4 md:px-8 ${headlineText} ${alignClass}`;
         const sectionPad = biasLeft
-          ? "pl-4 pr-8 sm:pl-6 sm:pr-12 md:pl-10 md:pr-20 lg:pl-16 lg:pr-28 xl:pl-24 xl:pr-36"
-          : "pl-8 pr-4 sm:pl-12 sm:pr-6 md:pl-20 md:pr-10 lg:pl-28 lg:pr-16 xl:pl-36 xl:pr-24";
+          ? "px-4 sm:px-6 md:pl-10 md:pr-20 lg:pl-16 lg:pr-28 xl:pl-24 xl:pr-36"
+          : "px-4 sm:px-6 md:pl-20 md:pr-10 lg:pl-28 lg:pr-16 xl:pl-36 xl:pr-24";
 
         const baseDelay = 160 + index * 120;
 
@@ -583,10 +583,12 @@ function HomePage({ onNavigate, path }) {
                   <img
                     src={section.character}
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     className={`relative z-[1] ${characterClasses}`}
                   />
                 </div>
-                <div className="min-w-0 flex-[1_1_72%] md:basis-[72%]">
+                <div className="order-1 min-w-0 flex-[1_1_auto] md:order-2 md:flex-[1_1_72%] md:basis-[72%]">
                   <button
                     type="button"
                     className="group relative block h-full w-full"
@@ -595,7 +597,9 @@ function HomePage({ onNavigate, path }) {
                     <img
                       src={section.image}
                       alt=""
-                      className="h-full w-full rounded-xl object-cover object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-[1.03] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full rounded-xl object-contain object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out md:object-cover group-hover:scale-[1.03] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
                     />
                     <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
                   </button>
