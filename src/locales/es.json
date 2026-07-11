@@ -106,7 +106,7 @@
     "defaultTitle": "Noticias del launcher",
     "defaultSubtitle": "Todas las actualizaciones en un solo lugar. Haz clic en una tarjeta para ver el changelog.",
     "backHome": "Volver al inicio",
-    "loading": "Cargando noticias desde GitHub...",
+    "loading": "",
     "loadError": "No se pudieron cargar las noticias remotas; se muestran datos locales.",
     "open": "Abrir",
     "backToNews": "Volver a noticias",

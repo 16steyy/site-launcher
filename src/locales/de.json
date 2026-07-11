@@ -106,7 +106,7 @@
     "defaultTitle": "Launcher-Neuigkeiten",
     "defaultSubtitle": "Alle Updates an einem Ort. Klicke auf eine Karte, um das Changelog zu öffnen.",
     "backHome": "Zur Startseite",
-    "loading": "Neuigkeiten werden von GitHub geladen...",
+    "loading": "",
     "loadError": "Remote-Neuigkeiten konnten nicht geladen werden; lokale Daten werden angezeigt.",
     "open": "Öffnen",
     "backToNews": "Zurück zu den Neuigkeiten",

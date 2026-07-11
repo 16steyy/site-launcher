@@ -31,6 +31,23 @@ body {
   font-family: Inter, Roboto, system-ui, sans-serif;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 120% 100% at 50% 40%,
+    #000 40%,
+    transparent 100%
+  );
+}
+
 .scroll-anchor {
   scroll-margin-top: 8.5rem;
 }
@@ -157,8 +174,7 @@ body {
     radial-gradient(circle at 18% 20%, rgba(44, 96, 255, 0.4), transparent 24%),
     radial-gradient(circle at 84% 30%, rgba(86, 115, 255, 0.35), transparent 23%),
     radial-gradient(circle at 50% 55%, rgba(62, 88, 214, 0.26), transparent 25%),
-    radial-gradient(circle at 35% 82%, rgba(27, 72, 221, 0.3), transparent 20%),
-    #000;
+    radial-gradient(circle at 35% 82%, rgba(27, 72, 221, 0.3), transparent 20%);
   animation: bgBreathe 22s ease-in-out infinite;
 }
 

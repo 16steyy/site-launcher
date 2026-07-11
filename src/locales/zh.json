@@ -106,7 +106,7 @@
     "defaultTitle": "启动器新闻",
     "defaultSubtitle": "所有更新集中在一处。点击卡片查看更新日志。",
     "backHome": "返回首页",
-    "loading": "正在从 GitHub 加载新闻...",
+    "loading": "",
     "loadError": "无法加载远程新闻，显示本地数据。",
     "open": "打开",
     "backToNews": "返回新闻",

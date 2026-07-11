@@ -106,7 +106,7 @@
     "defaultTitle": "Launcher news",
     "defaultSubtitle": "All updates in one place. Click a card to open the changelog.",
     "backHome": "Back to home",
-    "loading": "Loading news from GitHub...",
+    "loading": "",
     "loadError": "Could not load remote news; showing local data.",
     "open": "Open",
     "backToNews": "Back to news",
