@@ -22,7 +22,17 @@
   "hero": {
     "taglineHighlight": "Tu elección",
     "taglineRest": " para jugar Minecraft",
-    "install": "Instalar launcher"
+    "install": "Instalar launcher",
+    "previewAlt": "Abrir captura de la interfaz de 16Launcher",
+    "stats": {
+      "stars": "estrellas en GitHub",
+      "downloads": "descargas",
+      "version": "última versión"
+    }
+  },
+  "latestNews": {
+    "title": "Últimas actualizaciones",
+    "viewAll": "Todas las noticias"
   },
   "features": [
     {

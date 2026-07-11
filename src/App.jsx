@@ -19,8 +19,11 @@ import discordIcon from "../assets/discord.png";
 import telegramIcon from "../assets/telegram.png";
 import boostyIcon from "../assets/boosty.png";
 import newsData from "./content/news.json";
+import HeroPreview from "./components/HeroPreview";
+import HeroStats from "./components/HeroStats";
 import HeroTagline from "./components/HeroTagline";
 import HeroTitle from "./components/HeroTitle";
+import LatestNewsSection from "./components/LatestNewsSection";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import SectionNav from "./components/SectionNav";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
@@ -34,6 +37,9 @@ const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
 const LATEST_RELEASE_API =
   "https://api.github.com/repos/launcherdev11/rust-launcher/releases/latest";
+const RELEASES_API =
+  "https://api.github.com/repos/launcherdev11/rust-launcher/releases?per_page=100";
+const REPO_API = "https://api.github.com/repos/launcherdev11/rust-launcher";
 const NEWS_CDN_BASE =
   "https://cdn.jsdelivr.net/gh/16steyy/16Launcher-Site-News@main";
 const NEWS_RAW_BASE =
@@ -256,7 +262,36 @@ function normalizeNewsData(input, sourceUrl = "") {
   return { page, posts };
 }
 
-function HomePage({ onNavigate, path }) {
+function sumReleaseDownloads(assets) {
+  return (assets || []).reduce(
+    (total, asset) => total + (Number(asset.download_count) || 0),
+    0
+  );
+}
+
+async function fetchTotalReleaseDownloads() {
+  let page = 1;
+  let total = 0;
+
+  while (page <= 10) {
+    const response = await fetch(`${RELEASES_API}&page=${page}`);
+    if (!response.ok) break;
+
+    const releases = await response.json();
+    if (!Array.isArray(releases) || !releases.length) break;
+
+    releases.forEach((release) => {
+      total += sumReleaseDownloads(release.assets);
+    });
+
+    if (releases.length < 100) break;
+    page += 1;
+  }
+
+  return total;
+}
+
+function HomePage({ onNavigate, path, news }) {
   const { locale, messages } = useI18n();
   const [linuxOpen, setLinuxOpen] = useState(false);
   const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
@@ -271,16 +306,24 @@ function HomePage({ onNavigate, path }) {
     linuxRpm: FALLBACK_RELEASES_URL,
     linuxAppImage: FALLBACK_RELEASES_URL,
   });
+  const [githubStats, setGithubStats] = useState({ stars: 0, downloads: 0 });
+  const [releaseVersion, setReleaseVersion] = useState("");
 
   useEffect(() => {
     setUserOS(detectOS());
 
     async function loadLatestRelease() {
       try {
-        const response = await fetch(LATEST_RELEASE_API);
-        if (!response.ok) throw new Error("failed_release_load");
-        const release = await response.json();
+        const [releaseResponse, repoResponse, totalDownloads] = await Promise.all([
+          fetch(LATEST_RELEASE_API),
+          fetch(REPO_API),
+          fetchTotalReleaseDownloads(),
+        ]);
+        if (!releaseResponse.ok) throw new Error("failed_release_load");
+
+        const release = await releaseResponse.json();
         const assets = release.assets || [];
+        const repo = repoResponse.ok ? await repoResponse.json() : null;
 
         setLinks({
           windows: pickAssetUrl(
@@ -296,6 +339,15 @@ function HomePage({ onNavigate, path }) {
           linuxRpm: pickAssetUrl(assets, (name) => name.endsWith(".rpm")),
           linuxAppImage: pickAssetUrl(assets, (name) => name.endsWith(".appimage")),
         });
+
+        if (release?.tag_name) {
+          setReleaseVersion(String(release.tag_name).replace(/^v/i, ""));
+        }
+
+        setGithubStats({
+          stars: Number(repo?.stargazers_count) || 0,
+          downloads: totalDownloads,
+        });
       } catch {
         setLinks({
           windows: FALLBACK_RELEASES_URL,
@@ -304,6 +356,8 @@ function HomePage({ onNavigate, path }) {
           linuxRpm: FALLBACK_RELEASES_URL,
           linuxAppImage: FALLBACK_RELEASES_URL,
         });
+        setGithubStats({ stars: 0, downloads: 0 });
+        setReleaseVersion("");
       }
     }
 
@@ -332,7 +386,7 @@ function HomePage({ onNavigate, path }) {
     return () => observer.disconnect();
   }, [locale]);
 
-  useRevealScroll([linuxOpen, locale]);
+  useRevealScroll([linuxOpen, locale, news?.posts?.length]);
 
   const mainDownloadLink = useMemo(() => {
     if (userOS === "windows") return links.windows;
@@ -489,10 +543,17 @@ function HomePage({ onNavigate, path }) {
             className="reveal mt-3 text-2xl font-semibold text-white/70 md:text-4xl"
             style={{ animationDelay: "110ms" }}
           />
+          <HeroPreview />
+          <HeroStats
+            stars={githubStats.stars}
+            downloads={githubStats.downloads}
+            version={releaseVersion}
+            labels={messages.hero.stats}
+          />
           <a
             href={mainDownloadLink}
-            className="reveal interactive-cta mx-auto mt-12 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow"
-            style={{ animationDelay: "160ms" }}
+            className="reveal interactive-cta mx-auto mt-10 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow md:mt-12"
+            style={{ animationDelay: "320ms" }}
           >
             <span className="relative z-[1]">{messages.hero.install}</span>
           </a>
@@ -622,6 +683,15 @@ function HomePage({ onNavigate, path }) {
       <ImageLightbox image={lightboxImage} onClose={closeLightboxImage} />
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
+        <LatestNewsSection
+          title={messages.latestNews?.title}
+          viewAllLabel={messages.latestNews?.viewAll}
+          openLabel={messages.news.open}
+          posts={news?.posts}
+          onNavigate={onNavigate}
+          baseDelay={160 + shots.length * 120}
+        />
+
         <section id="faq" className="scroll-anchor py-20 md:py-28">
           <h2
             className="reveal reveal-scroll text-center text-5xl font-extrabold md:text-6xl"
@@ -1162,7 +1232,7 @@ export default function App() {
   return (
     <>
       <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-      <HomePage onNavigate={navigate} path={path} />
+      <HomePage onNavigate={navigate} path={path} news={news} />
     </>
   );
 }

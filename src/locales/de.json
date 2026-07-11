@@ -22,7 +22,17 @@
   "hero": {
     "taglineHighlight": "Deine Wahl",
     "taglineRest": " für Minecraft",
-    "install": "Launcher installieren"
+    "install": "Launcher installieren",
+    "previewAlt": "16Launcher-Oberflächenscreenshot öffnen",
+    "stats": {
+      "stars": "GitHub-Sterne",
+      "downloads": "Downloads",
+      "version": "neueste Version"
+    }
+  },
+  "latestNews": {
+    "title": "Neueste Updates",
+    "viewAll": "Alle Neuigkeiten"
   },
   "features": [
     {

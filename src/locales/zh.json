@@ -22,7 +22,17 @@
   "hero": {
     "taglineHighlight": "你的选择",
     "taglineRest": "，畅玩 Minecraft",
-    "install": "安装启动器"
+    "install": "安装启动器",
+    "previewAlt": "打开 16Launcher 界面截图",
+    "stats": {
+      "stars": "GitHub 星标",
+      "downloads": "下载量",
+      "version": "最新版本"
+    }
+  },
+  "latestNews": {
+    "title": "最新更新",
+    "viewAll": "全部新闻"
   },
   "features": [
     {

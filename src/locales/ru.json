@@ -22,7 +22,17 @@
   "hero": {
     "taglineHighlight": "Твой выбор",
     "taglineRest": " для игры в Minecraft",
-    "install": "Установить лаунчер"
+    "install": "Установить лаунчер",
+    "previewAlt": "Открыть скриншот интерфейса 16Launcher",
+    "stats": {
+      "stars": "звёзд на GitHub",
+      "downloads": "скачиваний",
+      "version": "последняя версия"
+    }
+  },
+  "latestNews": {
+    "title": "Последние обновления",
+    "viewAll": "Все новости"
   },
   "features": [
     {
