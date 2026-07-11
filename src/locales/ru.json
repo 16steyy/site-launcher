@@ -5,7 +5,8 @@
   },
   "seo": {
     "titleSuffix": " — 16Launcher",
-    "articleNotFoundDescription": "Запрошенная новость не найдена. Вернитесь к списку обновлений лаунчера."
+    "articleNotFoundDescription": "Запрошенная новость не найдена. Вернитесь к списку обновлений лаунчера.",
+    "pageNotFoundDescription": "Запрошенная страница не существует. Вернитесь на главную."
   },
   "language": {
     "label": "Выбор языка"
@@ -111,6 +112,11 @@
   },
   "footer": {
     "disclaimer": "16Launcher не является официальным продуктом Mojang или Microsoft."
+  },
+  "notFoundPage": {
+    "title": "Страница не найдена",
+    "description": "Такой страницы не существует. Возможно, ссылка устарела или адрес введён с ошибкой.",
+    "backHome": "На главную"
   },
   "news": {
     "defaultTitle": "Новости лаунчера",

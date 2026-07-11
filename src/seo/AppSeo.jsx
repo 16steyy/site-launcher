@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import { usePageSeo } from "../hooks/usePageSeo";
 import { useI18n } from "../i18n/I18nProvider";
+import { getRouteKind } from "../routing";
 
 export default function AppSeo({ path, news, releaseVersion }) {
   const { locale, messages } = useI18n();
@@ -18,6 +19,19 @@ export default function AppSeo({ path, news, releaseVersion }) {
         title,
         description,
         ogType: "website",
+        jsonLdType: null,
+      };
+    }
+
+    if (getRouteKind(path) === "not-found") {
+      return {
+        locale,
+        pathname: path,
+        title: `${messages.notFoundPage?.title || "404"}${suffix}`,
+        description:
+          messages.seo?.pageNotFoundDescription || messages.notFoundPage?.description,
+        ogType: "website",
+        noindex: true,
         jsonLdType: null,
       };
     }

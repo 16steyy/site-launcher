@@ -29,9 +29,11 @@ import SectionNav from "./components/SectionNav";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NewsMarkdown from "./components/NewsMarkdown";
 import NewsShareQr from "./components/NewsShareQr";
+import NotFoundPage from "./components/NotFoundPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useI18n } from "./i18n/I18nProvider";
+import { getRouteKind } from "./routing";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
@@ -1205,7 +1207,9 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (path === "/news") {
+  const route = getRouteKind(path);
+
+  if (route === "news") {
     return (
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
@@ -1219,12 +1223,21 @@ export default function App() {
     );
   }
 
-  if (path.startsWith("/news/")) {
+  if (route === "article") {
     const slug = path.replace("/news/", "");
     return (
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
         <NewsArticlePage slug={slug} onNavigate={navigate} news={news} />
+      </>
+    );
+  }
+
+  if (route === "not-found") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <NotFoundPage onNavigate={navigate} />
       </>
     );
   }

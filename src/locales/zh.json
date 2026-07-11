@@ -5,7 +5,8 @@
   },
   "seo": {
     "titleSuffix": " — 16Launcher",
-    "articleNotFoundDescription": "未找到请求的新闻。请返回启动器更新列表。"
+    "articleNotFoundDescription": "未找到请求的新闻。请返回启动器更新列表。",
+    "pageNotFoundDescription": "未找到请求的页面。请返回首页。"
   },
   "language": {
     "label": "选择语言"
@@ -111,6 +112,11 @@
   },
   "footer": {
     "disclaimer": "16Launcher 不是 Mojang 或 Microsoft 的官方产品。"
+  },
+  "notFoundPage": {
+    "title": "页面未找到",
+    "description": "该页面不存在。链接可能已过期，或地址输入有误。",
+    "backHome": "返回首页"
   },
   "news": {
     "defaultTitle": "启动器新闻",

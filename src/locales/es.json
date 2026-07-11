@@ -5,7 +5,8 @@
   },
   "seo": {
     "titleSuffix": " — 16Launcher",
-    "articleNotFoundDescription": "La noticia solicitada no se encontró. Vuelve a la lista de actualizaciones del launcher."
+    "articleNotFoundDescription": "La noticia solicitada no se encontró. Vuelve a la lista de actualizaciones del launcher.",
+    "pageNotFoundDescription": "La página solicitada no se encontró. Vuelve a la página de inicio."
   },
   "language": {
     "label": "Selección de idioma"
@@ -111,6 +112,11 @@
   },
   "footer": {
     "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft."
+  },
+  "notFoundPage": {
+    "title": "Página no encontrada",
+    "description": "Esta página no existe. Es posible que el enlace esté desactualizado o que la dirección sea incorrecta.",
+    "backHome": "Volver al inicio"
   },
   "news": {
     "defaultTitle": "Noticias del launcher",
