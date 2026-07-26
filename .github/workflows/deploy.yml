@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Обновлять статистику/ссылки релизов без пуша в репо
+    - cron: "0 */2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,7 +27,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build site
+        env:
+          # Свой PAT: Settings → Secrets and variables → Actions → New secret
+          # Name: GH_STATS_TOKEN
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

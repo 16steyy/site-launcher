@@ -37,11 +37,7 @@ import { getRouteKind } from "./routing";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
-const LATEST_RELEASE_API =
-  "https://api.github.com/repos/launcherdev11/rust-launcher/releases/latest";
-const RELEASES_API =
-  "https://api.github.com/repos/launcherdev11/rust-launcher/releases?per_page=100";
-const REPO_API = "https://api.github.com/repos/launcherdev11/rust-launcher";
+const GITHUB_RELEASE_DATA_URL = "/github-release.json";
 const NEWS_CDN_BASE =
   "https://cdn.jsdelivr.net/gh/16steyy/16Launcher-Site-News@main";
 const NEWS_RAW_BASE =
@@ -146,9 +142,42 @@ function detectOS() {
   return "unknown";
 }
 
-function pickAssetUrl(assets, matcher) {
-  const found = assets.find((asset) => matcher(asset.name.toLowerCase()));
-  return found?.browser_download_url || FALLBACK_RELEASES_URL;
+function emptyReleaseData() {
+  return {
+    stars: 0,
+    downloads: 0,
+    version: "",
+    links: {
+      windows: FALLBACK_RELEASES_URL,
+      macos: FALLBACK_RELEASES_URL,
+      linuxDeb: FALLBACK_RELEASES_URL,
+      linuxRpm: FALLBACK_RELEASES_URL,
+      linuxAppImage: FALLBACK_RELEASES_URL,
+    },
+  };
+}
+
+function normalizeReleaseData(input) {
+  const fallback = emptyReleaseData();
+  const links = input?.links || {};
+  return {
+    stars: Number(input?.stars) || 0,
+    downloads: Number(input?.downloads) || 0,
+    version: String(input?.version || "").replace(/^v/i, ""),
+    links: {
+      windows: links.windows || fallback.links.windows,
+      macos: links.macos || fallback.links.macos,
+      linuxDeb: links.linuxDeb || fallback.links.linuxDeb,
+      linuxRpm: links.linuxRpm || fallback.links.linuxRpm,
+      linuxAppImage: links.linuxAppImage || fallback.links.linuxAppImage,
+    },
+  };
+}
+
+async function fetchGithubReleaseData() {
+  const response = await fetch(GITHUB_RELEASE_DATA_URL, { cache: "no-store" });
+  if (!response.ok) throw new Error("failed_release_data_load");
+  return normalizeReleaseData(await response.json());
 }
 
 function toAbsoluteUrl(baseUrl, path) {
@@ -264,35 +293,6 @@ function normalizeNewsData(input, sourceUrl = "") {
   return { page, posts };
 }
 
-function sumReleaseDownloads(assets) {
-  return (assets || []).reduce(
-    (total, asset) => total + (Number(asset.download_count) || 0),
-    0
-  );
-}
-
-async function fetchTotalReleaseDownloads() {
-  let page = 1;
-  let total = 0;
-
-  while (page <= 10) {
-    const response = await fetch(`${RELEASES_API}&page=${page}`);
-    if (!response.ok) break;
-
-    const releases = await response.json();
-    if (!Array.isArray(releases) || !releases.length) break;
-
-    releases.forEach((release) => {
-      total += sumReleaseDownloads(release.assets);
-    });
-
-    if (releases.length < 100) break;
-    page += 1;
-  }
-
-  return total;
-}
-
 function HomePage({ onNavigate, path, news }) {
   const { locale, messages } = useI18n();
   const [linuxOpen, setLinuxOpen] = useState(false);
@@ -316,48 +316,16 @@ function HomePage({ onNavigate, path, news }) {
 
     async function loadLatestRelease() {
       try {
-        const [releaseResponse, repoResponse, totalDownloads] = await Promise.all([
-          fetch(LATEST_RELEASE_API),
-          fetch(REPO_API),
-          fetchTotalReleaseDownloads(),
-        ]);
-        if (!releaseResponse.ok) throw new Error("failed_release_load");
-
-        const release = await releaseResponse.json();
-        const assets = release.assets || [];
-        const repo = repoResponse.ok ? await repoResponse.json() : null;
-
-        setLinks({
-          windows: pickAssetUrl(
-            assets,
-            (name) => name.endsWith(".exe") || name.endsWith(".msi")
-          ),
-          macos: pickAssetUrl(
-            assets,
-            (name) =>
-              name.endsWith(".dmg") || name.endsWith(".pkg") || name.includes("mac")
-          ),
-          linuxDeb: pickAssetUrl(assets, (name) => name.endsWith(".deb")),
-          linuxRpm: pickAssetUrl(assets, (name) => name.endsWith(".rpm")),
-          linuxAppImage: pickAssetUrl(assets, (name) => name.endsWith(".appimage")),
-        });
-
-        if (release?.tag_name) {
-          setReleaseVersion(String(release.tag_name).replace(/^v/i, ""));
-        }
-
+        const data = await fetchGithubReleaseData();
+        setLinks(data.links);
+        setReleaseVersion(data.version);
         setGithubStats({
-          stars: Number(repo?.stargazers_count) || 0,
-          downloads: totalDownloads,
+          stars: data.stars,
+          downloads: data.downloads,
         });
       } catch {
-        setLinks({
-          windows: FALLBACK_RELEASES_URL,
-          macos: FALLBACK_RELEASES_URL,
-          linuxDeb: FALLBACK_RELEASES_URL,
-          linuxRpm: FALLBACK_RELEASES_URL,
-          linuxAppImage: FALLBACK_RELEASES_URL,
-        });
+        const fallback = emptyReleaseData();
+        setLinks(fallback.links);
         setGithubStats({ stars: 0, downloads: 0 });
         setReleaseVersion("");
       }
@@ -1182,12 +1150,8 @@ export default function App() {
   useEffect(() => {
     async function loadReleaseVersion() {
       try {
-        const response = await fetch(LATEST_RELEASE_API);
-        if (!response.ok) return;
-        const release = await response.json();
-        if (release?.tag_name) {
-          setReleaseVersion(String(release.tag_name).replace(/^v/i, ""));
-        }
+        const data = await fetchGithubReleaseData();
+        if (data.version) setReleaseVersion(data.version);
       } catch {
       }
     }

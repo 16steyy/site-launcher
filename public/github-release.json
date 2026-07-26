@@ -1,0 +1,13 @@
+{
+  "stars": 0,
+  "downloads": 0,
+  "version": "",
+  "links": {
+    "windows": "https://github.com/launcherdev11/rust-launcher/releases",
+    "macos": "https://github.com/launcherdev11/rust-launcher/releases",
+    "linuxDeb": "https://github.com/launcherdev11/rust-launcher/releases",
+    "linuxRpm": "https://github.com/launcherdev11/rust-launcher/releases",
+    "linuxAppImage": "https://github.com/launcherdev11/rust-launcher/releases"
+  },
+  "updatedAt": "2026-07-26T19:52:56.920Z"
+}
