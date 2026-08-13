@@ -95,6 +95,9 @@ async function generateSitemap() {
   const urls = [
     renderUrlEntry({ pathname: "/", changefreq: "weekly", priority: "1.0" }),
     renderUrlEntry({ pathname: "/news", changefreq: "weekly", priority: "0.8" }),
+    renderUrlEntry({ pathname: "/themes", changefreq: "weekly", priority: "0.7" }),
+    renderUrlEntry({ pathname: "/themes/upload", changefreq: "monthly", priority: "0.4" }),
+    renderUrlEntry({ pathname: "/account", changefreq: "monthly", priority: "0.3", lastmod: undefined }),
     ...posts.map((post) =>
       renderUrlEntry({
         pathname: `/news/${post.slug}`,

@@ -23,6 +23,41 @@ export default function AppSeo({ path, news, releaseVersion }) {
       };
     }
 
+    if (path === "/themes") {
+      return {
+        locale,
+        pathname: "/themes",
+        title: `${messages.themes?.title || "Themes"}${suffix}`,
+        description: messages.themes?.subtitle || messages.meta.description,
+        ogType: "website",
+        jsonLdType: null,
+      };
+    }
+
+    if (path === "/themes/upload") {
+      return {
+        locale,
+        pathname: "/themes/upload",
+        title: `${messages.themes?.uploadTitle || "Upload theme"}${suffix}`,
+        description: messages.themes?.uploadHint || messages.themes?.subtitle,
+        ogType: "website",
+        noindex: true,
+        jsonLdType: null,
+      };
+    }
+
+    if (path === "/account") {
+      return {
+        locale,
+        pathname: "/account",
+        title: `${messages.account?.title || "Account"}${suffix}`,
+        description: messages.themes?.loginRequired || messages.meta.description,
+        ogType: "website",
+        noindex: true,
+        jsonLdType: null,
+      };
+    }
+
     if (getRouteKind(path) === "not-found") {
       return {
         locale,

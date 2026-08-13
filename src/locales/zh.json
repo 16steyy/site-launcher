@@ -14,6 +14,7 @@
   "nav": {
     "home": "首页",
     "news": "新闻",
+    "themes": "主题",
     "features": "关于启动器",
     "screenshots": "截图",
     "faq": "常见问题",
@@ -138,5 +139,55 @@
     "shareDiscord": "分享到 Discord",
     "shareCopied": "链接已复制 — 请粘贴到 Discord",
     "shareCopyPrompt": "复制 Discord 分享链接"
+  },
+  "themes": {
+    "nav": "主题",
+    "title": "主题商店",
+    "subtitle": "16Launcher 自定义主题",
+    "upload": "上传主题",
+    "download": "下载",
+    "author": "作者：{{author}}",
+    "empty": "暂无已发布的主题",
+    "emptyCta": "成为第一个上传主题的人",
+    "uploadTitle": "上传主题",
+    "uploadName": "主题名称",
+    "uploadFile": "ZIP 压缩包",
+    "uploadHint": "压缩包必须包含 theme.json 和 style.css",
+    "uploadAuthor": "作者",
+    "uploadSubmit": "提交审核",
+    "uploadSuccess": "主题已提交审核",
+    "uploadSuccessHint": "审核通常需要 1–2 天",
+    "loginRequired": "登录后才能上传主题",
+    "errors": {
+      "invalidZip": "ZIP 必须包含 theme.json 和 style.css",
+      "tooLarge": "文件过大（最大 5 MB）",
+      "duplicate": "相同 ID 的主题已在审核中",
+      "rateLimit": "上传次数过多，请稍后再试",
+      "generic": "无法提交主题"
+    }
+  },
+  "account": {
+    "title": "账户",
+    "login": "登录",
+    "register": "注册",
+    "logout": "退出",
+    "nickname": "昵称",
+    "email": "邮箱",
+    "password": "密码",
+    "loginField": "用户名或邮箱",
+    "loginSubmit": "登录",
+    "registerSubmit": "注册",
+    "verificationCode": "验证码",
+    "loggedInAs": "当前登录",
+    "errors": {
+      "generic": "请求失败",
+      "invalidCredentials": "用户名或密码错误",
+      "invalidEmail": "邮箱格式无效",
+      "invalidNickname": "昵称无效",
+      "invalidPassword": "密码无效",
+      "alreadyExists": "该账户信息已存在",
+      "verificationRequired": "请输入邮件中的验证码",
+      "rateLimit": "尝试次数过多，请稍后再试"
+    }
   }
 }

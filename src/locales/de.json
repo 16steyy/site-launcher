@@ -14,6 +14,7 @@
   "nav": {
     "home": "Startseite",
     "news": "Neuigkeiten",
+    "themes": "Themes",
     "features": "Über den Launcher",
     "screenshots": "Screenshots",
     "faq": "FAQ",
@@ -138,5 +139,55 @@
     "shareDiscord": "In Discord teilen",
     "shareCopied": "Link kopiert — in Discord einfügen",
     "shareCopyPrompt": "Link für Discord kopieren"
+  },
+  "themes": {
+    "nav": "Themes",
+    "title": "Theme-Shop",
+    "subtitle": "Benutzerdefinierte Themes für 16Launcher",
+    "upload": "Theme hochladen",
+    "download": "Herunterladen",
+    "author": "Autor: {{author}}",
+    "empty": "Noch keine veröffentlichten Themes",
+    "emptyCta": "Sei der Erste — lade dein Theme hoch",
+    "uploadTitle": "Theme hochladen",
+    "uploadName": "Theme-Name",
+    "uploadFile": "ZIP-Archiv",
+    "uploadHint": "Das Archiv muss theme.json und style.css enthalten",
+    "uploadAuthor": "Autor",
+    "uploadSubmit": "Zur Moderation senden",
+    "uploadSuccess": "Theme zur Moderation gesendet",
+    "uploadSuccessHint": "Die Prüfung dauert normalerweise 1–2 Tage",
+    "loginRequired": "Melde dich an, um ein Theme hochzuladen",
+    "errors": {
+      "invalidZip": "ZIP muss theme.json und style.css enthalten",
+      "tooLarge": "Datei ist zu groß (max. 5 MB)",
+      "duplicate": "Ein Theme mit dieser ID wird bereits moderiert",
+      "rateLimit": "Zu viele Uploads, versuche es später erneut",
+      "generic": "Theme konnte nicht gesendet werden"
+    }
+  },
+  "account": {
+    "title": "Konto",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "logout": "Abmelden",
+    "nickname": "Nickname",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "loginField": "Login oder E-Mail",
+    "loginSubmit": "Anmelden",
+    "registerSubmit": "Registrieren",
+    "verificationCode": "Bestätigungscode",
+    "loggedInAs": "Angemeldet als",
+    "errors": {
+      "generic": "Anfrage fehlgeschlagen",
+      "invalidCredentials": "Ungültiger Login oder Passwort",
+      "invalidEmail": "Ungültige E-Mail",
+      "invalidNickname": "Ungültiger Nickname",
+      "invalidPassword": "Ungültiges Passwort",
+      "alreadyExists": "Ein Konto mit diesen Daten existiert bereits",
+      "verificationRequired": "Gib den Bestätigungscode aus der E-Mail ein",
+      "rateLimit": "Zu viele Versuche, versuche es später erneut"
+    }
   }
 }

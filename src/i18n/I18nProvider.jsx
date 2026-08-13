@@ -52,14 +52,18 @@ export function I18nProvider({ children }) {
       setLocale,
       locales: SUPPORTED_LOCALES,
       localeLabels: LOCALE_LABELS,
-      t: (key) => {
+      t: (key, params) => {
         const parts = key.split(".");
         let node = messages;
         for (const part of parts) {
           node = node?.[part];
           if (node === undefined) return key;
         }
-        return node;
+        if (typeof node !== "string") return key;
+        if (!params) return node;
+        return node.replace(/\{\{(\w+)\}\}/g, (_, name) =>
+          params[name] !== undefined ? String(params[name]) : `{{${name}}}`
+        );
       },
     }),
     [locale, messages, setLocale]

@@ -14,6 +14,7 @@
   "nav": {
     "home": "Inicio",
     "news": "Noticias",
+    "themes": "Temas",
     "features": "Sobre el launcher",
     "screenshots": "Capturas",
     "faq": "FAQ",
@@ -138,5 +139,55 @@
     "shareDiscord": "Compartir en Discord",
     "shareCopied": "Enlace copiado — pégalo en Discord",
     "shareCopyPrompt": "Copia el enlace para Discord"
+  },
+  "themes": {
+    "nav": "Temas",
+    "title": "Tienda de temas",
+    "subtitle": "Temas personalizados para 16Launcher",
+    "upload": "Subir tema",
+    "download": "Descargar",
+    "author": "Autor: {{author}}",
+    "empty": "Aún no hay temas publicados",
+    "emptyCta": "Sé el primero — sube tu tema",
+    "uploadTitle": "Subir tema",
+    "uploadName": "Nombre del tema",
+    "uploadFile": "Archivo ZIP",
+    "uploadHint": "El archivo debe incluir theme.json y style.css",
+    "uploadAuthor": "Autor",
+    "uploadSubmit": "Enviar a moderación",
+    "uploadSuccess": "Tema enviado a moderación",
+    "uploadSuccessHint": "La revisión suele tardar 1–2 días",
+    "loginRequired": "Inicia sesión para subir un tema",
+    "errors": {
+      "invalidZip": "El ZIP debe contener theme.json y style.css",
+      "tooLarge": "El archivo es demasiado grande (máx. 5 MB)",
+      "duplicate": "Ya hay un tema con este ID en moderación",
+      "rateLimit": "Demasiadas subidas, inténtalo más tarde",
+      "generic": "No se pudo enviar el tema"
+    }
+  },
+  "account": {
+    "title": "Cuenta",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "nickname": "Apodo",
+    "email": "Email",
+    "password": "Contraseña",
+    "loginField": "Usuario o email",
+    "loginSubmit": "Entrar",
+    "registerSubmit": "Registrarse",
+    "verificationCode": "Código de verificación",
+    "loggedInAs": "Has iniciado sesión como",
+    "errors": {
+      "generic": "Error en la solicitud",
+      "invalidCredentials": "Usuario o contraseña incorrectos",
+      "invalidEmail": "Email no válido",
+      "invalidNickname": "Apodo no válido",
+      "invalidPassword": "Contraseña no válida",
+      "alreadyExists": "Ya existe una cuenta con estos datos",
+      "verificationRequired": "Introduce el código de verificación del email",
+      "rateLimit": "Demasiados intentos, inténtalo más tarde"
+    }
   }
 }

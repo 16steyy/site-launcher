@@ -14,6 +14,7 @@
   "nav": {
     "home": "Главная",
     "news": "Новости",
+    "themes": "Темы",
     "features": "О лаунчере",
     "screenshots": "Скриншоты",
     "faq": "FAQ",
@@ -138,5 +139,55 @@
     "shareDiscord": "Поделиться в Discord",
     "shareCopied": "Ссылка скопирована — вставьте в Discord",
     "shareCopyPrompt": "Скопируйте ссылку для Discord"
+  },
+  "themes": {
+    "nav": "Темы",
+    "title": "Магазин тем",
+    "subtitle": "Кастомные темы для 16Launcher",
+    "upload": "Загрузить тему",
+    "download": "Скачать",
+    "author": "Автор: {{author}}",
+    "empty": "Пока нет опубликованных тем",
+    "emptyCta": "Станьте первым — загрузите свою тему",
+    "uploadTitle": "Загрузить тему",
+    "uploadName": "Название темы",
+    "uploadFile": "ZIP-архив",
+    "uploadHint": "В архиве обязательны theme.json и style.css",
+    "uploadAuthor": "Автор",
+    "uploadSubmit": "Отправить на модерацию",
+    "uploadSuccess": "Тема отправлена на модерацию",
+    "uploadSuccessHint": "Обычно проверка занимает 1–2 дня",
+    "loginRequired": "Войдите, чтобы загрузить тему",
+    "errors": {
+      "invalidZip": "ZIP должен содержать theme.json и style.css",
+      "tooLarge": "Файл слишком большой (макс. 5 МБ)",
+      "duplicate": "Тема с таким ID уже на модерации",
+      "rateLimit": "Слишком много загрузок, попробуйте позже",
+      "generic": "Не удалось отправить тему"
+    }
+  },
+  "account": {
+    "title": "Аккаунт",
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "nickname": "Никнейм",
+    "email": "Email",
+    "password": "Пароль",
+    "loginField": "Логин или email",
+    "loginSubmit": "Войти",
+    "registerSubmit": "Зарегистрироваться",
+    "verificationCode": "Код подтверждения",
+    "loggedInAs": "Вы вошли как",
+    "errors": {
+      "generic": "Не удалось выполнить запрос",
+      "invalidCredentials": "Неверный логин или пароль",
+      "invalidEmail": "Некорректный email",
+      "invalidNickname": "Некорректный никнейм",
+      "invalidPassword": "Некорректный пароль",
+      "alreadyExists": "Аккаунт с такими данными уже существует",
+      "verificationRequired": "Введите код подтверждения из письма",
+      "rateLimit": "Слишком много попыток, попробуйте позже"
+    }
   }
 }

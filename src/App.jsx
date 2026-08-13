@@ -30,8 +30,12 @@ import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NewsMarkdown from "./components/NewsMarkdown";
 import NewsShareQr from "./components/NewsShareQr";
 import NotFoundPage from "./components/NotFoundPage";
+import AccountPage from "./components/pages/AccountPage";
+import ThemeUploadPage from "./components/pages/ThemeUploadPage";
+import ThemesPage from "./components/pages/ThemesPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
+import { useAuth } from "./hooks/useAuth";
 import { useI18n } from "./i18n/I18nProvider";
 import { getRouteKind } from "./routing";
 
@@ -498,6 +502,20 @@ function HomePage({ onNavigate, path, news }) {
                 }}
               >
                 {messages.nav.news}
+              </a>
+              <a
+                href="/themes"
+                className={`site-nav-page whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:text-sm md:px-4 ${
+                  path.startsWith("/themes")
+                    ? "is-active"
+                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
+                }`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onNavigate("/themes");
+                }}
+              >
+                {messages.nav.themes || messages.themes?.nav}
               </a>
             </nav>
           </div>
@@ -1094,6 +1112,7 @@ export default function App() {
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsLoadError, setNewsLoadError] = useState(false);
   const [releaseVersion, setReleaseVersion] = useState("");
+  const { user } = useAuth();
 
   async function refreshNews({ isBackground = false } = {}) {
     if (!isBackground) {
@@ -1160,18 +1179,51 @@ export default function App() {
   }, []);
 
   function navigate(nextPath) {
-    if (nextPath === window.location.pathname) return;
     const nextUrl = new URL(nextPath, window.location.origin);
+    const currentUrl = new URL(window.location.href);
+    if (
+      nextUrl.pathname === currentUrl.pathname &&
+      nextUrl.search === currentUrl.search
+    ) {
+      return;
+    }
     const lang = new URLSearchParams(window.location.search).get("lang");
-    if (lang) {
+    if (lang && !nextUrl.searchParams.has("lang")) {
       nextUrl.searchParams.set("lang", lang);
     }
     window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}`);
-    setPath(nextPath);
+    setPath(nextUrl.pathname);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const route = getRouteKind(path);
+
+  if (route === "themes") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <ThemesPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
+
+  if (route === "themes-upload") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <ThemeUploadPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
+
+  if (route === "account") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <AccountPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
 
   if (route === "news") {
     return (

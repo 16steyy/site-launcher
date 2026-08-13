@@ -14,6 +14,7 @@
   "nav": {
     "home": "Home",
     "news": "News",
+    "themes": "Themes",
     "features": "About the launcher",
     "screenshots": "Screenshots",
     "faq": "FAQ",
@@ -138,5 +139,55 @@
     "shareDiscord": "Share on Discord",
     "shareCopied": "Link copied — paste it in Discord",
     "shareCopyPrompt": "Copy the link for Discord"
+  },
+  "themes": {
+    "nav": "Themes",
+    "title": "Theme store",
+    "subtitle": "Custom themes for 16Launcher",
+    "upload": "Upload theme",
+    "download": "Download",
+    "author": "Author: {{author}}",
+    "empty": "No published themes yet",
+    "emptyCta": "Be the first — upload your theme",
+    "uploadTitle": "Upload theme",
+    "uploadName": "Theme name",
+    "uploadFile": "ZIP archive",
+    "uploadHint": "The archive must include theme.json and style.css",
+    "uploadAuthor": "Author",
+    "uploadSubmit": "Submit for moderation",
+    "uploadSuccess": "Theme submitted for moderation",
+    "uploadSuccessHint": "Review usually takes 1–2 days",
+    "loginRequired": "Sign in to upload a theme",
+    "errors": {
+      "invalidZip": "ZIP must contain theme.json and style.css",
+      "tooLarge": "File is too large (max 5 MB)",
+      "duplicate": "A theme with this ID is already pending moderation",
+      "rateLimit": "Too many uploads, try again later",
+      "generic": "Failed to submit theme"
+    }
+  },
+  "account": {
+    "title": "Account",
+    "login": "Sign in",
+    "register": "Register",
+    "logout": "Sign out",
+    "nickname": "Nickname",
+    "email": "Email",
+    "password": "Password",
+    "loginField": "Login or email",
+    "loginSubmit": "Sign in",
+    "registerSubmit": "Register",
+    "verificationCode": "Verification code",
+    "loggedInAs": "Signed in as",
+    "errors": {
+      "generic": "Request failed",
+      "invalidCredentials": "Invalid login or password",
+      "invalidEmail": "Invalid email",
+      "invalidNickname": "Invalid nickname",
+      "invalidPassword": "Invalid password",
+      "alreadyExists": "An account with these details already exists",
+      "verificationRequired": "Enter the verification code from your email",
+      "rateLimit": "Too many attempts, try again later"
+    }
   }
 }

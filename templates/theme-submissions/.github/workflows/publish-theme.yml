@@ -1,0 +1,82 @@
+name: Publish approved theme
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout submissions
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve theme path
+        id: theme
+        run: |
+          set -euo pipefail
+          FILES=$(git diff --name-only "${{ github.event.pull_request.base.sha }}"..."${{ github.event.pull_request.head.sha }}" | grep '^submissions/' || true)
+          if [ -z "$FILES" ]; then
+            echo "No submissions/* changes in PR"
+            exit 1
+          fi
+          THEME_PATH=$(echo "$FILES" | grep '^submissions/[^/]*/[^/]*/' | head -1 | sed 's|\(submissions/[^/]*/[^/]*\)/.*|\1|')
+          THEME_ID=$(basename "$THEME_PATH")
+          echo "path=$THEME_PATH" >> "$GITHUB_OUTPUT"
+          echo "id=$THEME_ID" >> "$GITHUB_OUTPUT"
+          echo "Publishing $THEME_PATH (id=$THEME_ID)"
+
+      - name: Checkout site-launcher
+        uses: actions/checkout@v4
+        with:
+          repository: 16steyy/site-launcher
+          token: ${{ secrets.PUBLISH_TOKEN }}
+          path: site
+
+      - name: Copy theme to public site
+        run: |
+          set -euo pipefail
+          ID="${{ steps.theme.outputs.id }}"
+          SRC="${{ steps.theme.outputs.path }}"
+          DEST="site/public/themes/$ID"
+          mkdir -p "$DEST"
+          cp "$SRC/theme.json" "$DEST/"
+          cp "$SRC/style.css" "$DEST/"
+          cp "$SRC/theme.zip" "$DEST/download.zip"
+          if [ -f "$SRC/preview.png" ]; then
+            cp "$SRC/preview.png" "$DEST/preview.png"
+          fi
+
+      - name: Update themes.json
+        working-directory: site
+        run: |
+          node scripts/update-themes-json.js \
+            --id "${{ steps.theme.outputs.id }}" \
+            --meta "public/themes/${{ steps.theme.outputs.id }}/theme.json"
+
+      - name: Commit and push to site-launcher
+        working-directory: site
+        run: |
+          git config user.name "16Launcher Bot"
+          git config user.email "bot@16-launcher.ru"
+          git add public/data/themes.json "public/themes/${{ steps.theme.outputs.id }}"
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Publish theme: ${{ steps.theme.outputs.id }}"
+          git push
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '✅ Theme published to site-launcher. GitHub Pages will update in a few minutes.'
+            })

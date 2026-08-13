@@ -24,6 +24,51 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news?lang=en" />
   </url>
   <url>
+    <loc>https://16-launcher.ru/themes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/themes?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/themes?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/themes?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/themes?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/themes?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/themes?lang=en" />
+  </url>
+  <url>
+    <loc>https://16-launcher.ru/themes/upload</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/themes/upload?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/themes/upload?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/themes/upload?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/themes/upload?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/themes/upload?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/themes/upload?lang=en" />
+  </url>
+  <url>
+    <loc>https://16-launcher.ru/account</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/account?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/account?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/account?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/account?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/account?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/account?lang=en" />
+  </url>
+  <url>
+    <loc>https://16-launcher.ru/news/update-2-1-5</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/news/update-2-1-5?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/news/update-2-1-5?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/news/update-2-1-5?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/news/update-2-1-5?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/news/update-2-1-5?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news/update-2-1-5?lang=en" />
+  </url>
+  <url>
     <loc>https://16-launcher.ru/news/update-2-1-0</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
