@@ -10,6 +10,16 @@
       "preview": null,
       "download": "/themes/e2e-test-theme/download.zip",
       "published_at": "2026-08-14"
+    },
+    {
+      "id": "test",
+      "name": "test",
+      "author": "test16",
+      "description": "",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/test/download.zip",
+      "published_at": "2026-08-14"
     }
   ]
 }
