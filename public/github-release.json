@@ -1,6 +1,6 @@
 {
   "stars": 5,
-  "downloads": 5102,
+  "downloads": 5149,
   "version": "2.1.5",
   "links": {
     "windows": "https://github.com/launcherdev11/rust-launcher/releases/download/v2.1.5/16Launcher_2.1.5_x64-setup.exe",
@@ -9,5 +9,5 @@
     "linuxRpm": "https://github.com/launcherdev11/rust-launcher/releases/download/v2.1.5/16Launcher-2.1.5-1.x86_64.rpm",
     "linuxAppImage": "https://github.com/launcherdev11/rust-launcher/releases/download/v2.1.5/16Launcher_2.1.5_amd64.AppImage"
   },
-  "updatedAt": "2026-08-13T10:44:37.845Z"
+  "updatedAt": "2026-08-14T11:00:12.557Z"
 }
