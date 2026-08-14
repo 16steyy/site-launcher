@@ -20,6 +20,16 @@
       "preview": null,
       "download": "/themes/test/download.zip",
       "published_at": "2026-08-14"
+    },
+    {
+      "id": "femboy-gif",
+      "name": "Femboy GIF",
+      "author": "Crepqiz",
+      "description": "",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/femboy-gif/download.zip",
+      "published_at": "2026-08-14"
     }
   ]
 }
