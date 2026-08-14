@@ -19,6 +19,7 @@
     "screenshots": "Скриншоты",
     "faq": "FAQ",
     "download": "Скачать",
+    "privacy": "Конфиденциальность",
     "sections": "Разделы страницы"
   },
   "hero": {
@@ -112,12 +113,20 @@
     "choose": "Выбрать"
   },
   "footer": {
-    "disclaimer": "16Launcher не является официальным продуктом Mojang или Microsoft."
+    "disclaimer": "16Launcher не является официальным продуктом Mojang или Microsoft.",
+    "privacy": "Политика конфиденциальности"
   },
   "notFoundPage": {
     "title": "Страница не найдена",
     "description": "Такой страницы не существует. Возможно, ссылка устарела или адрес введён с ошибкой.",
     "backHome": "На главную"
+  },
+  "privacy": {
+    "nav": "Конфиденциальность",
+    "title": "Политика конфиденциальности",
+    "description": "Политика конфиденциальности 16Launcher: какие данные обрабатываются, зачем и как реализовать свои права.",
+    "effectiveDate": "14 августа 2026 г.",
+    "versionLabel": "Версия 1.0"
   },
   "news": {
     "defaultTitle": "Новости лаунчера",
@@ -179,6 +188,23 @@
     "registerSubmit": "Зарегистрироваться",
     "verificationCode": "Код подтверждения",
     "loggedInAs": "Вы вошли как",
+    "profileSubtitle": "Ваш профиль",
+    "skinPreview": "3D-скин",
+    "skinPreviewHint": "Ваш игровой образ",
+    "online": "В сети",
+    "myWorks": "Мои работы",
+    "myWorksSubtitle": "Темы, которые вы загрузили в магазин",
+    "myWorksEmpty": "Пока нет тем",
+    "myWorksEmptyHint": "Загрузите свою первую тему — она появится здесь после модерации",
+    "uploadTheme": "Загрузить тему",
+    "browseAllThemes": "Все темы",
+    "downloadTheme": "Скачать",
+    "themesCount": "{{count}} тем",
+    "publishedCount": "{{count}} опубликовано",
+    "submittedAt": "Отправлено",
+    "statusPending": "На модерации",
+    "statusApproved": "Опубликовано",
+    "statusRejected": "Отклонено",
     "errors": {
       "generic": "Не удалось выполнить запрос",
       "invalidCredentials": "Неверный логин или пароль",

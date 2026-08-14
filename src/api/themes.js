@@ -1,4 +1,25 @@
-import { ApiError, getApiBaseUrl } from "./client.js";
+import { ApiError, apiRequest, getApiBaseUrl } from "./client.js";
+
+export const THEMES_CATALOG_URL = "/data/themes.json";
+
+export async function fetchThemesCatalog() {
+  const response = await fetch(THEMES_CATALOG_URL, { cache: "no-store" });
+  if (!response.ok) throw new Error("catalog_load_failed");
+  const data = await response.json();
+  return Array.isArray(data?.themes) ? data.themes : [];
+}
+
+export async function fetchMySubmissions(accessToken) {
+  try {
+    const data = await apiRequest("/themes/my-submissions", { accessToken });
+    if (Array.isArray(data?.submissions)) return data.submissions;
+    if (Array.isArray(data)) return data;
+    return [];
+  } catch (error) {
+    if (error?.status === 404 || error?.status === 501) return [];
+    return [];
+  }
+}
 
 export const THEME_MAX_ZIP_BYTES = 5 * 1024 * 1024;
 

@@ -16,6 +16,9 @@ export default defineConfig({
         const themesDir = resolve(distDir, "themes");
         mkdirSync(themesDir, { recursive: true });
         copyFileSync(indexHtml, resolve(themesDir, "index.html"));
+        const privacyDir = resolve(distDir, "privacy");
+        mkdirSync(privacyDir, { recursive: true });
+        copyFileSync(indexHtml, resolve(privacyDir, "index.html"));
       },
     },
   ],

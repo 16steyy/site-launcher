@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://16-launcher.ru/sitemap.xml
-

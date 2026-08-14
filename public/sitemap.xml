@@ -35,6 +35,17 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/themes?lang=en" />
   </url>
   <url>
+    <loc>https://16-launcher.ru/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/privacy?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/privacy?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/privacy?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/privacy?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/privacy?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/privacy?lang=en" />
+  </url>
+  <url>
     <loc>https://16-launcher.ru/themes/upload</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>

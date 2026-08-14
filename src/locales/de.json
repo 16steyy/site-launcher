@@ -19,6 +19,7 @@
     "screenshots": "Screenshots",
     "faq": "FAQ",
     "download": "Download",
+    "privacy": "Datenschutz",
     "sections": "Seitenabschnitte"
   },
   "hero": {
@@ -112,12 +113,20 @@
     "choose": "Auswählen"
   },
   "footer": {
-    "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft."
+    "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft.",
+    "privacy": "Datenschutzerklärung"
   },
   "notFoundPage": {
     "title": "Seite nicht gefunden",
     "description": "Diese Seite existiert nicht. Der Link ist möglicherweise veraltet oder die Adresse wurde falsch eingegeben.",
     "backHome": "Zur Startseite"
+  },
+  "privacy": {
+    "nav": "Datenschutz",
+    "title": "Datenschutzerklärung",
+    "description": "Datenschutzerklärung von 16Launcher: welche Daten verarbeitet werden, wozu und wie Sie Ihre Rechte ausüben.",
+    "effectiveDate": "14. August 2026",
+    "versionLabel": "Version 1.0"
   },
   "news": {
     "defaultTitle": "Launcher-Neuigkeiten",
@@ -179,6 +188,23 @@
     "registerSubmit": "Registrieren",
     "verificationCode": "Bestätigungscode",
     "loggedInAs": "Angemeldet als",
+    "profileSubtitle": "Dein Profil",
+    "skinPreview": "3D-Skin",
+    "skinPreviewHint": "Dein Spieler-Aussehen",
+    "online": "Online",
+    "myWorks": "Meine Werke",
+    "myWorksSubtitle": "Themes, die du in den Store hochgeladen hast",
+    "myWorksEmpty": "Noch keine Themes",
+    "myWorksEmptyHint": "Lade dein erstes Theme hoch — es erscheint hier nach der Moderation",
+    "uploadTheme": "Theme hochladen",
+    "browseAllThemes": "Alle Themes",
+    "downloadTheme": "Herunterladen",
+    "themesCount": "{{count}} Themes",
+    "publishedCount": "{{count}} veröffentlicht",
+    "submittedAt": "Eingereicht",
+    "statusPending": "In Prüfung",
+    "statusApproved": "Veröffentlicht",
+    "statusRejected": "Abgelehnt",
     "errors": {
       "generic": "Anfrage fehlgeschlagen",
       "invalidCredentials": "Ungültiger Login oder Passwort",

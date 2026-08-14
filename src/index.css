@@ -951,6 +951,19 @@ body::before {
   padding-left: 1.5rem;
 }
 
+.privacy-page .news-markdown {
+  margin-top: 1.5rem;
+}
+
+.news-markdown-table-wrap {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.news-markdown-table th,
+.news-markdown-table td {
+  overflow-wrap: anywhere;
+}
+
 
 .language-switcher-trigger {
   display: inline-flex;
@@ -1524,5 +1537,182 @@ body::before {
   .hero-preview-shine,
   .hero-preview-shell::before {
     animation: none;
+  }
+
+  .account-hero-glow,
+  .account-card-shimmer,
+  .account-online-dot,
+  .account-skin-frame::before {
+    animation: none !important;
+  }
+}
+
+.account-page {
+  position: relative;
+}
+
+.account-hero-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(520px, 90vw);
+  height: 180px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(140, 144, 255, 0.22), transparent 70%);
+  filter: blur(24px);
+  animation: accountHeroPulse 6s ease-in-out infinite;
+}
+
+.account-profile-card {
+  background: linear-gradient(
+    155deg,
+    rgba(22, 29, 48, 0.72),
+    rgba(14, 18, 36, 0.88)
+  );
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.account-card-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(148, 175, 255, 0.07) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: accountShimmer 7s ease-in-out infinite;
+}
+
+.account-avatar-ring {
+  background: linear-gradient(
+    135deg,
+    rgba(140, 144, 255, 0.85),
+    rgba(44, 96, 255, 0.55),
+    rgba(255, 255, 255, 0.35)
+  );
+  box-shadow: 0 0 28px rgba(86, 115, 255, 0.35);
+}
+
+.account-nickname-gradient {
+  background: linear-gradient(120deg, #fff 0%, #c8cbff 45%, #8c90ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.account-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.account-stat-pill--accent {
+  border-color: rgba(140, 144, 255, 0.35);
+  background: rgba(72, 118, 255, 0.16);
+  color: rgba(200, 210, 255, 0.95);
+}
+
+.account-online-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  animation: accountOnlinePulse 2.4s ease-out infinite;
+}
+
+.account-skin-frame::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(140, 144, 255, 0.42),
+    rgba(255, 255, 255, 0.08),
+    rgba(90, 120, 255, 0.3)
+  );
+  background-size: 300% 300%;
+  animation: borderFlow 8s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.account-theme-card {
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.account-theme-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(140, 144, 255, 0.45);
+  box-shadow:
+    0 16px 48px rgba(61, 97, 255, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.account-empty-works {
+  background: linear-gradient(
+    160deg,
+    rgba(22, 29, 48, 0.55),
+    rgba(12, 16, 32, 0.82)
+  );
+}
+
+@keyframes accountHeroPulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+
+@keyframes accountShimmer {
+  0%,
+  72% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes accountOnlinePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
   }
 }

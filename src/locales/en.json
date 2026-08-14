@@ -19,6 +19,7 @@
     "screenshots": "Screenshots",
     "faq": "FAQ",
     "download": "Download",
+    "privacy": "Privacy",
     "sections": "Page sections"
   },
   "hero": {
@@ -112,12 +113,20 @@
     "choose": "Choose"
   },
   "footer": {
-    "disclaimer": "16Launcher is not an official product of Mojang or Microsoft."
+    "disclaimer": "16Launcher is not an official product of Mojang or Microsoft.",
+    "privacy": "Privacy Policy"
   },
   "notFoundPage": {
     "title": "Page not found",
     "description": "This page doesn't exist. The link may be outdated or the address was entered incorrectly.",
     "backHome": "Back to home"
+  },
+  "privacy": {
+    "nav": "Privacy",
+    "title": "Privacy Policy",
+    "description": "16Launcher Privacy Policy: what data is processed, why, and how to exercise your rights.",
+    "effectiveDate": "14 August 2026",
+    "versionLabel": "Version 1.0"
   },
   "news": {
     "defaultTitle": "Launcher news",
@@ -179,6 +188,23 @@
     "registerSubmit": "Register",
     "verificationCode": "Verification code",
     "loggedInAs": "Signed in as",
+    "profileSubtitle": "Your profile",
+    "skinPreview": "3D skin",
+    "skinPreviewHint": "Your in-game look",
+    "online": "Online",
+    "myWorks": "My works",
+    "myWorksSubtitle": "Themes you've submitted to the store",
+    "myWorksEmpty": "No themes yet",
+    "myWorksEmptyHint": "Upload your first theme — it will appear here after moderation",
+    "uploadTheme": "Upload theme",
+    "browseAllThemes": "All themes",
+    "downloadTheme": "Download",
+    "themesCount": "{{count}} themes",
+    "publishedCount": "{{count}} published",
+    "submittedAt": "Submitted",
+    "statusPending": "Pending",
+    "statusApproved": "Published",
+    "statusRejected": "Rejected",
     "errors": {
       "generic": "Request failed",
       "invalidCredentials": "Invalid login or password",

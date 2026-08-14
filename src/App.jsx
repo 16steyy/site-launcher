@@ -31,6 +31,7 @@ import NewsMarkdown from "./components/NewsMarkdown";
 import NewsShareQr from "./components/NewsShareQr";
 import NotFoundPage from "./components/NotFoundPage";
 import AccountPage from "./components/pages/AccountPage";
+import PrivacyPage from "./components/pages/PrivacyPage";
 import ThemeUploadPage from "./components/pages/ThemeUploadPage";
 import ThemesPage from "./components/pages/ThemesPage";
 import AppSeo from "./seo/AppSeo";
@@ -834,6 +835,19 @@ function HomePage({ onNavigate, path, news }) {
         <footer className="pt-4 text-center text-base font-semibold text-white/60">
           {messages.footer.disclaimer}
 
+          <div className="mt-3">
+            <a
+              href="/privacy"
+              className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
+              onClick={(event) => {
+                event.preventDefault();
+                onNavigate("/privacy");
+              }}
+            >
+              {messages.footer.privacy || messages.privacy?.nav}
+            </a>
+          </div>
+
           <div className="mt-4 flex items-center justify-center gap-3">
             {SOCIAL_LINKS.map((item) => (
               <a
@@ -1221,6 +1235,15 @@ export default function App() {
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
         <AccountPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
+
+  if (route === "privacy") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <PrivacyPage onNavigate={navigate} path={path} user={user} />
       </>
     );
   }

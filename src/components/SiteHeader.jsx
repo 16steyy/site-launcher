@@ -1,4 +1,5 @@
 import LanguageSwitcher from "./LanguageSwitcher";
+import AccountAvatar from "./AccountAvatar";
 import { useI18n } from "../i18n/I18nProvider";
 
 const NAV_LINKS = [
@@ -36,7 +37,7 @@ export default function SiteHeader({ path, onNavigate, user, accountLabel }) {
       <div className="flex items-center gap-2">
         <a
           href="/account"
-          className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${
+          className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 text-sm font-bold transition ${
             path === "/account"
               ? "border-accent/40 bg-accent/15 text-white"
               : "border-white/20 bg-white/5 text-white/80 hover:text-white"
@@ -46,7 +47,10 @@ export default function SiteHeader({ path, onNavigate, user, accountLabel }) {
             onNavigate("/account");
           }}
         >
-          {user?.nickname || accountLabel || messages.account?.title || "Account"}
+          {user ? (
+            <AccountAvatar user={user} size={24} className="h-6 w-6 shrink-0 overflow-hidden rounded-md" />
+          ) : null}
+          <span>{user?.nickname || accountLabel || messages.account?.title || "Account"}</span>
         </a>
         <LanguageSwitcher />
       </div>

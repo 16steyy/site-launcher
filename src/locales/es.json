@@ -19,6 +19,7 @@
     "screenshots": "Capturas",
     "faq": "FAQ",
     "download": "Descargar",
+    "privacy": "Privacidad",
     "sections": "Secciones de la página"
   },
   "hero": {
@@ -112,12 +113,20 @@
     "choose": "Elegir"
   },
   "footer": {
-    "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft."
+    "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft.",
+    "privacy": "Política de privacidad"
   },
   "notFoundPage": {
     "title": "Página no encontrada",
     "description": "Esta página no existe. Es posible que el enlace esté desactualizado o que la dirección sea incorrecta.",
     "backHome": "Volver al inicio"
+  },
+  "privacy": {
+    "nav": "Privacidad",
+    "title": "Política de privacidad",
+    "description": "Política de privacidad de 16Launcher: qué datos se tratan, para qué y cómo ejercer tus derechos.",
+    "effectiveDate": "14 de agosto de 2026",
+    "versionLabel": "Versión 1.0"
   },
   "news": {
     "defaultTitle": "Noticias del launcher",
@@ -179,6 +188,23 @@
     "registerSubmit": "Registrarse",
     "verificationCode": "Código de verificación",
     "loggedInAs": "Has iniciado sesión como",
+    "profileSubtitle": "Tu perfil",
+    "skinPreview": "Skin 3D",
+    "skinPreviewHint": "Tu aspecto en el juego",
+    "online": "En línea",
+    "myWorks": "Mis trabajos",
+    "myWorksSubtitle": "Temas que has enviado a la tienda",
+    "myWorksEmpty": "Aún no hay temas",
+    "myWorksEmptyHint": "Sube tu primer tema — aparecerá aquí tras la moderación",
+    "uploadTheme": "Subir tema",
+    "browseAllThemes": "Todos los temas",
+    "downloadTheme": "Descargar",
+    "themesCount": "{{count}} temas",
+    "publishedCount": "{{count}} publicados",
+    "submittedAt": "Enviado",
+    "statusPending": "En moderación",
+    "statusApproved": "Publicado",
+    "statusRejected": "Rechazado",
     "errors": {
       "generic": "Error en la solicitud",
       "invalidCredentials": "Usuario o contraseña incorrectos",

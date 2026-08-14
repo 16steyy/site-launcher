@@ -18,14 +18,29 @@ function normalizeMarkdownLinks(markdown) {
   return markdown.replace(/\[([^\]]+)\]\s+\(([^)]+)\)/g, "[$1]($2)");
 }
 
-export default function NewsMarkdown({ markdown, assetBaseUrl }) {
+export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
   const { image, openImage, closeImage } = useImageLightbox();
 
   const components = useMemo(
     () => ({
-      h1: ({ children }) => <h2 className="text-3xl font-extrabold">{children}</h2>,
-      h2: ({ children }) => <h3 className="text-2xl font-extrabold">{children}</h3>,
-      h3: ({ children }) => <h4 className="text-xl font-bold">{children}</h4>,
+      h1: ({ children }) =>
+        documentMode ? (
+          <h1 className="hero-title text-4xl font-extrabold tracking-tight md:text-5xl">{children}</h1>
+        ) : (
+          <h2 className="text-3xl font-extrabold">{children}</h2>
+        ),
+      h2: ({ children }) =>
+        documentMode ? (
+          <h2 className="mt-10 text-2xl font-extrabold md:text-3xl">{children}</h2>
+        ) : (
+          <h3 className="text-2xl font-extrabold">{children}</h3>
+        ),
+      h3: ({ children }) =>
+        documentMode ? (
+          <h3 className="mt-6 text-xl font-bold">{children}</h3>
+        ) : (
+          <h4 className="text-xl font-bold">{children}</h4>
+        ),
       p: ({ children }) => <p className="news-markdown-paragraph">{children}</p>,
       ul: ({ children }) => <ul className="space-y-3">{children}</ul>,
       ol: ({ children }) => <ol className="news-markdown-ordered-list space-y-3">{children}</ol>,
@@ -74,8 +89,25 @@ export default function NewsMarkdown({ markdown, assetBaseUrl }) {
           {children}
         </pre>
       ),
+      hr: () => <hr className="my-8 border-white/15" />,
+      table: ({ children }) => (
+        <div className="news-markdown-table-wrap overflow-x-auto rounded-xl border border-white/10">
+          <table className="news-markdown-table w-full min-w-[36rem] border-collapse text-left text-base">
+            {children}
+          </table>
+        </div>
+      ),
+      thead: ({ children }) => <thead className="bg-white/10 text-white">{children}</thead>,
+      tbody: ({ children }) => <tbody>{children}</tbody>,
+      tr: ({ children }) => <tr className="border-t border-white/10">{children}</tr>,
+      th: ({ children }) => (
+        <th className="px-4 py-3 align-top font-bold text-white">{children}</th>
+      ),
+      td: ({ children }) => (
+        <td className="px-4 py-3 align-top text-white/80">{children}</td>
+      ),
     }),
-    [assetBaseUrl, openImage]
+    [assetBaseUrl, documentMode, openImage]
   );
 
   const normalizedMarkdown = useMemo(

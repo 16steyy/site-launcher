@@ -58,6 +58,17 @@ export default function AppSeo({ path, news, releaseVersion }) {
       };
     }
 
+    if (path === "/privacy") {
+      return {
+        locale,
+        pathname: "/privacy",
+        title: `${messages.privacy?.title || "Privacy Policy"}${suffix}`,
+        description: messages.privacy?.description || messages.meta.description,
+        ogType: "website",
+        jsonLdType: null,
+      };
+    }
+
     if (getRouteKind(path) === "not-found") {
       return {
         locale,

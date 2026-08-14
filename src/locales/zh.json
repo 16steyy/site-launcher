@@ -19,6 +19,7 @@
     "screenshots": "截图",
     "faq": "常见问题",
     "download": "下载",
+    "privacy": "隐私政策",
     "sections": "页面章节"
   },
   "hero": {
@@ -112,12 +113,20 @@
     "choose": "选择"
   },
   "footer": {
-    "disclaimer": "16Launcher 不是 Mojang 或 Microsoft 的官方产品。"
+    "disclaimer": "16Launcher 不是 Mojang 或 Microsoft 的官方产品。",
+    "privacy": "隐私政策"
   },
   "notFoundPage": {
     "title": "页面未找到",
     "description": "该页面不存在。链接可能已过期，或地址输入有误。",
     "backHome": "返回首页"
+  },
+  "privacy": {
+    "nav": "隐私政策",
+    "title": "隐私政策",
+    "description": "16Launcher 隐私政策：处理哪些数据、为何处理以及如何行使权利。",
+    "effectiveDate": "2026 年 8 月 14 日",
+    "versionLabel": "版本 1.0"
   },
   "news": {
     "defaultTitle": "启动器新闻",
@@ -179,6 +188,23 @@
     "registerSubmit": "注册",
     "verificationCode": "验证码",
     "loggedInAs": "当前登录",
+    "profileSubtitle": "你的资料",
+    "skinPreview": "3D 皮肤",
+    "skinPreviewHint": "你的游戏形象",
+    "online": "在线",
+    "myWorks": "我的作品",
+    "myWorksSubtitle": "你提交到商店的主题",
+    "myWorksEmpty": "暂无主题",
+    "myWorksEmptyHint": "上传你的第一个主题 — 审核通过后会显示在这里",
+    "uploadTheme": "上传主题",
+    "browseAllThemes": "全部主题",
+    "downloadTheme": "下载",
+    "themesCount": "{{count}} 个主题",
+    "publishedCount": "已发布 {{count}} 个",
+    "submittedAt": "提交于",
+    "statusPending": "审核中",
+    "statusApproved": "已发布",
+    "statusRejected": "已拒绝",
     "errors": {
       "generic": "请求失败",
       "invalidCredentials": "用户名或密码错误",
