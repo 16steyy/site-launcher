@@ -1,0 +1,85 @@
+/* =========================================
+   Тема: Windows 98 Classic (Исправленная)
+   ========================================= */
+body, .bg-\[\#050609\] {
+  background-color: #c0c0c0 !important;
+  background-image: none !important;
+  color: #000000 !important;
+  font-family: "MS Sans Serif", "Tahoma", sans-serif !important;
+}
+
+div[style*="radial-gradient"] {
+  display: none !important;
+}
+
+.z-20.h-9 {
+  background: #000080 !important;
+  border-bottom: 2px solid #dfdfdf !important;
+}
+.z-20.h-9 *, .z-20.h-9 .text-white\/40 {
+  color: #ffffff !important;
+}
+
+.glass-panel, .bg-black\/40, .bg-black\/20, .bg-black\/25, .bg-black\/35 {
+  background: #c0c0c0 !important;
+  backdrop-filter: none !important;
+  border-left: 2px solid #ffffff !important;
+  border-top: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+}
+
+/* Глобальные кнопки */
+button, .interactive-press {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-left: 2px solid #ffffff !important;
+  border-top: 2px solid #ffffff !important;
+  border-right: 2px solid #000000 !important;
+  border-bottom: 2px solid #000000 !important;
+  box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf !important;
+  transition: none !important;
+}
+
+button:active, .interactive-press:active {
+  border-left: 2px solid #000000 !important;
+  border-top: 2px solid #000000 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px #808080 !important;
+  padding-top: 2px !important;
+  padding-left: 2px !important;
+}
+
+/* Исключения */
+.interactive-press:has(.sidebar-icon), button:has(.sidebar-icon), .sidebar-icon, 
+.rounded-full, .w-7, .h-7, .w-6, .h-6, .p-1, .p-2 {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Активный переключатель (Вкладки Общие/Java) */
+.rounded-full.text-black {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+/* Активная иконка сайдбара */
+.sidebar-icon-active {
+  background: #000080 !important;
+  color: #ffffff !important;
+}
+
+input[type="text"], input[type="password"] {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-left: 2px solid #808080 !important;
+  border-top: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+* { border-radius: 0 !important; }

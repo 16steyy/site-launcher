@@ -30,6 +30,16 @@
       "preview": null,
       "download": "/themes/femboy-gif/download.zip",
       "published_at": "2026-08-14"
+    },
+    {
+      "id": "vinda-95",
+      "name": "винда 95",
+      "author": "test1",
+      "description": "Ретро-тема в стиле Windows 98",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/vinda-95/download.zip",
+      "published_at": "2026-08-14"
     }
   ]
 }
