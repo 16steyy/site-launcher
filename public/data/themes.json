@@ -1,4 +1,15 @@
 {
   "version": 1,
-  "themes": []
+  "themes": [
+    {
+      "id": "e2e-test-theme",
+      "name": "E2E Test Theme",
+      "author": "test16",
+      "description": "",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/e2e-test-theme/download.zip",
+      "published_at": "2026-08-14"
+    }
+  ]
 }
