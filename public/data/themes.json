@@ -2,6 +2,16 @@
   "version": 1,
   "themes": [
     {
+      "id": "ph",
+      "name": "PH",
+      "author": "Crepqiz",
+      "description": "An 16Launcher theme thats converting launcher into Pornhub(18+)",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/ph/download.zip",
+      "published_at": "2026-08-18"
+    },
+    {
       "id": "e2e-test-theme",
       "name": "E2E Test Theme",
       "author": "test16",

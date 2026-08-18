@@ -1,0 +1,106 @@
+/* =========================================
+   Тема: Pornhub
+   Чёрный + фирменный оранжевый #ff9000
+   ========================================= */
+
+body, .bg-\[\#050609\] {
+  background-color: #0f0f0f !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  font-family: "Arial", "Helvetica", sans-serif !important;
+}
+
+div[style*="radial-gradient"] {
+  display: none !important;
+}
+
+/* Верхняя панель */
+.z-20.h-9 {
+  background: #000000 !important;
+  border-bottom: 2px solid #ff9000 !important;
+}
+.z-20.h-9 *, .z-20.h-9 .text-white\/40 {
+  color: #ffffff !important;
+}
+
+/* Панели / карточки */
+.glass-panel, .bg-black\/40, .bg-black\/20, .bg-black\/25, .bg-black\/35 {
+  background: #1a1a1a !important;
+  backdrop-filter: none !important;
+  border: 1px solid #333333 !important;
+  border-top: 1px solid #ff9000 !important;
+}
+
+/* Глобальные кнопки */
+button, .interactive-press {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 1px solid #ff9000 !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease !important;
+}
+
+button:hover, .interactive-press:hover {
+  background: #ff9000 !important;
+  color: #000000 !important;
+  border-color: #ff9000 !important;
+}
+
+button:active, .interactive-press:active {
+  background: #e67e00 !important;
+  color: #000000 !important;
+  border-color: #e67e00 !important;
+}
+
+/* Исключения — иконки сайдбара и круглые элементы */
+.interactive-press:has(.sidebar-icon), button:has(.sidebar-icon), .sidebar-icon, 
+.rounded-full, .w-7, .h-7, .w-6, .h-6, .p-1, .p-2 {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Активный переключатель */
+.rounded-full.text-black {
+  background-color: #ff9000 !important;
+  color: #000000 !important;
+  border-radius: 4px !important;
+}
+
+/* Активная иконка сайдбара */
+.sidebar-icon-active {
+  background: #ff9000 !important;
+  color: #000000 !important;
+}
+
+/* Поля ввода */
+input[type="text"], input[type="password"] {
+  background: #121212 !important;
+  color: #ffffff !important;
+  border: 1px solid #333333 !important;
+  border-bottom: 2px solid #ff9000 !important;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: #ff9000 !important;
+  outline: none !important;
+}
+
+/* Скругления оставляем минимальные, как у Pornhub */
+* { 
+  border-radius: 4px !important; 
+}
+
+/* Дополнительные акценты */
+.text-white\/40, .text-white\/50, .text-white\/60 {
+  color: #aaaaaa !important;
+}
+
+a, .text-blue-400, .text-blue-500 {
+  color: #ff9000 !important;
+}
+
+a:hover {
+  color: #ffaa33 !important;
+}
