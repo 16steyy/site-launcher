@@ -73,6 +73,10 @@
     "java": {
       "accentPart": "Detaillierte",
       "restPart": "Spieleinstellungen nach deinen Bedürfnissen."
+    },
+    "rooms": {
+      "accentPart": "Eine Welt",
+      "restPart": "für alle - zusammen spielen mit Räumen."
     }
   },
   "faq": {

@@ -7,6 +7,7 @@ import modpacksShot from "../assets/modpacks.png";
 import modsShot from "../assets/mods_tab.png";
 import javaShot from "../assets/java_settings.png";
 import settingsShot from "../assets/settings.png";
+import roomsShot from "../assets/rooms.png";
 import armCharacter from "../assets/arm.png";
 import coolCharacter from "../assets/cool.png";
 import runCharacter from "../assets/run.png";
@@ -124,6 +125,15 @@ const SHOT_LAYOUT = [
     id: "java",
     headlinePosition: "top",
     image: javaShot,
+    character: runCharacter,
+    characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
+    characterWrapClasses: CHARACTER_WRAP_CLASSES_STYLE_RUN,
+    headingAlign: "center",
+  },
+  {
+    id: "rooms",
+    headlinePosition: "top",
+    image: roomsShot,
     character: runCharacter,
     characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
     characterWrapClasses: CHARACTER_WRAP_CLASSES_STYLE_RUN,
@@ -624,21 +634,29 @@ function HomePage({ onNavigate, path, news }) {
                 }`}
                 style={{ animationDelay: `${baseDelay + 70}ms` }}
               >
+                {section.character ? (
+                  <div
+                    className={
+                      section.characterWrapClasses ||
+                      CHARACTER_WRAP_DEFAULT_CLASSES
+                    }
+                  >
+                    <img
+                      src={section.character}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className={`relative z-[1] ${characterClasses}`}
+                    />
+                  </div>
+                ) : null}
                 <div
-                  className={
-                    section.characterWrapClasses ||
-                    CHARACTER_WRAP_DEFAULT_CLASSES
-                  }
+                  className={`order-1 min-w-0 flex-[1_1_auto] md:order-2 ${
+                    section.character
+                      ? "md:flex-[1_1_72%] md:basis-[72%]"
+                      : "md:flex-[1_1_100%] md:basis-full"
+                  }`}
                 >
-                  <img
-                    src={section.character}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className={`relative z-[1] ${characterClasses}`}
-                  />
-                </div>
-                <div className="order-1 min-w-0 flex-[1_1_auto] md:order-2 md:flex-[1_1_72%] md:basis-[72%]">
                   <button
                     type="button"
                     className="group relative block h-full w-full"

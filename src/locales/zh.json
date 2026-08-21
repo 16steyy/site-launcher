@@ -73,6 +73,10 @@
     "java": {
       "accentPart": "详细的",
       "restPart": "游戏设置，满足你的需求。"
+    },
+    "rooms": {
+      "accentPart": "同一个世界",
+      "restPart": "一起玩-用房间联机。"
     }
   },
   "faq": {
