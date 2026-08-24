@@ -151,7 +151,12 @@
     "shareTelegram": "Compartir en Telegram",
     "shareDiscord": "Compartir en Discord",
     "shareCopied": "Enlace copiado — pégalo en Discord",
-    "shareCopyPrompt": "Copia el enlace para Discord"
+    "shareCopyPrompt": "Copia el enlace para Discord",
+    "sliderLabel": "Carrusel de fotos",
+    "sliderPrev": "Foto anterior",
+    "sliderNext": "Foto siguiente",
+    "sliderCounter": "{{current}} de {{total}}",
+    "sliderGoTo": "Ir a la foto {{current}}"
   },
   "themes": {
     "nav": "Temas",

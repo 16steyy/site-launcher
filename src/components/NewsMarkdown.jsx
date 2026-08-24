@@ -1,7 +1,14 @@
-import { useMemo } from "react";
+import { Children, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ImageLightbox, { useImageLightbox } from "./ImageLightbox";
+import NewsImageSlider from "./NewsImageSlider";
+
+const IMAGE_LINE_RE =
+  /^\s*!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)\s*$/;
+const FENCE_RE = /^\s*(```|~~~)/;
+const SLIDER_OPEN_RE = /^\s*:::slider\s*$/i;
+const SLIDER_CLOSE_RE = /^\s*:::\s*$/;
 
 function resolveRelativeUrl(path, baseUrl) {
   if (!path) return "";
@@ -18,8 +25,102 @@ function normalizeMarkdownLinks(markdown) {
   return markdown.replace(/\[([^\]]+)\]\s+\(([^)]+)\)/g, "[$1]($2)");
 }
 
+function parseImageLine(line) {
+  const match = line.match(IMAGE_LINE_RE);
+  if (!match) return null;
+  return { alt: match[1] || "", src: match[2] };
+}
+
+function toSliderFence(images) {
+  return ["```news-slider", JSON.stringify(images), "```"].join("\n");
+}
+
+export function transformNewsMarkdownSliders(markdown) {
+  const lines = markdown.split(/\r?\n/);
+  const output = [];
+  let inFence = false;
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (FENCE_RE.test(line)) {
+      inFence = !inFence;
+      output.push(line);
+      i += 1;
+      continue;
+    }
+
+    if (!inFence && SLIDER_OPEN_RE.test(line)) {
+      const start = i;
+      const images = [];
+      const collected = [];
+      i += 1;
+      let closed = false;
+      while (i < lines.length) {
+        if (SLIDER_CLOSE_RE.test(lines[i])) {
+          closed = true;
+          i += 1;
+          break;
+        }
+        collected.push(lines[i]);
+        const image = parseImageLine(lines[i]);
+        if (image) images.push(image);
+        i += 1;
+      }
+      if (!closed) {
+        output.push(lines[start], ...collected);
+        continue;
+      }
+      if (images.length >= 2) {
+        output.push(toSliderFence(images));
+      } else {
+        images.forEach((image) => {
+          output.push(`![${image.alt}](${image.src})`);
+        });
+      }
+      continue;
+    }
+
+    if (!inFence && parseImageLine(line)) {
+      const images = [];
+      while (i < lines.length && parseImageLine(lines[i])) {
+        images.push(parseImageLine(lines[i]));
+        i += 1;
+      }
+      if (images.length >= 2) {
+        output.push(toSliderFence(images));
+      } else {
+        output.push(`![${images[0].alt}](${images[0].src})`);
+      }
+      continue;
+    }
+
+    output.push(line);
+    i += 1;
+  }
+
+  return output.join("\n");
+}
+
+function extractNewsSlider(children) {
+  const nodes = Children.toArray(children);
+  const code = nodes.find(
+    (child) =>
+      child?.props?.className && String(child.props.className).includes("language-news-slider")
+  );
+  if (!code) return null;
+  const raw = String(code.props.children ?? "").trim();
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((item) => item?.src) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
-  const { image, openImage, closeImage } = useImageLightbox();
+  const { image, alt, hasGallery, openImage, closeImage, showPrev, showNext } = useImageLightbox();
 
   const components = useMemo(
     () => ({
@@ -47,7 +148,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
       li: ({ children }) => (
         <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">{children}</li>
       ),
-      img: ({ src, alt }) => {
+      img: ({ src, alt: imageAlt }) => {
         const resolvedSrc = resolveRelativeUrl(src, assetBaseUrl);
         return (
           <button
@@ -57,7 +158,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
           >
             <img
               src={resolvedSrc}
-              alt={alt || ""}
+              alt={imageAlt || ""}
               className="news-inline-image rounded-2xl border border-white/15 transition-transform duration-300 ease-out group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
             />
             <div className="pointer-events-none absolute inset-0 rounded-2xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
@@ -84,11 +185,25 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
           </code>
         );
       },
-      pre: ({ children }) => (
-        <pre className="overflow-x-auto rounded-xl border border-white/10 bg-white/5 p-4 font-mono text-sm text-white/85">
-          {children}
-        </pre>
-      ),
+      pre: ({ children }) => {
+        const sliderImages = extractNewsSlider(children);
+        if (sliderImages?.length >= 2) {
+          return (
+            <NewsImageSlider
+              images={sliderImages.map((item) => ({
+                alt: item.alt || "",
+                src: resolveRelativeUrl(item.src, assetBaseUrl),
+              }))}
+              onOpenImage={openImage}
+            />
+          );
+        }
+        return (
+          <pre className="overflow-x-auto rounded-xl border border-white/10 bg-white/5 p-4 font-mono text-sm text-white/85">
+            {children}
+          </pre>
+        );
+      },
       hr: () => <hr className="my-8 border-white/15" />,
       table: ({ children }) => (
         <div className="news-markdown-table-wrap overflow-x-auto rounded-xl border border-white/10">
@@ -111,7 +226,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
   );
 
   const normalizedMarkdown = useMemo(
-    () => (markdown ? normalizeMarkdownLinks(markdown) : ""),
+    () => (markdown ? transformNewsMarkdownSliders(normalizeMarkdownLinks(markdown)) : ""),
     [markdown]
   );
 
@@ -124,7 +239,14 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
           {normalizedMarkdown}
         </ReactMarkdown>
       </section>
-      <ImageLightbox image={image} onClose={closeImage} />
+      <ImageLightbox
+        image={image}
+        alt={alt}
+        hasGallery={hasGallery}
+        onClose={closeImage}
+        onPrev={showPrev}
+        onNext={showNext}
+      />
     </>
   );
 }

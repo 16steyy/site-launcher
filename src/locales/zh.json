@@ -151,7 +151,12 @@
     "shareTelegram": "分享到 Telegram",
     "shareDiscord": "分享到 Discord",
     "shareCopied": "链接已复制 — 请粘贴到 Discord",
-    "shareCopyPrompt": "复制 Discord 分享链接"
+    "shareCopyPrompt": "复制 Discord 分享链接",
+    "sliderLabel": "图片轮播",
+    "sliderPrev": "上一张",
+    "sliderNext": "下一张",
+    "sliderCounter": "{{current}} / {{total}}",
+    "sliderGoTo": "查看第 {{current}} 张"
   },
   "themes": {
     "nav": "主题",

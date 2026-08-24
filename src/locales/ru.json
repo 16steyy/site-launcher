@@ -151,7 +151,12 @@
     "shareTelegram": "Поделиться в Telegram",
     "shareDiscord": "Поделиться в Discord",
     "shareCopied": "Ссылка скопирована — вставьте в Discord",
-    "shareCopyPrompt": "Скопируйте ссылку для Discord"
+    "shareCopyPrompt": "Скопируйте ссылку для Discord",
+    "sliderLabel": "Слайдер фото",
+    "sliderPrev": "Предыдущее фото",
+    "sliderNext": "Следующее фото",
+    "sliderCounter": "{{current}} из {{total}}",
+    "sliderGoTo": "Перейти к фото {{current}}"
   },
   "themes": {
     "nav": "Темы",
