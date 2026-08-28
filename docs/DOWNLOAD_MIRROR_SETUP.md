@@ -9,7 +9,7 @@ Implement this in the **api.16-launcher.ru** backend repository.
 The site build script writes mirror URLs like:
 
 ```text
-https://api.16-launcher.ru/releases/v3.2.5/16Launcher_3.2.5_x64-setup.exe
+https://api.16-launcher.ru/releases/v3.2.6/16Launcher_3.2.6_x64-setup.exe
 ```
 
 Pattern: `{DOWNLOAD_MIRROR_BASE}/v{version}/{filename}`
@@ -24,7 +24,7 @@ No need to upload binaries manually. The API streams the file from GitHub when t
 
 `GET /releases/v:version/:filename`
 
-Example: `GET /releases/v3.2.5/16Launcher_3.2.5_x64-setup.exe`
+Example: `GET /releases/v3.2.6/16Launcher_3.2.6_x64-setup.exe`
 
 ### Behaviour
 
@@ -55,7 +55,7 @@ Large files (AppImage ~110 MB) need a long read timeout.
 Copy release assets to the server after each GitHub release:
 
 ```text
-/var/www/launcher-releases/v3.2.5/16Launcher_3.2.5_x64-setup.exe
+/var/www/launcher-releases/v3.2.6/16Launcher_3.2.6_x64-setup.exe
 ```
 
 Serve with Nginx `alias` or upload to object storage (S3, Yandex Object Storage) and use that URL as `DOWNLOAD_MIRROR_BASE`.
@@ -85,7 +85,7 @@ Optional GitHub Actions variable `DOWNLOAD_MIRROR_BASE` overrides the default wh
 ## Smoke test
 
 ```bash
-curl -I "https://api.16-launcher.ru/releases/v3.2.5/16Launcher_3.2.5_x64-setup.exe"
+curl -I "https://api.16-launcher.ru/releases/v3.2.6/16Launcher_3.2.6_x64-setup.exe"
 ```
 
 Expect `200` or `302` and `Content-Length` around 23 MB for the Windows installer.
@@ -93,7 +93,7 @@ Expect `200` or `302` and `Content-Length` around 23 MB for the Windows installe
 Without VPN, the same request to GitHub often times out:
 
 ```bash
-curl -I "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.5/16Launcher_3.2.5_x64-setup.exe"
+curl -I "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.6/16Launcher_3.2.6_x64-setup.exe"
 ```
 
 ## Until the mirror is live

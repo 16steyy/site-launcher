@@ -29,7 +29,10 @@ export function getDownloadMirrorBase(override) {
       ? DEFAULT_DOWNLOAD_MIRROR_BASE
       : override;
 
-  return String(value).replace(/\/+$/, "");
+  // Очищаем лишние слеши и захардкоженные версии в конце URL, если они были переданы
+  return String(value)
+    .replace(/\/+$/, "")
+    .replace(/\/v\d+\.\d+\.\d+$/, "");
 }
 
 export function extractFilenameFromDownloadUrl(url) {
@@ -90,7 +93,6 @@ export function resolveDownloadLinks(githubLinks, mirrors) {
   for (const key of RELEASE_LINK_KEYS) {
     const github = githubLinks?.[key] || "";
     const mirror = mirrors?.[key] || "";
-    // API mirror is used when available: GitHub assets are often blocked in RU.
     resolved[key] = mirror || github;
   }
   return resolved;
