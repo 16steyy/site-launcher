@@ -2,6 +2,11 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  buildMirrorLinks,
+  getDownloadMirrorBase,
+} from "../src/lib/releaseDownloads.js";
+
 const OWNER = "launcherdev11";
 const REPO = "rust-launcher";
 const FALLBACK_RELEASES_URL = `https://github.com/${OWNER}/${REPO}/releases`;
@@ -11,6 +16,7 @@ const REPO_API = `https://api.github.com/repos/${OWNER}/${REPO}`;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_PATH = resolve(__dirname, "../public/github-release.json");
+const DOWNLOAD_MIRROR_BASE = getDownloadMirrorBase(process.env.DOWNLOAD_MIRROR_BASE);
 
 function authHeaders() {
   const token = process.env.GH_STATS_TOKEN || process.env.GITHUB_TOKEN || "";
@@ -110,14 +116,23 @@ async function main() {
       linuxRpm: pickAssetUrl(assets, (name) => name.endsWith(".rpm")),
       linuxAppImage: pickAssetUrl(assets, (name) => name.endsWith(".appimage")),
     };
+
+    if (DOWNLOAD_MIRROR_BASE && payload.version) {
+      payload.mirrors = buildMirrorLinks(
+        payload.links,
+        payload.version,
+        DOWNLOAD_MIRROR_BASE
+      );
+    }
   } catch (error) {
     console.warn("[fetch-github-release] fallback:", error.message || error);
   }
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
   writeFileSync(OUT_PATH, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  const mirrorStatus = payload.mirrors ? `mirror=${DOWNLOAD_MIRROR_BASE}` : "mirror=off";
   console.log(
-    `[fetch-github-release] wrote ${OUT_PATH} (stars=${payload.stars}, downloads=${payload.downloads}, version=${payload.version || "—"})`
+    `[fetch-github-release] wrote ${OUT_PATH} (stars=${payload.stars}, downloads=${payload.downloads}, version=${payload.version || "—"}, ${mirrorStatus})`
   );
 }
 

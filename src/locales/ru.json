@@ -224,5 +224,53 @@
       "verificationRequired": "Введите код подтверждения из письма",
       "rateLimit": "Слишком много попыток, попробуйте позже"
     }
+  },
+  "newsAdmin": {
+    "title": "Админка новостей",
+    "subtitle": "Создавайте и редактируйте обновления лаунчера",
+    "loading": "Загрузка…",
+    "create": "Новая новость",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "empty": "Пока нет опубликованных новостей",
+    "backToList": "К списку",
+    "createTitle": "Новая новость",
+    "editTitle": "Редактирование",
+    "save": "Опубликовать",
+    "saving": "Сохраняю…",
+    "saveSuccess": "Новость сохранена",
+    "previewEdit": "Редактор",
+    "previewView": "Превью",
+    "previewEmpty": "Текст статьи появится здесь",
+    "loadingPost": "Загружаю статью…",
+    "forbiddenTitle": "Нет доступа",
+    "forbiddenHint": "Эта страница доступна только администраторам. Добавьте свой ник в VITE_NEWS_ADMIN_NICKNAMES или попросите выдать роль admin в API.",
+    "deleteConfirm": "Удалить новость «{{title}}»?",
+    "postsCount": "{{count}} новостей",
+    "openAdmin": "Админка новостей",
+    "fields": {
+      "title": "Заголовок",
+      "slug": "Slug (URL)",
+      "slugHint": "Например: update-3-2-3",
+      "version": "Версия",
+      "date": "Дата",
+      "excerpt": "Краткое описание",
+      "cover": "Обложка",
+      "coverHint": "PNG, JPG или WebP, до 5 МБ",
+      "markdown": "Текст статьи (Markdown)",
+      "markdownHint": "Поддерживаются заголовки, списки, картинки и :::slider",
+      "markdownPlaceholder": "# Заголовок\n\nТекст новости…"
+    },
+    "errors": {
+      "generic": "Не удалось сохранить новость",
+      "forbidden": "Недостаточно прав",
+      "notFound": "Новость не найдена",
+      "duplicateSlug": "Новость с таким slug уже существует",
+      "coverTooLarge": "Обложка слишком большая (макс. 5 МБ)",
+      "rateLimit": "Слишком много запросов, попробуйте позже",
+      "apiUnavailable": "API новостей ещё не настроен на сервере",
+      "required": "Заполните заголовок, slug и дату",
+      "markdownLoad": "Не удалось загрузить текст статьи"
+    }
   }
 }

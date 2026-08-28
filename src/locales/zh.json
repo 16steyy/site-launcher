@@ -224,5 +224,53 @@
       "verificationRequired": "请输入邮件中的验证码",
       "rateLimit": "尝试次数过多，请稍后再试"
     }
+  },
+  "newsAdmin": {
+    "title": "新闻管理",
+    "subtitle": "创建和编辑启动器更新",
+    "loading": "加载中…",
+    "create": "新建新闻",
+    "edit": "编辑",
+    "delete": "删除",
+    "empty": "暂无已发布新闻",
+    "backToList": "返回列表",
+    "createTitle": "新建新闻",
+    "editTitle": "编辑新闻",
+    "save": "发布",
+    "saving": "保存中…",
+    "saveSuccess": "新闻已保存",
+    "previewEdit": "编辑器",
+    "previewView": "预览",
+    "previewEmpty": "文章文本将显示在这里",
+    "loadingPost": "正在加载文章…",
+    "forbiddenTitle": "无权访问",
+    "forbiddenHint": "此页面仅限管理员。请将昵称添加到 VITE_NEWS_ADMIN_NICKNAMES，或在 API 中申请 admin 角色。",
+    "deleteConfirm": "删除新闻「{{title}}」？",
+    "postsCount": "{{count}} 条新闻",
+    "openAdmin": "新闻管理",
+    "fields": {
+      "title": "标题",
+      "slug": "Slug（URL）",
+      "slugHint": "例如：update-3-2-3",
+      "version": "版本",
+      "date": "日期",
+      "excerpt": "简短描述",
+      "cover": "封面图",
+      "coverHint": "PNG、JPG 或 WebP，最大 5 MB",
+      "markdown": "文章正文（Markdown）",
+      "markdownHint": "支持标题、列表、图片和 :::slider",
+      "markdownPlaceholder": "# 标题\n\n新闻正文…"
+    },
+    "errors": {
+      "generic": "无法保存新闻",
+      "forbidden": "权限不足",
+      "notFound": "未找到新闻",
+      "duplicateSlug": "该 slug 的新闻已存在",
+      "coverTooLarge": "封面图过大（最大 5 MB）",
+      "rateLimit": "请求过多，请稍后再试",
+      "apiUnavailable": "服务器尚未配置新闻 API",
+      "required": "请填写标题、slug 和日期",
+      "markdownLoad": "无法加载文章正文"
+    }
   }
 }

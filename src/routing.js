@@ -7,5 +7,6 @@ export function getRouteKind(pathname) {
   if (path === "/themes/upload") return "themes-upload";
   if (path === "/account") return "account";
   if (path === "/privacy") return "privacy";
+  if (path === "/admin/news") return "admin-news";
   return "not-found";
 }

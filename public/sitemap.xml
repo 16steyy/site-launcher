@@ -67,40 +67,4 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/account?lang=es" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/account?lang=en" />
   </url>
-  <url>
-    <loc>https://16-launcher.ru/news/update-2-1-5</loc>
-    <lastmod>2026-07-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/news/update-2-1-5?lang=ru" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/news/update-2-1-5?lang=en" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/news/update-2-1-5?lang=zh" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/news/update-2-1-5?lang=de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/news/update-2-1-5?lang=es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news/update-2-1-5?lang=en" />
-  </url>
-  <url>
-    <loc>https://16-launcher.ru/news/update-2-1-0</loc>
-    <lastmod>2026-06-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/news/update-2-1-0?lang=ru" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/news/update-2-1-0?lang=en" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/news/update-2-1-0?lang=zh" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/news/update-2-1-0?lang=de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/news/update-2-1-0?lang=es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news/update-2-1-0?lang=en" />
-  </url>
-  <url>
-    <loc>https://16-launcher.ru/news/update-2-0-0</loc>
-    <lastmod>2026-03-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/news/update-2-0-0?lang=ru" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/news/update-2-0-0?lang=en" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/news/update-2-0-0?lang=zh" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/news/update-2-0-0?lang=de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/news/update-2-0-0?lang=es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news/update-2-0-0?lang=en" />
-  </url>
 </urlset>

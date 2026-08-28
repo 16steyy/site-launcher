@@ -224,5 +224,53 @@
       "verificationRequired": "Introduce el código de verificación del email",
       "rateLimit": "Demasiados intentos, inténtalo más tarde"
     }
+  },
+  "newsAdmin": {
+    "title": "Admin de noticias",
+    "subtitle": "Crea y edita actualizaciones del launcher",
+    "loading": "Cargando…",
+    "create": "Nueva noticia",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "empty": "Aún no hay publicaciones",
+    "backToList": "Volver a la lista",
+    "createTitle": "Nueva noticia",
+    "editTitle": "Editar noticia",
+    "save": "Publicar",
+    "saving": "Guardando…",
+    "saveSuccess": "Noticia guardada",
+    "previewEdit": "Editor",
+    "previewView": "Vista previa",
+    "previewEmpty": "El texto del artículo aparecerá aquí",
+    "loadingPost": "Cargando artículo…",
+    "forbiddenTitle": "Acceso denegado",
+    "forbiddenHint": "Esta página es solo para administradores. Añade tu nickname a VITE_NEWS_ADMIN_NICKNAMES o solicita el rol admin en la API.",
+    "deleteConfirm": "¿Eliminar la noticia «{{title}}»?",
+    "postsCount": "{{count}} noticias",
+    "openAdmin": "Admin de noticias",
+    "fields": {
+      "title": "Título",
+      "slug": "Slug (URL)",
+      "slugHint": "Ejemplo: update-3-2-3",
+      "version": "Versión",
+      "date": "Fecha",
+      "excerpt": "Descripción breve",
+      "cover": "Portada",
+      "coverHint": "PNG, JPG o WebP, hasta 5 MB",
+      "markdown": "Texto del artículo (Markdown)",
+      "markdownHint": "Admite encabezados, listas, imágenes y :::slider",
+      "markdownPlaceholder": "# Título\n\nTexto de la noticia…"
+    },
+    "errors": {
+      "generic": "No se pudo guardar la noticia",
+      "forbidden": "Permisos insuficientes",
+      "notFound": "Noticia no encontrada",
+      "duplicateSlug": "Ya existe una noticia con este slug",
+      "coverTooLarge": "La portada es demasiado grande (máx. 5 MB)",
+      "rateLimit": "Demasiadas solicitudes, inténtalo más tarde",
+      "apiUnavailable": "La API de noticias aún no está configurada en el servidor",
+      "required": "Completa título, slug y fecha",
+      "markdownLoad": "No se pudo cargar el texto del artículo"
+    }
   }
 }

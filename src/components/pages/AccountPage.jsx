@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { ensureValidAccessToken } from "../../api/auth.js";
 import { fetchMySubmissions, fetchThemesCatalog } from "../../api/themes.js";
 import { useAuth } from "../../hooks/useAuth.js";
+import { isNewsAdmin } from "../../lib/newsAdmin.js";
 import SiteHeader from "../SiteHeader";
 import AccountAvatar from "../AccountAvatar";
 import { useI18n } from "../../i18n/I18nProvider";
@@ -297,6 +298,15 @@ export default function AccountPage({ onNavigate, path, user }) {
                   >
                     {copy.uploadTheme}
                   </button>
+                  {isNewsAdmin(user) ? (
+                    <button
+                      type="button"
+                      onClick={() => onNavigate("/admin/news")}
+                      className="rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/85 transition hover:text-white"
+                    >
+                      {messages.newsAdmin?.openAdmin || "News admin"}
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     onClick={handleLogout}

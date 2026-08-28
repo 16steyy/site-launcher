@@ -224,5 +224,53 @@
       "verificationRequired": "Enter the verification code from your email",
       "rateLimit": "Too many attempts, try again later"
     }
+  },
+  "newsAdmin": {
+    "title": "News admin",
+    "subtitle": "Create and edit launcher updates",
+    "loading": "Loading…",
+    "create": "New post",
+    "edit": "Edit",
+    "delete": "Delete",
+    "empty": "No published posts yet",
+    "backToList": "Back to list",
+    "createTitle": "New post",
+    "editTitle": "Edit post",
+    "save": "Publish",
+    "saving": "Saving…",
+    "saveSuccess": "Post saved",
+    "previewEdit": "Editor",
+    "previewView": "Preview",
+    "previewEmpty": "Article text will appear here",
+    "loadingPost": "Loading article…",
+    "forbiddenTitle": "Access denied",
+    "forbiddenHint": "This page is for administrators only. Add your nickname to VITE_NEWS_ADMIN_NICKNAMES or ask for an admin role in the API.",
+    "deleteConfirm": "Delete post \"{{title}}\"?",
+    "postsCount": "{{count}} posts",
+    "openAdmin": "News admin",
+    "fields": {
+      "title": "Title",
+      "slug": "Slug (URL)",
+      "slugHint": "Example: update-3-2-3",
+      "version": "Version",
+      "date": "Date",
+      "excerpt": "Short description",
+      "cover": "Cover image",
+      "coverHint": "PNG, JPG or WebP, up to 5 MB",
+      "markdown": "Article text (Markdown)",
+      "markdownHint": "Supports headings, lists, images and :::slider",
+      "markdownPlaceholder": "# Title\n\nNews text…"
+    },
+    "errors": {
+      "generic": "Failed to save post",
+      "forbidden": "Insufficient permissions",
+      "notFound": "Post not found",
+      "duplicateSlug": "A post with this slug already exists",
+      "coverTooLarge": "Cover image is too large (max 5 MB)",
+      "rateLimit": "Too many requests, try again later",
+      "apiUnavailable": "News API is not configured on the server yet",
+      "required": "Fill in title, slug and date",
+      "markdownLoad": "Failed to load article text"
+    }
   }
 }

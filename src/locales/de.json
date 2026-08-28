@@ -224,5 +224,53 @@
       "verificationRequired": "Gib den Bestätigungscode aus der E-Mail ein",
       "rateLimit": "Zu viele Versuche, versuche es später erneut"
     }
+  },
+  "newsAdmin": {
+    "title": "News-Admin",
+    "subtitle": "Launcher-Updates erstellen und bearbeiten",
+    "loading": "Laden…",
+    "create": "Neuer Beitrag",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "empty": "Noch keine veröffentlichten Beiträge",
+    "backToList": "Zurück zur Liste",
+    "createTitle": "Neuer Beitrag",
+    "editTitle": "Beitrag bearbeiten",
+    "save": "Veröffentlichen",
+    "saving": "Speichern…",
+    "saveSuccess": "Beitrag gespeichert",
+    "previewEdit": "Editor",
+    "previewView": "Vorschau",
+    "previewEmpty": "Der Artikeltext erscheint hier",
+    "loadingPost": "Artikel wird geladen…",
+    "forbiddenTitle": "Zugriff verweigert",
+    "forbiddenHint": "Diese Seite ist nur für Administratoren. Füge deinen Nickname zu VITE_NEWS_ADMIN_NICKNAMES hinzu oder bitte um eine Admin-Rolle in der API.",
+    "deleteConfirm": "Beitrag „{{title}}“ löschen?",
+    "postsCount": "{{count}} Beiträge",
+    "openAdmin": "News-Admin",
+    "fields": {
+      "title": "Titel",
+      "slug": "Slug (URL)",
+      "slugHint": "Beispiel: update-3-2-3",
+      "version": "Version",
+      "date": "Datum",
+      "excerpt": "Kurzbeschreibung",
+      "cover": "Titelbild",
+      "coverHint": "PNG, JPG oder WebP, bis 5 MB",
+      "markdown": "Artikeltext (Markdown)",
+      "markdownHint": "Unterstützt Überschriften, Listen, Bilder und :::slider",
+      "markdownPlaceholder": "# Titel\n\nNewstext…"
+    },
+    "errors": {
+      "generic": "Beitrag konnte nicht gespeichert werden",
+      "forbidden": "Unzureichende Berechtigungen",
+      "notFound": "Beitrag nicht gefunden",
+      "duplicateSlug": "Ein Beitrag mit diesem Slug existiert bereits",
+      "coverTooLarge": "Titelbild ist zu groß (max. 5 MB)",
+      "rateLimit": "Zu viele Anfragen, versuche es später erneut",
+      "apiUnavailable": "News-API ist auf dem Server noch nicht konfiguriert",
+      "required": "Titel, Slug und Datum ausfüllen",
+      "markdownLoad": "Artikeltext konnte nicht geladen werden"
+    }
   }
 }

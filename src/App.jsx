@@ -35,15 +35,27 @@ import AccountPage from "./components/pages/AccountPage";
 import PrivacyPage from "./components/pages/PrivacyPage";
 import ThemeUploadPage from "./components/pages/ThemeUploadPage";
 import ThemesPage from "./components/pages/ThemesPage";
+import NewsAdminPage from "./components/pages/NewsAdminPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useAuth } from "./hooks/useAuth";
 import { useI18n } from "./i18n/I18nProvider";
 import { getRouteKind } from "./routing";
+import {
+  normalizeReleaseData,
+  pickMainDownloadLink,
+  RELEASE_LINK_KEYS,
+} from "./lib/releaseDownloads";
+import {
+  fetchReleaseDataFromApi,
+  getReleaseMirrorBase,
+  mergeReleaseData,
+} from "./api/releases";
 
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
 const GITHUB_RELEASE_DATA_URL = "/github-release.json";
+const DOWNLOAD_MIRROR_BASE = getReleaseMirrorBase();
 const NEWS_CDN_BASE =
   "https://cdn.jsdelivr.net/gh/16steyy/16Launcher-Site-News@main";
 const NEWS_RAW_BASE =
@@ -158,41 +170,41 @@ function detectOS() {
 }
 
 function emptyReleaseData() {
-  return {
-    stars: 0,
-    downloads: 0,
-    version: "",
-    links: {
-      windows: FALLBACK_RELEASES_URL,
-      macos: FALLBACK_RELEASES_URL,
-      linuxDeb: FALLBACK_RELEASES_URL,
-      linuxRpm: FALLBACK_RELEASES_URL,
-      linuxAppImage: FALLBACK_RELEASES_URL,
-    },
-  };
-}
-
-function normalizeReleaseData(input) {
-  const fallback = emptyReleaseData();
-  const links = input?.links || {};
-  return {
-    stars: Number(input?.stars) || 0,
-    downloads: Number(input?.downloads) || 0,
-    version: String(input?.version || "").replace(/^v/i, ""),
-    links: {
-      windows: links.windows || fallback.links.windows,
-      macos: links.macos || fallback.links.macos,
-      linuxDeb: links.linuxDeb || fallback.links.linuxDeb,
-      linuxRpm: links.linuxRpm || fallback.links.linuxRpm,
-      linuxAppImage: links.linuxAppImage || fallback.links.linuxAppImage,
-    },
-  };
+  const fallbackLinks = Object.fromEntries(
+    RELEASE_LINK_KEYS.map((key) => [key, FALLBACK_RELEASES_URL])
+  );
+  return normalizeReleaseData(
+    { stars: 0, downloads: 0, version: "", links: fallbackLinks },
+    { fallbackLinks, runtimeMirrorBase: DOWNLOAD_MIRROR_BASE }
+  );
 }
 
 async function fetchGithubReleaseData() {
-  const response = await fetch(GITHUB_RELEASE_DATA_URL, { cache: "no-store" });
-  if (!response.ok) throw new Error("failed_release_data_load");
-  return normalizeReleaseData(await response.json());
+  const fallback = emptyReleaseData();
+
+  try {
+    const response = await fetch(GITHUB_RELEASE_DATA_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("failed_release_data_load");
+    const primary = normalizeReleaseData(await response.json(), {
+      fallbackLinks: fallback.githubLinks,
+      runtimeMirrorBase: DOWNLOAD_MIRROR_BASE,
+    });
+
+    try {
+      const apiData = await fetchReleaseDataFromApi({
+        fallbackLinks: fallback.githubLinks,
+        runtimeMirrorBase: DOWNLOAD_MIRROR_BASE,
+      });
+      return mergeReleaseData(primary, apiData);
+    } catch {
+      return primary;
+    }
+  } catch {
+    return fetchReleaseDataFromApi({
+      fallbackLinks: fallback.githubLinks,
+      runtimeMirrorBase: DOWNLOAD_MIRROR_BASE,
+    });
+  }
 }
 
 function toAbsoluteUrl(baseUrl, path) {
@@ -208,19 +220,34 @@ function withCacheBust(url) {
   return `${url}${divider}t=${Date.now()}`;
 }
 
+const NEWS_FETCH_TIMEOUT_MS = 5000;
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = NEWS_FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+function newsSourceCandidates(relativePath) {
+  return [
+    toAbsoluteUrl(NEWS_CDN_BASE, relativePath),
+    toAbsoluteUrl(NEWS_RAW_BASE, relativePath),
+  ];
+}
+
 async function fetchJsonWithFallback(relativePath) {
   const isAbsolute = /^https?:\/\//i.test(relativePath || "");
-  const candidates = isAbsolute
-    ? [relativePath]
-    : [
-        toAbsoluteUrl(NEWS_RAW_BASE, relativePath),
-        toAbsoluteUrl(NEWS_CDN_BASE, relativePath),
-      ];
+  const candidates = isAbsolute ? [relativePath] : newsSourceCandidates(relativePath);
 
   for (const candidate of candidates) {
     try {
       const url = withCacheBust(candidate);
-      const response = await fetch(url, { cache: "no-store" });
+      const response = await fetchWithTimeout(url, { cache: "no-store" });
       if (!response.ok) continue;
       const data = await response.json();
       return { data, url };
@@ -236,15 +263,12 @@ async function fetchTextWithFallback(relativePathOrAbsolute) {
   const isAbsolute = /^https?:\/\//i.test(relativePathOrAbsolute || "");
   const candidates = isAbsolute
     ? [relativePathOrAbsolute]
-    : [
-        toAbsoluteUrl(NEWS_RAW_BASE, relativePathOrAbsolute),
-        toAbsoluteUrl(NEWS_CDN_BASE, relativePathOrAbsolute),
-      ];
+    : newsSourceCandidates(relativePathOrAbsolute);
 
   for (const candidate of candidates) {
     try {
       const url = withCacheBust(candidate);
-      const response = await fetch(url, { cache: "no-store" });
+      const response = await fetchWithTimeout(url, { cache: "no-store" });
       if (!response.ok) continue;
       const text = await response.text();
       return { text, url };
@@ -316,13 +340,7 @@ function HomePage({ onNavigate, path, news }) {
   const { image: lightboxImage, openImage: openLightboxImage, closeImage: closeLightboxImage } =
     useImageLightbox();
   const [activeSection, setActiveSection] = useState("");
-  const [links, setLinks] = useState({
-    windows: FALLBACK_RELEASES_URL,
-    macos: FALLBACK_RELEASES_URL,
-    linuxDeb: FALLBACK_RELEASES_URL,
-    linuxRpm: FALLBACK_RELEASES_URL,
-    linuxAppImage: FALLBACK_RELEASES_URL,
-  });
+  const [links, setLinks] = useState(() => emptyReleaseData().links);
   const [githubStats, setGithubStats] = useState({ stars: 0, downloads: 0 });
   const [releaseVersion, setReleaseVersion] = useState("");
 
@@ -373,10 +391,10 @@ function HomePage({ onNavigate, path, news }) {
 
   useRevealScroll([linuxOpen, locale, news?.posts?.length]);
 
-  const mainDownloadLink = useMemo(() => {
-    if (userOS === "windows") return links.windows;
-    return FALLBACK_RELEASES_URL;
-  }, [links.windows, userOS]);
+  const mainDownloadLink = useMemo(
+    () => pickMainDownloadLink(links, userOS, FALLBACK_RELEASES_URL),
+    [links, userOS]
+  );
 
   const features = useMemo(
     () =>
@@ -1262,6 +1280,21 @@ export default function App() {
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
         <PrivacyPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
+
+  if (route === "admin-news") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <NewsAdminPage
+          onNavigate={navigate}
+          path={path}
+          user={user}
+          news={news}
+          onNewsSaved={() => refreshNews({ isBackground: true })}
+        />
       </>
     );
   }
