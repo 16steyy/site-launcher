@@ -118,7 +118,8 @@
   },
   "footer": {
     "disclaimer": "16Launcher не является официальным продуктом Mojang или Microsoft.",
-    "privacy": "Политика конфиденциальности"
+    "privacy": "Политика конфиденциальности",
+    "documentation": "Документация"
   },
   "notFoundPage": {
     "title": "Страница не найдена",

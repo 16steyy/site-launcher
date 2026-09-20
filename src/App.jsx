@@ -33,6 +33,7 @@ import NewsShareQr from "./components/NewsShareQr";
 import NotFoundPage from "./components/NotFoundPage";
 import AccountPage from "./components/pages/AccountPage";
 import PrivacyPage from "./components/pages/PrivacyPage";
+import DocumentationPage from "./components/pages/DocumentationPage";
 import ThemeUploadPage from "./components/pages/ThemeUploadPage";
 import ThemesPage from "./components/pages/ThemesPage";
 import NewsAdminPage from "./components/pages/NewsAdminPage";
@@ -873,6 +874,19 @@ function HomePage({ onNavigate, path, news }) {
 
           <div className="mt-3">
             <a
+              href="/documentation"
+              className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
+              onClick={(event) => {
+                event.preventDefault();
+                onNavigate("/documentation");
+              }}
+            >
+              {messages.footer.documentation || messages.documentation?.nav}
+            </a>
+          </div>
+          <div className="mt-3">
+            
+            <a
               href="/privacy"
               className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
               onClick={(event) => {
@@ -883,6 +897,8 @@ function HomePage({ onNavigate, path, news }) {
               {messages.footer.privacy || messages.privacy?.nav}
             </a>
           </div>
+
+
 
           <div className="mt-4 flex items-center justify-center gap-3">
             {SOCIAL_LINKS.map((item) => (
@@ -1280,6 +1296,15 @@ export default function App() {
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
         <PrivacyPage onNavigate={navigate} path={path} user={user} />
+      </>
+    );
+  }
+
+  if (route === "documentation") {
+    return (
+      <>
+        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+        <DocumentationPagePage onNavigate={navigate} path={path} user={user} />
       </>
     );
   }

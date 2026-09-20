@@ -118,7 +118,8 @@
   },
   "footer": {
     "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft.",
-    "privacy": "Datenschutzerklärung"
+    "privacy": "Datenschutzerklärung",
+    "documentation": "Dokumentation"
   },
   "notFoundPage": {
     "title": "Seite nicht gefunden",
