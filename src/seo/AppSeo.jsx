@@ -69,6 +69,17 @@ export default function AppSeo({ path, news, releaseVersion }) {
       };
     }
 
+    if (path === "/documentation") {
+      return {
+        locale,
+        pathname: "/documentation",
+        title: `${messages.documentation?.title || "Documentation"}${suffix}`,
+        description: messages.documentation?.description || messages.meta.description,
+        ogType: "website",
+        jsonLdType: null,
+      };
+    }
+
     if (getRouteKind(path) === "not-found") {
       return {
         locale,

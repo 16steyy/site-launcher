@@ -885,7 +885,7 @@ function HomePage({ onNavigate, path, news }) {
             </a>
           </div>
           <div className="mt-3">
-            
+
             <a
               href="/privacy"
               className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
@@ -1304,7 +1304,7 @@ export default function App() {
     return (
       <>
         <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <DocumentationPagePage onNavigate={navigate} path={path} user={user} />
+        <DocumentationPage onNavigate={navigate} path={path} user={user} />
       </>
     );
   }
