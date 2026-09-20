@@ -21,7 +21,7 @@ export async function fetchMySubmissions(accessToken) {
   }
 }
 
-export const THEME_MAX_ZIP_BYTES = 5 * 1024 * 1024;
+export const THEME_MAX_ZIP_BYTES = 15 * 1024 * 1024;
 
 export async function submitTheme({ name, file, accessToken }) {
   const formData = new FormData();
