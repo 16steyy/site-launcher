@@ -1,0 +1,323 @@
+/* Tsar v2.2 — матовая лаванда со стеклянными панелями */
+
+/* ── 0. Палитра ─────────────────────────────────────────── */
+:root {
+    color-scheme: dark; /* нативные меню, чекбоксы, скроллы — тёмные */
+    --tsar-bg-0: #0a0814;
+    --tsar-bg-1: #1a122c;
+    --tsar-text: #e5d9f2;
+    --tsar-text-dim: #bfa8de;
+    --tsar-accent: #a67fe0;
+    --tsar-gold: #d9b779; /* единственный тёплый акцент: метка выбранного пункта */
+    --tsar-line: rgba(180, 150, 220, 0.14);
+    --tsar-line-hover: rgba(190, 160, 230, 0.32);
+    --tsar-line-active: rgba(200, 160, 240, 0.5);
+    --tsar-fill: rgba(140, 100, 200, 0.10);
+    --tsar-fill-hover: rgba(150, 110, 210, 0.18);
+    --tsar-fill-active: rgba(160, 110, 220, 0.26);
+    --tsar-field: rgba(8, 6, 16, 0.45);
+    --tsar-popup: rgba(18, 13, 34, 0.94);
+    --tsar-ring: rgba(205, 170, 250, 0.75);
+    --tsar-radius-side: 16px; /* скругление кнопок слева */
+}
+
+/* ── 1. Фон и текст ─────────────────────────────────────── */
+html {
+    background-color: var(--tsar-bg-0) !important;
+    background-image: radial-gradient(circle at top right, var(--tsar-bg-1) 0%, var(--tsar-bg-0) 100%) !important;
+    background-attachment: fixed !important;
+    color: var(--tsar-text) !important;
+}
+
+body {
+    background: transparent !important;
+    color: var(--tsar-text) !important;
+    font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Поля и кнопки по умолчанию не наследуют шрифт */
+button, input, select, textarea {
+    font-family: inherit;
+}
+
+/* ── 2. Стеклянные панели ───────────────────────────────── */
+.glass-panel {
+    background: rgba(140, 110, 200, 0.05) !important;
+    backdrop-filter: blur(18px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    box-sizing: border-box !important;
+}
+
+/* Вложенное стекло не размываем повторно: лишняя нагрузка и «грязный» фон */
+.glass-panel .glass-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/* Если движок не умеет blur — панель делаем плотной, иначе текст сливается с фоном */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass-panel { background: rgba(24, 17, 44, 0.92) !important; }
+}
+
+/* Всплывающие окна и меню: всегда читаемы поверх контента */
+dialog, [role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"] {
+    background: var(--tsar-popup) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 14px !important;
+    color: var(--tsar-text) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ── 3. Кнопки ──────────────────────────────────────────── */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]) {
+    background: var(--tsar-fill) !important;
+    color: #dcd0ea !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    box-sizing: border-box !important;
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease !important;
+}
+
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):not(:disabled, [aria-disabled="true"]) {
+    cursor: pointer;
+}
+
+/* Наведение */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):hover:not(:disabled, [aria-disabled="true"]) {
+    background: var(--tsar-fill-hover) !important;
+    border-color: var(--tsar-line-hover) !important;
+    box-shadow: 0 0 12px rgba(150, 110, 210, 0.18) !important;
+    color: #ece2f8 !important;
+}
+
+/* Нажатие */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):active:not(:disabled, [aria-disabled="true"]) {
+    background: var(--tsar-fill-active) !important;
+    border-color: var(--tsar-line-active) !important;
+    box-shadow: inset 0 0 8px rgba(180, 130, 240, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* ── 4. Выбранный пункт ─────────────────────────────────────
+   Только реальные интерактивные элементы: контейнеры с «active»
+   в имени класса больше не заливаются целиком.
+   Толщина шрифта не меняется — пункты не «прыгают» при выборе. */
+:is(
+    .active, .is-active, .selected, .is-selected,
+    [class*="-active"], [class*="_active"], [class*="-selected"], [class*="_selected"],
+    [aria-selected="true"], [aria-pressed="true"], [aria-current]:not([aria-current="false"]),
+    [data-active="true"], [data-selected="true"], [data-state="active"], [data-state="on"]
+):not([class*="inactive"], [class*="unselected"], [class*="deactive"]):is(
+    button, a, li, [role="tab"], [role="menuitem"], [role="option"],
+    .interactive-press, .sidebar-item, .nav-item, [class*="item"], [class*="tab"], [class*="link"]
+) {
+    background: var(--tsar-fill-active) !important;
+    border-color: var(--tsar-line-active) !important;
+    box-shadow: inset 0 0 10px rgba(180, 130, 240, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Золотая метка слева — только у пунктов навигации */
+:is(.sidebar-item, .nav-item, [role="tab"], [role="menuitem"], li):is(
+    .active, .is-active, .selected, .is-selected,
+    [class*="-active"], [class*="_active"], [class*="-selected"], [class*="_selected"],
+    [aria-selected="true"], [aria-current]:not([aria-current="false"]), [data-state="active"]
+):not([class*="inactive"], [class*="unselected"]) {
+    box-shadow: inset 3px 0 0 var(--tsar-gold), inset 0 0 10px rgba(180, 130, 240, 0.2) !important;
+}
+
+/* Недоступные кнопки (должны идти последними) */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):is(:disabled, [aria-disabled="true"]) {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    background: var(--tsar-fill) !important;
+    border-color: var(--tsar-line) !important;
+    box-shadow: none !important;
+    color: var(--tsar-text-dim) !important;
+}
+
+/* ── 5. Иконки и меню ───────────────────────────────────── */
+:where([class*="icon"]), button img, button svg {
+    border-radius: 10px !important;
+}
+
+/* Кнопки слева — скругление регулируется переменной --tsar-radius-side.
+   Правило намного шире прежнего: ловит и <button>, и обычные div/li/a
+   внутри боковой панели, а также их внутренние слои и подсветку. */
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar) {
+    border-radius: var(--tsar-radius-side) !important;
+}
+
+/* Внутренние слои (фон при наведении, «ripple», псевдоэлементы) повторяют
+   форму кнопки — так острые углы не торчат из-под скруглённой рамки. */
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar) > *:not(svg, img, path),
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar)::before,
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar)::after {
+    border-radius: inherit !important;
+}
+
+:is(.sidebar-item, .nav-item, :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])) :is(img, svg):not(#tsar) {
+    border-radius: 10px !important;
+}
+
+/* ── 6. Версия игры и загрузчик: без подсветки ──────────────
+   Ни фона, ни рамки, ни свечения — просто текст. Выпадающие списки
+   выбора версии не трогаем, чтобы в них сохранялась отметка выбранного. */
+:is(
+    .version, .version-text, .game-version, .status-bar, .info-bar, .footer-info,
+    [class*="version"]:not(:has([class*="version"]), select, option, ul, ol, li, input, [role="option"], [role="menuitem"]),
+    [class*="game-loader"], [class*="mod-loader"], [class*="modloader"], [class*="loader-name"], [class*="loader-info"]
+):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: var(--tsar-text-dim) !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── 6b. Главная кнопка в режиме «Остановить» — красная ─────
+   В остальное время кнопка сохраняет обычный цвет темы. */
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i],
+    [title*="останов" i], [title*="stop" i], [value*="останов" i]
+):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, #tsar) {
+    background: rgba(200, 45, 65, 0.30) !important;
+    border-color: rgba(255, 105, 125, 0.55) !important;
+    color: #ffe4e8 !important;
+    box-shadow: 0 0 14px rgba(220, 60, 80, 0.28), inset 0 0 8px rgba(255, 90, 110, 0.15) !important;
+}
+
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i],
+    [title*="останов" i], [title*="stop" i], [value*="останов" i]
+):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, #tsar):is(:hover, :active):not(:disabled) {
+    background: rgba(215, 55, 75, 0.42) !important;
+    border-color: rgba(255, 130, 148, 0.75) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(230, 70, 90, 0.4), inset 0 0 10px rgba(255, 100, 120, 0.2) !important;
+}
+
+/* ── 7. Поля ввода ──────────────────────────────────────── */
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select) {
+    background: var(--tsar-field) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 10px !important;
+    color: var(--tsar-text) !important;
+    caret-color: var(--tsar-accent);
+    transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease !important;
+    box-sizing: border-box !important;
+}
+
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select):focus {
+    outline: none !important;
+    background: rgba(12, 8, 22, 0.65) !important;
+    border-color: rgba(180, 140, 230, 0.45) !important;
+    box-shadow: 0 0 0 3px rgba(160, 110, 220, 0.16) !important;
+}
+
+:is(input, textarea, select):disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+::placeholder {
+    color: rgba(191, 168, 222, 0.5) !important;
+    opacity: 1;
+}
+
+/* Выпадающие списки: без этого текст в опциях может стать невидимым */
+select option, select optgroup {
+    background: #15102a;
+    color: var(--tsar-text);
+}
+
+/* Автозаполнение браузера не должно красить поле в белый/жёлтый */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--tsar-text) !important;
+    caret-color: var(--tsar-text);
+    box-shadow: 0 0 0 1000px #100b20 inset !important;
+    transition: background-color 9999s ease-out 0s;
+}
+
+/* Чекбоксы, переключатели, ползунки, прогресс */
+input[type="checkbox"], input[type="radio"], input[type="range"], progress, meter {
+    accent-color: var(--tsar-accent);
+}
+
+/* ── 8. Клавиатурный фокус ──────────────────────────────── */
+:is(button, a, [role="tab"], [role="menuitem"], [tabindex], .interactive-press,
+    input[type="checkbox"], input[type="radio"], input[type="range"]):focus-visible {
+    outline: 2px solid var(--tsar-ring) !important;
+    outline-offset: 2px !important;
+}
+
+/* ── 9. Скроллбар ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(160, 130, 210, 0.18); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(180, 150, 230, 0.4); }
+
+/* Движки без ::-webkit-scrollbar */
+@supports not selector(::-webkit-scrollbar) {
+    * { scrollbar-width: thin; scrollbar-color: rgba(160, 130, 210, 0.3) transparent; }
+}
+
+::selection {
+    background: rgba(150, 110, 210, 0.35) !important;
+    color: #ffffff !important;
+}
+
+/* ── 10. Уважаем «уменьшить анимацию» ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
