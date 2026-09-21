@@ -3,13 +3,26 @@
   "themes": [
     {
       "id": "win11",
-      "name": "win11",
+      "name": "Win11",
       "author": "16steyy",
       "description": "тест",
-      "version": "1.0.0",
-      "preview": null,
+      "version": "1.0.2",
+      "preview": "/themes/win11/preview.png",
       "download": "/themes/win11/download.zip",
-      "published_at": "2026-09-21"
+      "published_at": "2026-09-21",
+      "files": [
+        "download.zip",
+        "preview.png",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-21",
+          "description": "тест"
+        }
+      ]
     },
     {
       "id": "tsar-2",
@@ -19,6 +32,22 @@
       "version": "2.2",
       "preview": null,
       "download": "/themes/tsar-2/download.zip",
+      "published_at": "2026-09-20"
+    },
+    {
+      "id": "win11",
+      "name": "win11",
+      "author": "test16",
+      "description": "тест",
+      "version": "1.0.0",
+      "preview": null,
+      "download": "/themes/win11/download.zip",
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
       "published_at": "2026-09-20"
     },
     {
@@ -70,22 +99,6 @@
       "preview": null,
       "download": "/themes/vinda-95/download.zip",
       "published_at": "2026-08-14"
-    },
-    {
-      "id": "win11",
-      "name": "win11",
-      "author": "test16",
-      "description": "тест",
-      "version": "1.0.0",
-      "preview": null,
-      "download": "/themes/win11/download.zip",
-      "files": [
-        "download.zip",
-        "style.css",
-        "theme.json"
-      ],
-      "history": [],
-      "published_at": "2026-09-20"
     }
   ]
 }
