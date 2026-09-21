@@ -95,7 +95,7 @@ function ThemeModal({ theme, copy, onClose }) {
               </h2>
 
               <p className="mt-1 text-sm font-semibold text-white/55">
-                {copy.author || "Автор"}: {theme.author || "—"}
+                {copy.author}: {theme.author || "—"}
               </p>
             </div>
 
