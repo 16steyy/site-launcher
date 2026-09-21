@@ -45,13 +45,15 @@ jobs:
           ID="${{ steps.theme.outputs.id }}"
           SRC="${{ steps.theme.outputs.path }}"
           DEST="site/public/themes/$ID"
+          rm -rf "$DEST"
           mkdir -p "$DEST"
-          cp "$SRC/theme.json" "$DEST/"
-          cp "$SRC/style.css" "$DEST/"
-          cp "$SRC/theme.zip" "$DEST/download.zip"
-          if [ -f "$SRC/preview.png" ]; then
-            cp "$SRC/preview.png" "$DEST/preview.png"
+          cp -R "$SRC/." "$DEST/"
+          if [ -f "$DEST/theme.zip" ]; then
+            mv "$DEST/theme.zip" "$DEST/download.zip"
           fi
+
+          # Служебный файл не должен публиковаться на сайте.
+          rm -f "$DEST/.meta.json"
 
       - name: Update themes.json
         working-directory: site

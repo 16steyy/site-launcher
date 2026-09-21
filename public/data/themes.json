@@ -70,6 +70,22 @@
       "preview": null,
       "download": "/themes/vinda-95/download.zip",
       "published_at": "2026-08-14"
+    },
+    {
+      "id": "win11",
+      "name": "win11",
+      "author": "test16",
+      "description": "тест",
+      "version": "1.0.0",
+      "preview": null,
+      "download": "/themes/win11/download.zip",
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "published_at": "2026-09-20"
     }
   ]
 }
