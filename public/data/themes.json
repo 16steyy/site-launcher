@@ -2,6 +2,16 @@
   "version": 1,
   "themes": [
     {
+      "id": "win11",
+      "name": "win11",
+      "author": "16steyy",
+      "description": "тест",
+      "version": "1.0.0",
+      "preview": null,
+      "download": "/themes/win11/download.zip",
+      "published_at": "2026-09-21"
+    },
+    {
       "id": "tsar-2",
       "name": "Tsar",
       "author": "Tsarapcat",
@@ -9,16 +19,6 @@
       "version": "2.2",
       "preview": null,
       "download": "/themes/tsar-2/download.zip",
-      "published_at": "2026-09-20"
-    },
-    {
-      "id": "win11",
-      "name": "win11",
-      "author": "test16",
-      "description": "тест",
-      "version": "1.0.0",
-      "preview": null,
-      "download": "/themes/win11/download.zip",
       "published_at": "2026-09-20"
     },
     {
