@@ -52,22 +52,6 @@
       "published_at": "2026-09-20"
     },
     {
-      "id": "win11",
-      "name": "win11",
-      "author": "test16",
-      "description": "тест",
-      "version": "1.0.0",
-      "preview": null,
-      "download": "/themes/win11/download.zip",
-      "files": [
-        "download.zip",
-        "style.css",
-        "theme.json"
-      ],
-      "history": [],
-      "published_at": "2026-09-20"
-    },
-    {
       "id": "ph",
       "name": "PH",
       "author": "Crepqiz",
@@ -76,26 +60,6 @@
       "preview": null,
       "download": "/themes/ph/download.zip",
       "published_at": "2026-08-18"
-    },
-    {
-      "id": "e2e-test-theme",
-      "name": "E2E Test Theme",
-      "author": "test16",
-      "description": "",
-      "version": "1.0",
-      "preview": null,
-      "download": "/themes/e2e-test-theme/download.zip",
-      "published_at": "2026-08-14"
-    },
-    {
-      "id": "test",
-      "name": "test",
-      "author": "test16",
-      "description": "",
-      "version": "1.0",
-      "preview": null,
-      "download": "/themes/test/download.zip",
-      "published_at": "2026-08-14"
     },
     {
       "id": "femboy-gif",
