@@ -2,6 +2,23 @@
   "version": 1,
   "themes": [
     {
+      "id": "dfdfdf",
+      "name": "dfdfdf",
+      "author": "MiDyaha",
+      "description": "хуй",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/dfdfdf/download.zip",
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json",
+        "ывыв.jpg"
+      ],
+      "history": [],
+      "published_at": "2026-09-23"
+    },
+    {
       "id": "win11",
       "name": "Win11",
       "author": "16steyy",
