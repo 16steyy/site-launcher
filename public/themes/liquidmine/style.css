@@ -1,0 +1,420 @@
+/* LiquidMine Light 2.5 — accent-aware surfaces for 16Launcher. */
+:root { color-scheme:light; --ink:#1c2c40; --secondary:#465970; --scene:radial-gradient(ellipse at 12% 0%,#fff 0%,transparent 60%),radial-gradient(ellipse at 95% 95%,#cddbec 0%,transparent 65%),#eaf0f6; --surface:rgba(255,255,255,.78); --control:rgba(229,237,246,.86); --control-hover:#dce7f3; --popup:#f6f9fc; --edge:rgba(73,100,134,.2); --edge-hover:rgba(73,100,134,.4); --selected:color-mix(in srgb,var(--accent-color) 18%,#fff); --selected-ink:#1c2c40; --focus:color-mix(in srgb,var(--accent-color) 82%,#52647a); --accent-soft:color-mix(in srgb,var(--accent-color) 14%,#fff); --accent-mid:color-mix(in srgb,var(--accent-color) 34%,#fff); --accent-strong:color-mix(in srgb,var(--accent-color) 78%,#fff); --scroll:#8e9fb3; --danger-bg:#fbe5e5; --danger-ink:#9d2734; --glass-highlight:inset 0 1px 0 rgba(255,255,255,.9); --glass-shadow:0 8px 24px rgba(39,60,87,.08);
+--accent-color:#e4b863 !important; --glass-bg:var(--surface); --glass-bg-strong:var(--surface); --glass-bg-inset:var(--control); --glass-bg-control:var(--control); --glass-bg-popover:var(--popup); --glass-border:var(--edge); --glass-border-soft:var(--edge); --glass-shadow-sm:var(--glass-shadow); --glass-tint:transparent; --glass-radius:20px; --glass-radius-sm:10px; --glass-blur:40px; }
+/* Map actual dark utility classes, including solid and arbitrary backgrounds. */
+#root :is([class~="text-white"],[class*="text-white/"],[class*="text-gray-"],[class*="text-slate-"],[class*="text-zinc-"]) { color:var(--secondary) !important; }
+#root :is(h1,h2,h3,h4,strong,[class~="text-white"],[class*="font-semibold"],[class*="font-bold"]) { color:var(--ink) !important; }
+#root :is([class~="bg-black"],[class*="bg-black/"],[class*="bg-gray-"],[class*="bg-zinc-"],[class*="bg-slate-"],[class*="bg-[#121212]"],[class*="bg-[#0c0c0c]"],[class*="bg-[#0c0c11]"]) { background-color:var(--control) !important; }
+#root [class*="border-white/"] { border-color:var(--edge) !important; }
+
+html, body, #root { height:100%; color:var(--ink); font-family:"Segoe UI Variable Text","Segoe UI",sans-serif; cursor:url("cursor-default.cur"),default !important; }
+body { margin:0; background:var(--scene); }
+body * { cursor:inherit; }
+#root { background:var(--scene); }
+#root > div.min-h-screen { color:var(--ink) !important; background:var(--scene) !important; }
+/* Keep wallpaper subdued, without touching banners or profile artwork. */
+#root > div.min-h-screen > .pointer-events-none.fixed.inset-0 { opacity:.12; }
+#root > div.min-h-screen > .pointer-events-none.absolute.inset-0 { background:transparent !important; opacity:.15; }
+::selection { background:var(--accent-mid); color:var(--ink); }
+.glass-panel, .glass-chip, .glass-toolbar, .glass-modal, .glass-popover, .glass-control, .glass-inset,
+[data-tour-id="tour-sidebar"] {
+ color:var(--ink) !important;
+ border:1px solid var(--edge) !important;
+ background:var(--surface) !important;
+ box-shadow:var(--glass-highlight),var(--glass-shadow) !important;
+ backdrop-filter:blur(40px) saturate(135%) !important;
+ -webkit-backdrop-filter:blur(40px) saturate(135%) !important;
+}
+.glass-panel,.glass-modal { border-radius:20px !important; }
+.glass-chip,.glass-toolbar { border-radius:14px !important; }
+.glass-inset,.glass-control { border-radius:10px !important; background:var(--control) !important; box-shadow:var(--glass-highlight) !important; backdrop-filter:none !important; }
+.glass-popover,.glass-modal,.sidebar-tooltip { background:var(--popup) !important; color:var(--ink) !important; }
+.glass-popover { border-radius:12px !important; }
+.glass-overlay { background:rgba(7,14,24,.38) !important; backdrop-filter:blur(10px) !important; }
+.sidebar-label { background:none !important; box-shadow:none !important; color:var(--secondary) !important; }
+.sidebar-tooltip { border:1px solid var(--edge); box-shadow:var(--glass-shadow) !important; }
+.ui-title,h1,h2 { color:var(--ink) !important; letter-spacing:-.025em; }
+.ui-subtitle,.ui-body,.ui-meta,.ui-caption,.ui-section { color:var(--secondary) !important; }
+button,input,select,textarea { font-family:inherit; }
+button { flex-shrink:0; }
+.interactive-press { transition:box-shadow 160ms ease !important; }
+/* No transforms: absolute controls must keep their anchoring at every state. */
+.interactive-press:hover,.interactive-press:active,.sidebar-icon:hover,.sidebar-icon:active { transform:none !important; }
+.interactive-press::after { content:none !important; }
+button:not(.glass-panel):not(.sidebar-icon):not([class*="absolute"]):not([class*="fixed"]) {
+ border-radius:9px;
+}
+button:not(:disabled):hover { box-shadow:inset 0 0 0 1px var(--edge-hover); }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
+ outline:2px solid var(--focus) !important; outline-offset:2px;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),textarea,select {
+ background:var(--control) !important; color:var(--ink) !important;
+ border:1px solid var(--edge) !important; border-radius:10px; box-shadow:none !important;
+}
+input::placeholder,textarea::placeholder { color:var(--secondary) !important; opacity:.85; }
+option { background:var(--popup); color:var(--ink); }
+input[type="checkbox"],input[type="radio"],input[type="range"] { accent-color:var(--focus); }
+#root .accent-bg { background:linear-gradient(145deg,var(--accent-strong),var(--accent-color)) !important; color:#1c2c40 !important; border-color:color-mix(in srgb,var(--accent-color) 72%,#718198) !important; }
+#root .accent-bg * { color:inherit !important; }
+#root .accent-chip,#root .sidebar-icon-active { background:var(--selected) !important; color:var(--selected-ink) !important; border-color:var(--accent-color) !important; }
+#root .accent-border { border-color:var(--accent-color) !important; }
+#root .sidebar-icon { color:var(--secondary) !important; }
+#root .sidebar-icon-active { color:var(--selected-ink) !important; border-color:var(--accent-color) !important; }
+#root .sidebar-icon:hover { background:var(--control) !important; color:var(--ink) !important; }
+/* Actual CatalogFilters scroll container: rows scroll instead of shrinking. */
+.custom-scrollbar.flex.flex-col > button { flex:0 0 auto !important; min-height:30px; line-height:1.45 !important; padding:6px 10px !important; border-radius:8px !important; box-shadow:none !important; }
+.custom-scrollbar.flex.flex-col { gap:4px !important; padding-bottom:4px; }
+.custom-scrollbar.flex.flex-col > button:hover { background:var(--control-hover) !important; }
+#root button.bg-white\/90 { background:var(--selected) !important; color:var(--selected-ink) !important; }
+.glass-toolbar { gap:6px; }
+[data-tour-id="tour-launch-controls"] { gap:20px; box-shadow:var(--glass-highlight),0 8px 26px rgba(0,0,0,.14) !important; }
+[data-tour-id="tour-sidebar"] { box-shadow:var(--glass-highlight),var(--glass-shadow) !important; }
+/* Preserve semantic status colours and keep destructive actions recognisable. */
+#root button[class*="bg-red-"] { background:var(--danger-bg) !important; color:var(--danger-ink) !important; }
+#root button[class*="bg-emerald-"] { background:var(--selected) !important; color:var(--selected-ink) !important; }
+* { scrollbar-width:thin; scrollbar-color:var(--scroll) transparent; }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-thumb { border:2px solid transparent; border-radius:8px; background:var(--scroll); background-clip:padding-box; }
+::-webkit-scrollbar-track { background:transparent; }
+/* Explicit inheritance includes icons, labels and nested spans inside controls. */
+a,button,summary,select,label[for],[role="button"],[role="tab"],[role="menuitem"],.cursor-pointer,
+input[type="checkbox"],input[type="radio"],input[type="range"],input[type="submit"],input[type="file"] { cursor:url("cursor-pointer.cur"),pointer !important; }
+input:not([type]),input[type="text"],input[type="search"],input[type="password"],input[type="email"],input[type="number"],textarea,[contenteditable="true"] { cursor:url("cursor-text.cur"),text !important; }
+[draggable="true"],.cursor-move,.cursor-grab,.cursor-grabbing { cursor:url("cursor-move.cur"),move !important; }
+.cursor-help { cursor:url("cursor-help.cur"),help !important; }
+.cursor-crosshair { cursor:url("cursor-precision.cur"),crosshair !important; }
+.cursor-ew-resize { cursor:url("cursor-resize-h.cur"),ew-resize !important; }
+.cursor-ns-resize { cursor:url("cursor-resize-v.cur"),ns-resize !important; }
+.cursor-nwse-resize { cursor:url("cursor-resize-d1.cur"),nwse-resize !important; }
+.cursor-nesw-resize { cursor:url("cursor-resize-d2.cur"),nesw-resize !important; }
+[aria-busy="true"],.cursor-wait { cursor:wait !important; }
+:disabled,[aria-disabled="true"],.cursor-not-allowed { cursor:url("cursor-unavailable.cur"),not-allowed !important; }
+:is(button,a,[role="button"],[role="tab"],.cursor-pointer) * { cursor:inherit !important; }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation-duration:.01ms !important; } }
+:root { --surface:rgba(255,255,255,.62); --ambient:rgba(32,52,76,.10); --nav-bg:rgba(245,249,255,.82); --nav-hover:#d9e7f5; --icon-filter:brightness(0) saturate(100%) invert(20%) sepia(17%) saturate(1217%) hue-rotate(172deg) brightness(93%) contrast(89%); --wallpaper-veil:linear-gradient(rgba(239,245,250,.24),rgba(231,239,247,.35)); }
+
+/* 2.2: actual launcher title bar, image icons and nested catalog input. */
+#root .glass-toolbar { box-shadow:var(--glass-highlight),0 2px 8px var(--ambient) !important; }
+#root :is(.glass-panel,.glass-chip,[data-tour-id="tour-sidebar"]) { box-shadow:var(--glass-highlight),0 4px 14px var(--ambient) !important; }
+#root :is(button,.sidebar-icon) { box-shadow:none !important; filter:none !important; }
+#root .sidebar-icon {
+ background:var(--nav-bg) !important; border:1px solid var(--edge) !important;
+ color:var(--ink) !important; border-radius:13px !important;
+}
+#root button:hover > .sidebar-icon,#root .sidebar-icon:hover {
+ background:var(--nav-hover) !important; border-color:var(--edge-hover) !important;
+}
+#root .sidebar-icon.sidebar-icon-active,#root button:hover > .sidebar-icon.sidebar-icon-active {
+ background:var(--selected) !important; border-color:var(--focus) !important;
+}
+#root .sidebar-icon img { filter:var(--icon-filter) !important; opacity:1 !important; }
+#root img[src$="/help.png"],#root img[src$="/search.png"],#root img[src$="/notification.png"],#root img[src$="/notifications.png"] {
+ filter:var(--icon-filter) !important; opacity:1 !important;
+}
+#root button:has(> img[src$="/help.png"]) {
+ background:var(--nav-bg) !important; border:1px solid var(--edge) !important; color:var(--ink) !important;
+}
+#root .glass-toolbar > input {
+ height:36px !important; min-height:36px; padding:8px 4px !important; font-size:13px !important;
+ line-height:20px !important; background:transparent !important; border:0 !important;
+ border-radius:0 !important; box-shadow:none !important; outline:none !important;
+}
+#root .glass-toolbar:has(> input:focus) { border-color:var(--focus) !important; }
+/* Original title bar is 36px; each right-hand control is now exactly 28px. */
+#root .relative.z-20.h-9:has([data-tour-id="tour-account-switcher"]) {
+ height:36px !important; min-height:36px; padding-top:4px !important; padding-bottom:4px !important;
+ align-items:center !important;
+}
+#root [data-tour-id="tour-account-switcher"],
+#root .relative.z-20.h-9 > .flex.items-center > [data-no-drag] > button {
+ height:28px !important; min-height:28px !important; max-height:28px !important;
+ padding-top:0 !important; padding-bottom:0 !important;
+}
+#root [data-tour-id="tour-account-switcher"] .h-7.w-7 { height:22px !important; width:22px !important; }
+#root .relative.z-20.h-9 > .flex.items-center > [data-no-drag] > button > img {
+ filter:var(--icon-filter) !important; opacity:1 !important;
+}
+#root > div.min-h-screen { background:var(--wallpaper-veil),url("glass-background.jpg") center/cover no-repeat fixed !important; }
+#root > div.min-h-screen > .pointer-events-none.fixed.inset-0,
+#root > div.min-h-screen > .pointer-events-none.absolute.inset-0 { opacity:0 !important; }
+/* Reduce stacked blur: small controls do not need another frosted plane. */
+#root .glass-toolbar { backdrop-filter:blur(20px) saturate(125%) !important; -webkit-backdrop-filter:blur(20px) saturate(125%) !important; }
+:root { --skin-stage:linear-gradient(145deg,rgba(239,248,255,.94),rgba(214,230,242,.88)); }
+/* 2.3: skin stage, collection search and scrollbars inside rounded panels. */
+html,body,#root { overflow:hidden; }
+/* Unified search sizing: toolbar, standalone, import/export and version filters. */
+#root input:is([type="search"],[placeholder*="поиск" i],[placeholder*="найти" i],[placeholder*="search" i],[placeholder*="such" i],[placeholder*="buscar" i],[placeholder*="recher" i]),
+#root :is(div,label).flex > input.bg-transparent {
+ box-sizing:border-box !important;
+ height:36px !important; min-height:36px !important; max-height:none !important;
+ padding-top:7px !important; padding-bottom:7px !important;
+ font-size:14px !important; line-height:20px !important;
+ min-width:0; flex-shrink:0;
+}
+#root :is(div,label).flex:has(> input.bg-transparent),
+#root .glass-toolbar:has(input) {
+ box-sizing:border-box !important;
+ height:auto !important; min-height:44px !important; max-height:none !important;
+ padding-top:3px !important; padding-bottom:3px !important;
+ align-items:center !important; flex-shrink:0 !important;
+}
+#root :is(div,label).flex > input.bg-transparent {
+ background:transparent !important; border:0 !important; box-shadow:none !important;
+ border-radius:0 !important;
+}
+#root .glass-toolbar input {
+ display:block; flex:1 1 0%; width:100%; min-width:0;
+ height:36px !important; min-height:36px !important; padding:8px 4px !important;
+ font-size:14px !important; line-height:20px !important;
+ background:transparent !important; border:0 !important; box-shadow:none !important;
+}
+#root .glass-panel > .mb-1.flex.shrink-0.items-center.justify-between.pl-3 {
+ margin:0 16px 10px !important; padding:14px 0 10px !important;
+ min-height:44px; font-size:13px !important; line-height:20px; font-weight:600;
+ color:var(--secondary) !important; border-bottom:1px solid var(--edge);
+}
+#root .glass-panel > .custom-scrollbar.-mr-2 { margin-right:6px !important; margin-bottom:12px; }
+#root .glass-panel.overflow-y-auto { scrollbar-width:auto !important; border-right:6px solid transparent !important; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar { width:8px; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar-track { margin-block:20px; background:transparent; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar-button { display:none; height:0; }
+#root .glass-panel:has(> .relative > canvas) { background:var(--skin-stage) !important; color:var(--ink) !important; }
+#root .glass-panel:has(> .relative > canvas) > .pointer-events-none { opacity:.18 !important; }
+#root .glass-panel:has(> .relative > canvas) :is(button.glass-control,button[aria-expanded]) {
+ background:var(--nav-bg) !important; color:var(--ink) !important; border-color:var(--edge) !important;
+}
+#root .glass-panel:has(> .relative > canvas) button[aria-expanded="true"] { background:var(--selected) !important; color:var(--selected-ink) !important; }
+#root .glass-panel:has(> .relative > canvas) button img[src$="/settings.png"] { filter:var(--icon-filter) !important; }
+/* Flat search bars and catalog/list containers; preserve their glass and radii. */
+/* Light title-bar dropdowns, including legacy non-glass wrappers. */
+/* Skin stage: match its canvas independently of glass-panel or wrapper depth. */
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) {
+ background:linear-gradient(145deg,#edf6fc,#dbe8f2) !important;
+ color:#1c2c40 !important; border-color:rgba(73,100,134,.22) !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) > .pointer-events-none {
+ opacity:.12 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button {
+ background:#edf4fa !important; color:#263d54 !important;
+ border:1px solid #bdcddd !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button:hover {
+ background:#dce9f5 !important; color:#1c2c40 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button[aria-expanded="true"] {
+ background:#f1e3c5 !important; color:#624515 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button img[src$="/settings.png"] {
+ filter:var(--icon-filter) !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(.glass-popover,[class*="bg-[#1c1c26]"]) {
+ background:#f6f9fc !important; color:#263d54 !important;
+}
+
+/* Light title-bar dropdowns, including legacy non-glass wrappers. */
+#root .glass-popover,
+#root [data-no-drag] > .absolute.top-full,
+#root .relative:has(> [data-tour-id="tour-account-switcher"]) > .absolute,
+#root .relative.z-20.h-9 .absolute.top-full {
+ background:#f6f9fc !important;
+ background-image:none !important;
+ color:#1c2c40 !important;
+ border-color:rgba(73,100,134,.22) !important;
+ box-shadow:0 8px 24px rgba(32,52,76,.14),inset 0 1px 0 #fff !important;
+}
+#root .relative.z-20.h-9 .absolute.top-full :is([class*="text-emerald-"],[class*="text-sky-"]) {
+ color:#24645d !important;
+}
+#root .relative.z-20.h-9 .absolute.top-full [class*="bg-emerald-"] {
+ background:rgba(50,135,113,.10) !important;
+}
+#root .relative.z-20.h-9 .absolute.top-full button:hover {
+ background-color:#e3edf7 !important;
+}
+#root .relative.z-20.h-9 .absolute.top-full button:has(img[src*="delete"]) img {
+ filter:var(--icon-filter) !important;
+}
+
+/* Flat search bars and catalog/list containers; preserve their glass and radii. */
+#root .glass-toolbar,
+#root .glass-panel.relative.flex.min-h-0.flex-1.flex-col.overflow-hidden {
+ box-shadow:none !important;
+}
+/* Nested skin menus: cover legacy opaque wrappers as well as glass-popover. */
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(
+ .glass-popover,
+ div[class*="rounded"][class*="border"]:not(.pointer-events-none),
+ div[class*="bg-[#"]:not(.pointer-events-none),
+ div:has(> button[aria-expanded="true"]) > div:not(:has(canvas)),
+ div:has(> div > button[aria-expanded="true"]) > div[class*="overflow-hidden"]
+) {
+ background:#f6f9fc !important;
+ background-image:none !important;
+ color:#263d54 !important;
+ border-color:#bdcddd !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(ul,[role="menu"],[role="listbox"]) {
+ background:#f6f9fc !important; color:#263d54 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(p,span,label,li)[class*="text-"] {
+ color:#465970 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(input,select) {
+ background:#e8f0f7 !important; color:#263d54 !important;
+ border-color:#bdcddd !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button[aria-expanded="true"],
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button[aria-selected="true"],
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button[class*="bg-emerald-"] {
+ background:#f1e3c5 !important; color:#624515 !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button :is(span,svg) { color:inherit !important; }
+/* 2.4 audit: remaining opaque utility surfaces and App.css-only components. */
+#root :is(
+ [class*="bg-neutral-"],
+ [class*="bg-[#1c1c26]"],
+ [class*="bg-[#0f2744]"],
+ [class*="bg-[#1e3a5f]"],
+ [class*="bg-[#0c0c11]"],
+ [class*="bg-[#0c0c0c]"],
+ [class*="bg-[#050609]"]
+) {
+ background-color:#e8f0f7 !important;
+ color:#263d54 !important;
+ border-color:#bdcddd !important;
+}
+#root :is(.tab-split-pane-close,.tab-split-sidebar-close,.tab-split-zone-label) {
+ background:#e8f0f7 !important; color:#263d54 !important; border-color:#bdcddd !important;
+}
+#root :is(.tab-split-pane-close,.tab-split-sidebar-close):hover {
+ background:#fbe5e5 !important; color:#9d2734 !important;
+}
+#root .tab-drag-ghost {
+ background:#f1e3c5 !important; color:#624515 !important;
+ border-color:#b99655 !important; box-shadow:0 4px 14px rgba(32,52,76,.12) !important;
+}
+#root .tab-split-zone-active .tab-split-zone-label { color:#624515 !important; background:#f1e3c5 !important; }
+#root .tab-split-divider { background:#bdcddd !important; }
+#root .tab-split-divider:hover { background:#91a8c0 !important; }
+#root .accent-checkbox {
+ background-color:#edf4fa !important; border-color:#8da5bc !important; box-shadow:none !important;
+}
+#root .accent-checkbox:checked,#root .accent-checkbox:indeterminate {
+ background-color:#94691e !important; border-color:#94691e !important;
+}
+/* Light status text: keep meaning without pale yellow/green on white. */
+#root :is([class*="text-amber-"],[class*="text-yellow-"]) { color:#795313 !important; }
+#root :is([class*="text-emerald-"],[class*="text-green-"]) { color:#21674f !important; }
+#root :is([class*="text-sky-"],[class*="text-blue-"],[class*="text-cyan-"]) { color:#255e8b !important; }
+#root :is([class*="text-red-"],[class*="text-rose-"]) { color:#9d2734 !important; }
+/* Provider badges are intentionally saturated; their labels must remain white. */
+#root :is([class*="bg-[#0078d4]"],[class*="bg-[#106ebe]"],[class*="bg-[#2d7d46]"],[class*="bg-[#248338]"]) {
+ color:#fff !important;
+}
+#root :is(.glass-modal,.glass-popover) {
+ background:#f6f9fc !important; color:#263d54 !important;
+ border-color:#bdcddd !important;
+}
+/* Dialogs rendered through portals outside #root. */
+body > :is([role="dialog"],[role="menu"],[role="listbox"]),
+body > div > :is(.glass-modal,.glass-popover) {
+ background:#f6f9fc !important; color:#263d54 !important; border-color:#bdcddd !important;
+}
+/* The launcher accent selected in Settings drives all highlighted controls. */
+#root .accent-bg {
+ background:linear-gradient(145deg,var(--accent-strong),var(--accent-color)) !important;
+ border-color:color-mix(in srgb,var(--accent-color) 72%,#718198) !important;
+ color:#1c2c40 !important;
+}
+#root .accent-chip,
+#root .sidebar-icon-active {
+ background:var(--selected) !important;
+ border-color:var(--accent-color) !important;
+ color:var(--selected-ink) !important;
+}
+#root .glass-popover button:is([aria-selected="true"],[aria-checked="true"],[data-state="active"]),
+#root .glass-popover button[class*="bg-emerald-"],
+#root .glass-popover button[class*="bg-sky-"],
+#root .glass-popover button[class*="bg-amber-"] {
+ background:var(--selected) !important;
+ border-color:var(--accent-color) !important;
+ color:var(--selected-ink) !important;
+}
+#root :is(.glass-popover,.glass-modal) button.accent-bg,
+#root :is(.glass-popover,.glass-modal) .accent-bg {
+ background:linear-gradient(145deg,var(--accent-strong),var(--accent-color)) !important;
+ color:#1c2c40 !important;
+ border-color:var(--accent-color) !important;
+}
+#root .accent-checkbox:checked,
+#root .accent-checkbox:indeterminate,
+#root input[type="checkbox"]:checked,
+#root input[type="radio"]:checked { accent-color:var(--accent-color) !important; }
+
+/* Light update banner: readable copy, pale footer and accent-colored primary action. */
+#root .glass-modal[role="dialog"]:has(> div > img) {
+ background:#f6f9fc !important;
+ color:#1c2c40 !important;
+ border-color:var(--edge) !important;
+}
+#root .glass-modal[role="dialog"]:has(> div > img) > div:first-child > [class*="bg-gradient-to-t"] {
+ background:linear-gradient(to top,rgba(241,246,251,.97),rgba(241,246,251,.62) 54%,rgba(241,246,251,.08)) !important;
+}
+#root .glass-modal[role="dialog"]:has(> div > img) #update-popup-title,
+#root .glass-modal[role="dialog"]:has(> div > img) p {
+ color:#1c2c40 !important;
+ text-shadow:0 1px 1px rgba(255,255,255,.5);
+}
+#root .glass-modal[role="dialog"]:has(> div > img) > .flex.flex-wrap {
+ background:#edf3f8 !important;
+ border-color:var(--edge) !important;
+}
+#root .glass-modal[role="dialog"]:has(> div > img) button.bg-emerald-600 {
+ background:linear-gradient(145deg,var(--accent-strong),var(--accent-color)) !important;
+ color:#1c2c40 !important;
+ border:1px solid color-mix(in srgb,var(--accent-color) 72%,#718198) !important;
+ box-shadow:0 3px 10px color-mix(in srgb,var(--accent-color) 24%,transparent) !important;
+}
+#root .glass-modal[role="dialog"]:has(> div > img) button[class*="bg-white/"] {
+ background:#f8fbfe !important; color:#344b63 !important; border:1px solid var(--edge) !important;
+}
+#root .glass-modal[role="dialog"]:has(> div > img) button:hover { filter:brightness(.97); }
+
+/* Home carousel banner (separate from the update dialog above). Keep the artwork,
+   remove its heavy black wash, and restore legible copy over the image. */
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.pointer-events-none[class*="bg-gradient-to-r"] {
+ background:linear-gradient(90deg,rgba(14,28,44,.22) 0%,rgba(14,28,44,.10) 58%,rgba(14,28,44,.025) 100%) !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 h2 {
+ color:#fff !important;
+ text-shadow:0 1px 3px rgba(5,14,26,.72),0 0 14px rgba(5,14,26,.2) !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 p {
+ color:rgba(255,255,255,.94) !important;
+ text-shadow:0 1px 3px rgba(5,14,26,.78) !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 button {
+ background:linear-gradient(145deg,var(--accent-strong),var(--accent-color)) !important;
+ color:#1c2c40 !important;
+ border:1px solid color-mix(in srgb,var(--accent-color) 72%,#718198) !important;
+ box-shadow:0 3px 12px rgba(5,14,26,.28) !important;
+ text-shadow:none !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 button:hover { filter:brightness(.97); }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 a[href] {
+ background:rgba(246,249,252,.94) !important;
+ color:#263d54 !important;
+ border:1px solid rgba(255,255,255,.8) !important;
+ box-shadow:0 2px 10px rgba(5,14,26,.18) !important;
+ text-shadow:none !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 a[href]:hover { background:#fff !important; }
