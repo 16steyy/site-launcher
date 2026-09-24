@@ -2,6 +2,26 @@
   "version": 1,
   "themes": [
     {
+      "id": "tsar_2-0",
+      "name": "Tsar_2.0",
+      "author": "Tsarapcat",
+      "description": "Тёмная матовая тема: приглушённая лаванда, стеклянные панели, золотая метка выбранного пункта",
+      "version": "2.2",
+      "preview": "/themes/tsar_2-0/preview.png",
+      "download": "/themes/tsar_2-0/download.zip",
+      "files": [
+        "cursor-pointer.cur",
+        "cursor-text.cur",
+        "cursor.cur",
+        "download.zip",
+        "preview.png",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "published_at": "2026-09-24"
+    },
+    {
       "id": "dfdfdf",
       "name": "dfdfdf",
       "author": "MiDyaha",

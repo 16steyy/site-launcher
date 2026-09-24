@@ -1,0 +1,443 @@
+/* Tsar v2.0 By Tsarapcat */
+/* ── 0. Палитра ─────────────────────────────────────────── */
+:root {
+    color-scheme: dark;
+
+    /* база */
+    --tsar-bg-0: #0a0814;
+    --tsar-bg-1: #1c1231;
+    --tsar-bg-2: #241639;
+    --tsar-text: #e5d9f2;
+    --tsar-text-dim: #bfa8de;
+
+    /* акценты */
+    --tsar-accent: #a67fe0;
+    --tsar-accent-soft: #c3a3f0;
+    --tsar-gold: #d9b779;
+
+    /* градиенты */
+    --tsar-grad-bg: radial-gradient(120% 90% at 85% -10%, #2c1a4a 0%, var(--tsar-bg-1) 45%, var(--tsar-bg-0) 100%);
+    --tsar-grad-glass: linear-gradient(160deg, rgba(170, 130, 230, 0.10) 0%, rgba(110, 75, 175, 0.05) 45%, rgba(195, 150, 240, 0.08) 100%);
+    --tsar-grad-btn: linear-gradient(165deg, rgba(160, 120, 225, 0.16) 0%, rgba(115, 80, 185, 0.10) 100%);
+    --tsar-grad-btn-hover: linear-gradient(165deg, rgba(175, 135, 240, 0.26) 0%, rgba(130, 90, 205, 0.16) 100%);
+    --tsar-grad-play: linear-gradient(135deg, rgba(185, 140, 245, 0.42) 0%, rgba(140, 100, 220, 0.32) 50%, rgba(105, 70, 185, 0.42) 100%);
+    --tsar-grad-play-hover: linear-gradient(135deg, rgba(205, 160, 250, 0.55) 0%, rgba(160, 115, 240, 0.45) 50%, rgba(120, 85, 210, 0.55) 100%);
+
+    /* линии и заливки */
+    --tsar-line: rgba(180, 150, 220, 0.14);
+    --tsar-line-hover: rgba(190, 160, 230, 0.32);
+    --tsar-line-active: rgba(200, 160, 240, 0.42);
+    --tsar-fill: rgba(140, 100, 200, 0.10);
+    --tsar-fill-hover: rgba(150, 110, 210, 0.18);
+    --tsar-fill-active: rgba(160, 110, 220, 0.24);
+    --tsar-field: rgba(8, 6, 16, 0.45);
+    --tsar-popup: rgba(18, 13, 34, 0.94);
+    --tsar-ring: rgba(205, 170, 250, 0.75);
+    --tsar-glow: rgba(170, 130, 235, 0.22);
+
+    /* радиусы */
+    --tsar-radius-side: 16px;
+    --tsar-radius-play: 24px;
+    --tsar-radius-banner: 28px;
+    --tsar-radius-glass: 16px;
+}
+
+/* ── 1. Фон и текст ───────────────────────────────────────
+   Слоёный градиент: фиолетовое свечение сверху-справа + мягкое
+   ауро по центру. Фон зафиксирован, чтобы не «плыл» при скролле. */
+html {
+    background-color: var(--tsar-bg-0) !important;
+    background-image:
+        radial-gradient(46% 42% at 28% 22%, rgba(140, 100, 215, 0.16) 0%, transparent 100%),
+        radial-gradient(40% 36% at 78% 68%, rgba(190, 150, 240, 0.10) 0%, transparent 100%),
+        var(--tsar-grad-bg) !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 100% !important;
+    color: var(--tsar-text) !important;
+}
+
+body {
+    background: transparent !important;
+    color: var(--tsar-text) !important;
+    font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+}
+
+/* ── 2. Стеклянные панели ───────────────────────────────── */
+.glass-panel {
+    background: var(--tsar-grad-glass) !important;
+    backdrop-filter: blur(18px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: var(--tsar-radius-glass) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 30px rgba(160, 115, 220, 0.05) !important;
+    box-sizing: border-box !important;
+}
+
+/* Вложенное стекло не размываем повторно: лишняя нагрузка и «грязный» фон */
+.glass-panel .glass-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/* Если движок не умеет blur — панель делаем плотной, иначе текст сливается с фоном */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass-panel { background: linear-gradient(160deg, rgba(30, 21, 52, 0.96), rgba(20, 14, 36, 0.94)) !important; }
+}
+
+/* Всплывающие окна и меню: всегда читаемы поверх контента */
+dialog, [role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"] {
+    background: linear-gradient(165deg, rgba(26, 18, 46, 0.96), rgba(16, 12, 30, 0.94)) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 14px !important;
+    color: var(--tsar-text) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+/* ── 3. Кнопки ──────────────────────────────────────────── */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]) {
+    background: var(--tsar-grad-btn) !important;
+    color: #dcd0ea !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    box-sizing: border-box !important;
+    transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease !important;
+}
+
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):not(:disabled, [aria-disabled="true"]) {
+    cursor: pointer;
+}
+
+/* Наведение */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):hover:not(:disabled, [aria-disabled="true"]) {
+    background: var(--tsar-grad-btn-hover) !important;
+    border-color: var(--tsar-line-hover) !important;
+    box-shadow: 0 0 16px var(--tsar-glow), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    color: #ece2f8 !important;
+}
+
+/* Нажатие */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):active:not(:disabled, [aria-disabled="true"]) {
+    background: var(--tsar-fill-active) !important;
+    border-color: var(--tsar-line-active) !important;
+    box-shadow: inset 0 0 8px rgba(180, 130, 240, 0.22) !important;
+    color: #ece2f8 !important;
+}
+
+/* ── 3b. Главная кнопка «Играть» — лавандовый градиент ──── */
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]
+):not(aside *, [class*="sidebar"] *, #tsar) {
+    background: var(--tsar-grad-play) !important;
+    background-color: rgba(95, 65, 175, 0.28) !important;
+    backdrop-filter: blur(14px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+    border-color: rgba(205, 175, 250, 0.40) !important;
+    color: #f6efff !important;
+    border-radius: var(--tsar-radius-play) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 0 0 1px rgba(200, 170, 250, 0.25), 0 0 34px rgba(150, 100, 235, 0.35), 0 10px 28px rgba(80, 50, 150, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.20) !important;
+    transition: background .25s ease, transform .2s ease, box-shadow .25s ease, border-color .25s ease, backdrop-filter .25s ease !important;
+}
+
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]
+):not(aside *, [class*="sidebar"] *, #tsar):hover:not(:disabled) {
+    background: var(--tsar-grad-play-hover) !important;
+    background-color: rgba(110, 75, 200, 0.34) !important;
+    border-color: rgba(220, 195, 255, 0.65) !important;
+    box-shadow: 0 0 0 1px rgba(215, 185, 255, 0.35), 0 0 44px rgba(165, 115, 245, 0.45), 0 12px 32px rgba(90, 60, 170, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.26) !important;
+    transform: translateY(-2px) !important;
+}
+
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]
+):not(aside *, [class*="sidebar"] *, #tsar) > *:not(svg, img, path),
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]
+):not(aside *, [class*="sidebar"] *, #tsar)::before,
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]
+):not(aside *, [class*="sidebar"] *, #tsar)::after {
+    border-radius: inherit !important;
+}
+
+/* ── 4. Выбранный пункт — сочный лавандовый градиент вместо
+   белого «пересвета»; текст без белого залития. */
+:is(
+    .active, .is-active, .selected, .is-selected,
+    [class*="-active"], [class*="_active"], [class*="-selected"], [class*="_selected"],
+    [aria-selected="true"], [aria-pressed="true"], [aria-current]:not([aria-current="false"]),
+    [data-active="true"], [data-selected="true"], [data-state="active"], [data-state="on"]
+):not([class*="inactive"], [class*="unselected"], [class*="deactive"]):is(
+    button, a, li, [role="tab"], [role="menuitem"], [role="option"],
+    .interactive-press, .sidebar-item, .nav-item, [class*="item"], [class*="tab"], [class*="link"]
+):not(aside *, [class*="version"], [class*="loader"], [class*="banner"]) {
+    background: linear-gradient(135deg, rgba(185, 145, 245, 0.42) 0%, rgba(150, 105, 225, 0.30) 55%, rgba(110, 75, 190, 0.45) 100%) !important;
+    border-color: var(--tsar-line-active) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 14px rgba(170, 120, 240, 0.22), 0 0 12px rgba(140, 95, 220, 0.18) !important;
+    color: var(--tsar-text) !important;
+}
+
+/* Недоступные кнопки (должны идти последними) */
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):is(:disabled, [aria-disabled="true"]) {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    background: var(--tsar-fill) !important;
+    border-color: var(--tsar-line) !important;
+    box-shadow: none !important;
+    color: var(--tsar-text-dim) !important;
+}
+
+/* ── 5. Иконки и меню ───────────────────────────────────── */
+:where([class*="icon"]), button img, button svg {
+    border-radius: 10px !important;
+}
+
+/* Кнопки слева — скругление регулируется --tsar-radius-side.
+   Ловит и <button>, и обычные div/li/a внутри боковой панели. */
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar) {
+    border-radius: var(--tsar-radius-side) !important;
+}
+
+/* Внутренние слои повторяют форму кнопки — острые углы не торчат */
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar) > *:not(svg, img, path),
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar)::before,
+:is(
+    .sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])
+):not(#tsar)::after {
+    border-radius: inherit !important;
+}
+
+:is(.sidebar-item, .nav-item, :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])) :is(img, svg):not(#tsar) {
+    border-radius: 10px !important;
+}
+
+/* ── 6. Версия и загрузчик ─────────────────────────────────
+   Версия: мягкая тёмная плашка, чтобы текст читался, но без
+   яркой подсветки. Загрузчик — без подложки, просто текст. */
+
+/* Версия — стеклянная плашка */
+:is(
+    .version, .version-text, .game-version,
+    [class*="version"]:not(:has([class*="version"]), select, option, ul, ol, li, input, [role="option"], [role="menuitem"])
+):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+    background: rgba(10, 7, 20, 0.60) !important;
+    border: 1px solid rgba(185, 155, 225, 0.22) !important;
+    border-radius: 10px !important;
+    padding: 4px 12px !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    color: var(--tsar-text-dim) !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Загрузчик — без подсветки */
+:is(
+    .status-bar, .info-bar, .footer-info,
+    [class*="game-loader"], [class*="mod-loader"], [class*="modloader"], [class*="loader-name"], [class*="loader-info"]
+):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: var(--tsar-text-dim) !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── 6b. Главная кнопка после запуска — красная ─────────────
+   Активна, пока игра запущена; в остальное время обычная. */
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]
+):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar) {
+    background: linear-gradient(135deg, rgba(210, 55, 75, 0.38) 0%, rgba(170, 35, 55, 0.30) 100%) !important;
+    border-color: rgba(255, 105, 125, 0.55) !important;
+    color: #ffe4e8 !important;
+    box-shadow: 0 0 14px rgba(220, 60, 80, 0.30), inset 0 0 8px rgba(255, 90, 110, 0.15) !important;
+    border-radius: inherit;
+}
+
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]
+):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar):is(:hover, :active):not(:disabled) {
+    background: linear-gradient(135deg, rgba(225, 65, 85, 0.48) 0%, rgba(185, 45, 65, 0.40) 100%) !important;
+    border-color: rgba(255, 130, 148, 0.75) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(230, 70, 90, 0.42), inset 0 0 10px rgba(255, 100, 120, 0.2) !important;
+    border-radius: inherit;
+}
+
+/* ── 6c. Верхний банер главного экрана ─────────────────────
+   Чуть скруглённее + мягкий градиентный тинт поверх картинки. */
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]
+):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar) {
+    border-radius: var(--tsar-radius-banner) !important;
+}
+
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]
+):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar) > *:not(svg, img, path),
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]
+):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar)::before,
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]
+):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar)::after {
+    border-radius: inherit !important;
+}
+
+/* ── 6d. Кастомный курсор ──────────────────────────────────
+   Клади файл cursor.cur (или cursor.png) в папку темы рядом
+   с этим css — он подхватится автоматически. */
+* {
+    cursor: url('cursor.cur') 8 8, url('cursor.png') 8 8, auto !important;
+}
+:is(button, a, .interactive-press, [role="button"], input[type="submit"], input[type="button"], li, [role="menuitem"], [role="tab"]):not(:disabled, [aria-disabled="true"]) {
+    cursor: url('cursor-pointer.cur') 8 8, url('cursor-pointer.png') 8 8, url('cursor.cur') 8 8, url('cursor.png') 8 8, pointer !important;
+}
+input, textarea, select {
+    cursor: url('cursor-text.cur') 8 8, url('cursor-text.png') 8 8, url('cursor.cur') 8 8, url('cursor.png') 8 8, text !important;
+}
+
+/* ── 7. Поля ввода ──────────────────────────────────────── */
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select) {
+    background: var(--tsar-field) !important;
+    border: 1px solid var(--tsar-line) !important;
+    border-radius: 10px !important;
+    color: var(--tsar-text) !important;
+    caret-color: var(--tsar-accent);
+    transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease !important;
+    box-sizing: border-box !important;
+}
+
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select):focus {
+    outline: none !important;
+    background: rgba(12, 8, 22, 0.65) !important;
+    border-color: rgba(180, 140, 230, 0.45) !important;
+    box-shadow: 0 0 0 3px rgba(160, 110, 220, 0.16) !important;
+}
+
+:is(input, textarea, select):disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+::placeholder {
+    color: rgba(191, 168, 222, 0.5) !important;
+    opacity: 1;
+}
+
+select option, select optgroup {
+    background: #15102a;
+    color: var(--tsar-text);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--tsar-text) !important;
+    caret-color: var(--tsar-text);
+    box-shadow: 0 0 0 1000px #100b20 inset !important;
+    transition: background-color 9999s ease-out 0s;
+}
+
+input[type="checkbox"], input[type="radio"], input[type="range"], progress, meter {
+    accent-color: var(--tsar-accent);
+}
+
+/* ── 8. Клавиатурный фокус ──────────────────────────────── */
+:is(button, a, [role="tab"], [role="menuitem"], [tabindex], .interactive-press,
+    input[type="checkbox"], input[type="radio"], input[type="range"]):focus-visible {
+    outline: 2px solid var(--tsar-ring) !important;
+    outline-offset: 2px !important;
+}
+
+/* ── 9. Скроллбар и выделение ───────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(160, 130, 210, 0.18); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(180, 150, 230, 0.4); }
+
+@supports not selector(::-webkit-scrollbar) {
+    * { scrollbar-width: thin; scrollbar-color: rgba(160, 130, 210, 0.3) transparent; }
+}
+
+::selection {
+    background: rgba(150, 110, 210, 0.35) !important;
+    color: #ffffff !important;
+}
+
+/* ── 10. Уважаем «уменьшить анимацию» ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+\n
