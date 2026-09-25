@@ -22,23 +22,6 @@
       "published_at": "2026-09-24"
     },
     {
-      "id": "dfdfdf",
-      "name": "dfdfdf",
-      "author": "MiDyaha",
-      "description": "хуй",
-      "version": "1.0",
-      "preview": null,
-      "download": "/themes/dfdfdf/download.zip",
-      "files": [
-        "download.zip",
-        "style.css",
-        "theme.json",
-        "ывыв.jpg"
-      ],
-      "history": [],
-      "published_at": "2026-09-23"
-    },
-    {
       "id": "liquidmine",
       "name": "LiquidMine",
       "author": "AntonDevia",
