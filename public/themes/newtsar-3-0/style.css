@@ -1,0 +1,525 @@
+/* Tsar v3.0 By Tsarapcat — Масштабное обновление 3.0, добавлены кастомные иконки, частицы и цветовая палитра */
+/*── 0. Палитра ──*/
+:root {
+  color-scheme: dark;
+  --tsar-bg-0: #0a0814;
+  --tsar-bg-1: #1c1231;
+  --tsar-bg-2: #241639;
+  --tsar-text: #e5d9f2;
+  --tsar-text-dim: #bfa8de;
+  --tsar-accent: #a67fe0;
+  --tsar-accent-soft: #c3a3f0;
+  --tsar-gold: #d9b779;
+  --tsar-grad-bg: radial-gradient(120% 90% at 85% -10%, #2c1a4a 0%, var(--tsar-bg-1) 45%, var(--tsar-bg-0) 100%);
+  --tsar-grad-glass: linear-gradient(160deg, rgba(170, 130, 230, 0.10) 0%, rgba(110, 75, 175, 0.05) 45%, rgba(195, 150, 240, 0.08) 100%);
+  --tsar-grad-btn: linear-gradient(165deg, rgba(160, 120, 225, 0.16) 0%, rgba(115, 80, 185, 0.10) 100%);
+  --tsar-grad-btn-hover: linear-gradient(165deg, rgba(175, 135, 240, 0.26) 0%, rgba(130, 90, 205, 0.16) 100%);
+  --tsar-grad-play: linear-gradient(135deg, rgba(185, 140, 245, 0.42) 0%, rgba(140, 100, 220, 0.32) 50%, rgba(105, 70, 185, 0.42) 100%);
+  --tsar-grad-play-hover: linear-gradient(135deg, rgba(205, 160, 250, 0.55) 0%, rgba(160, 115, 240, 0.45) 50%, rgba(120, 85, 210, 0.55) 100%);
+  --tsar-line: rgba(180, 150, 220, 0.14);
+  --tsar-line-hover: rgba(190, 160, 230, 0.32);
+  --tsar-line-active: rgba(200, 160, 240, 0.42);
+  --tsar-fill: rgba(140, 100, 200, 0.10);
+  --tsar-fill-hover: rgba(150, 110, 210, 0.18);
+  --tsar-fill-active: rgba(160, 110, 220, 0.24);
+  --tsar-field: rgba(8, 6, 16, 0.45);
+  --tsar-popup: rgba(18, 13, 34, 0.94);
+  --tsar-ring: rgba(143, 227, 207, 0.75);
+  --tsar-glow: rgba(170, 130, 235, 0.22);
+  --tsar-radius-side: 16px;
+  --tsar-radius-play: 28px;
+  --tsar-radius-banner: 28px;
+  --tsar-radius-glass: 16px;
+}
+/*── 1. Фон и текст ──*/
+html {
+  background-color: var(--tsar-bg-0) !important;
+  background-image:
+    radial-gradient(46% 42% at 28% 22%, rgba(140, 100, 215, 0.16) 0%, transparent 100%),
+    radial-gradient(40% 36% at 78% 68%, rgba(190, 150, 240, 0.10) 0%, transparent 100%),
+    radial-gradient(30% 26% at 10% 82%, rgba(143, 227, 207, 0.18) 0%, transparent 100%),
+    radial-gradient(18% 16% at 62% 86%, rgba(143, 227, 207, 0.10) 0%, transparent 100%),
+    radial-gradient(28% 24% at 93% 38%, rgba(235, 175, 105, 0.14) 0%, transparent 100%),
+    radial-gradient(24% 20% at 55% 4%, rgba(235, 132, 168, 0.12) 0%, transparent 100%),
+    var(--tsar-grad-bg) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  color: var(--tsar-text) !important;
+}
+body {
+  background: transparent !important;
+  color: var(--tsar-text) !important;
+  font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, select, textarea { font-family: inherit; }
+/*── 2. Стеклянные панели ──*/
+.glass-panel {
+  background: var(--tsar-grad-glass) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  border: 1px solid var(--tsar-line) !important;
+  border-radius: var(--tsar-radius-glass) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 30px rgba(160, 115, 220, 0.05) !important;
+  box-sizing: border-box !important;
+}
+.glass-panel .glass-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.glass-chip {
+  background:
+    radial-gradient(52% 86% at 10% 28%, rgba(234, 193, 126, 0.18) 0%, transparent 62%),
+    radial-gradient(52% 86% at 92% 32%, rgba(143, 227, 207, 0.15) 0%, transparent 62%),
+    radial-gradient(42% 76% at 48% 118%, rgba(240, 158, 169, 0.12) 0%, transparent 62%),
+    radial-gradient(70% 110% at 50% 8%, rgba(150, 105, 225, 0.10) 0%, transparent 70%),
+    linear-gradient(160deg, rgba(24, 16, 46, 0.58) 0%, rgba(14, 10, 28, 0.52) 55%, rgba(28, 19, 54, 0.46) 100%) !important;
+  border: 1px solid rgba(205, 175, 250, 0.30) !important;
+  border-radius: 26px !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.5), 0 0 26px rgba(234, 193, 126, 0.10), 0 0 22px rgba(143, 227, 207, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 32px rgba(120, 80, 205, 0.12), inset 0 0 26px rgba(143, 227, 207, 0.08) !important;
+  color: var(--tsar-text) !important;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel { background: linear-gradient(160deg, rgba(30, 21, 52, 0.96), rgba(20, 14, 36, 0.94)) !important; }
+}
+dialog, [role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"] {
+  background: linear-gradient(165deg, rgba(26, 18, 46, 0.96), rgba(16, 12, 30, 0.94)) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--tsar-line) !important;
+  border-radius: 14px !important;
+  color: var(--tsar-text) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+/*── 3. Кнопки ──*/
+:is(.interactive-press, button, input[type="submit"], input[type="button"]) {
+  background: var(--tsar-grad-btn) !important;
+  color: #dcd0ea !important;
+  border: 1px solid var(--tsar-line) !important;
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.2px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  box-sizing: border-box !important;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):not(:disabled, [aria-disabled="true"]) { cursor: pointer; }
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):hover:not(:disabled, [aria-disabled="true"]) {
+  background: var(--tsar-grad-btn-hover) !important;
+  border-color: var(--tsar-line-hover) !important;
+  box-shadow: 0 0 16px var(--tsar-glow), inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 0 12px rgba(143, 227, 207, 0.16) !important;
+  color: #ece2f8 !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):active:not(:disabled, [aria-disabled="true"]) {
+  background: var(--tsar-fill-active) !important;
+  border-color: var(--tsar-line-active) !important;
+  box-shadow: inset 0 0 8px rgba(180, 130, 240, 0.22), inset 0 0 8px rgba(143, 227, 207, 0.16) !important;
+  color: #ece2f8 !important;
+}
+@keyframes tsar-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(200, 170, 250, 0.28), 0 0 30px rgba(150, 100, 235, 0.35), 0 0 20px rgba(143, 227, 207, 0.08), 0 10px 28px rgba(80, 50, 150, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 22px rgba(170, 120, 240, 0.16); }
+  50% { box-shadow: 0 0 0 1px rgba(215, 185, 255, 0.42), 0 0 48px rgba(172, 122, 245, 0.58), 0 0 30px rgba(143, 227, 207, 0.16), 0 10px 30px rgba(90, 60, 170, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 0 30px rgba(190, 140, 250, 0.26); }
+}
+/*── 3b. Главная кнопка «Играть» ──*/
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar) {
+  background:
+    radial-gradient(50% 70% at 16% 20%, rgba(234, 193, 126, 0.15) 0%, transparent 62%),
+    radial-gradient(50% 70% at 88% 18%, rgba(143, 227, 207, 0.12) 0%, transparent 62%),
+    radial-gradient(60% 90% at 50% 92%, rgba(190, 150, 250, 0.24) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(185, 140, 245, 0.50) 0%, rgba(140, 100, 220, 0.38) 50%, rgba(105, 70, 185, 0.50) 100%) !important;
+  background-color: rgba(95, 65, 175, 0.28) !important;
+  backdrop-filter: blur(14px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+  border-color: rgba(205, 175, 250, 0.40) !important;
+  color: #f6efff !important;
+  border-radius: var(--tsar-radius-play) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35) !important;
+  box-shadow: 0 0 0 1px rgba(200, 170, 250, 0.28), 0 0 34px rgba(150, 100, 235, 0.38), 0 0 20px rgba(143, 227, 207, 0.08), 0 10px 28px rgba(80, 50, 150, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 22px rgba(170, 120, 240, 0.16) !important;
+  animation: tsar-pulse 2.8s ease-in-out infinite !important;
+  transition: background .25s ease, transform .2s ease, box-shadow .25s ease, border-color .25s ease, backdrop-filter .25s ease !important;
+}
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar):hover:not(:disabled) {
+  background:
+    radial-gradient(52% 70% at 16% 20%, rgba(234, 193, 126, 0.20) 0%, transparent 62%),
+    radial-gradient(52% 70% at 88% 18%, rgba(143, 227, 207, 0.16) 0%, transparent 62%),
+    radial-gradient(60% 90% at 50% 92%, rgba(200, 160, 250, 0.30) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(195, 150, 250, 0.56) 0%, rgba(150, 105, 225, 0.44) 50%, rgba(115, 78, 200, 0.56) 100%) !important;
+  background-color: rgba(110, 75, 200, 0.34) !important;
+  border-color: rgba(220, 195, 255, 0.65) !important;
+  box-shadow: 0 0 0 1px rgba(215, 185, 255, 0.38), 0 0 48px rgba(168, 118, 245, 0.52), 0 0 28px rgba(143, 227, 207, 0.18), 0 12px 32px rgba(90, 60, 170, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.30), inset 0 0 28px rgba(185, 135, 245, 0.28) !important;
+  animation: tsar-pulse 1.6s ease-in-out infinite !important;
+  transform: translateY(-2px) !important;
+}
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar) > *:not(svg, img, path),
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar)::before,
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar)::after {
+  border-radius: inherit !important;
+}
+/*── 4. Выбранный пункт ──*/
+:is(.active, .is-active, .selected, .is-selected,
+    [class*="-active"], [class*="_active"], [class*="-selected"], [class*="_selected"],
+    [aria-selected="true"], [aria-pressed="true"], [aria-current]:not([aria-current="false"]),
+    [data-active="true"], [data-selected="true"], [data-state="active"], [data-state="on"]):not([class*="inactive"], [class*="unselected"], [class*="deactive"]):is(
+    button, a, li, [role="tab"], [role="menuitem"], [role="option"],
+    .interactive-press, .sidebar-item, .nav-item, [class*="item"], [class*="tab"], [class*="link"]):not(aside *, [class*="version"], [class*="loader"], [class*="banner"]) {
+  background: linear-gradient(135deg, rgba(185, 145, 245, 0.42) 0%, rgba(150, 105, 225, 0.30) 55%, rgba(110, 75, 190, 0.45) 100%) !important;
+  border-color: var(--tsar-line-active) !important;
+  box-shadow: inset 0 0 14px rgba(170, 120, 240, 0.22), 0 0 12px rgba(140, 95, 220, 0.18) !important;
+  color: var(--tsar-text) !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):is(:disabled, [aria-disabled="true"]) {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  background: var(--tsar-fill) !important;
+  border-color: var(--tsar-line) !important;
+  box-shadow: none !important;
+  color: var(--tsar-text-dim) !important;
+}
+/*── 5. Меню и скругления ──*/
+:where([class*="icon"]), button img, button svg { border-radius: 10px !important; }
+:is(.sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])):not(#tsar) {
+  border-radius: var(--tsar-radius-side) !important;
+}
+:is(.sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])):not(#tsar) > *:not(svg, img, path),
+:is(.sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])):not(#tsar)::before,
+:is(.sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])):not(#tsar)::after,
+:is(.sidebar-item, .nav-item,
+    :is(aside, nav, [class*="sidebar"], [class*="side-bar"], [class*="side-"], [class*="-side"],
+    [class*="sidenav"], [class*="rail"], [class*="dock"]) :is(button, a, li, [role="button"], [role="tab"], [role="menuitem"], .interactive-press,
+    [class*="item"], [class*="btn"], [class*="button"], [class*="tab"], [class*="link"])) :is(img, svg):not(#tsar) {
+  border-radius: 10px !important;
+}
+/*── 6. Версия и загрузчик ──*/
+:is(.version, .version-text, .game-version,
+    [class*="version"]:not(:has([class*="version"]), select, option, ul, ol, li, input, [role="option"], [role="menuitem"])):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+  background: rgba(10, 7, 20, 0.60) !important;
+  border: 1px solid rgba(185, 155, 225, 0.22) !important;
+  border-radius: 10px !important;
+  padding: 4px 12px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 10px rgba(143, 227, 207, 0.10) !important;
+  color: var(--tsar-text-dim) !important;
+  font-variant-numeric: tabular-nums;
+}
+:is(.status-bar, .info-bar, .footer-info,
+    [class*="game-loader"], [class*="mod-loader"], [class*="modloader"], [class*="loader-name"], [class*="loader-info"]):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--tsar-text-dim) !important;
+  font-variant-numeric: tabular-nums;
+}
+/*── 6b. Кнопка после запуска (красная) ──*/
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar) {
+  background: linear-gradient(135deg, rgba(210, 55, 75, 0.38) 0%, rgba(170, 35, 55, 0.30) 100%) !important;
+  border-color: rgba(255, 105, 125, 0.55) !important;
+  color: #ffe4e8 !important;
+  box-shadow: 0 0 14px rgba(220, 60, 80, 0.30), inset 0 0 8px rgba(255, 90, 110, 0.15) !important;
+  border-radius: inherit;
+}
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar):is(:hover, :active):not(:disabled) {
+  background: linear-gradient(135deg, rgba(225, 65, 85, 0.48) 0%, rgba(185, 45, 65, 0.40) 100%) !important;
+  border-color: rgba(255, 130, 148, 0.75) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(230, 70, 90, 0.42), inset 0 0 10px rgba(255, 100, 120, 0.2) !important;
+  border-radius: inherit;
+}
+/*── 6c. Банер ──*/
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar) {
+  border-radius: var(--tsar-radius-banner) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(200, 165, 250, 0.30) !important;
+  box-shadow: 0 0 0 1px rgba(165, 120, 235, 0.14), 0 22px 55px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 46px rgba(150, 105, 230, 0.10) !important;
+}
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar) > *:not(svg, img, path),
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar)::before,
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar)::after {
+  border-radius: inherit !important;
+}
+:is(.banner, .top-banner, .banner-top, .hero-banner, .main-banner,
+    [class*="banner"], [id*="banner" i]):not(aside *, [class*="sidebar"] *, [class*="ad"], [class*="ads"], #tsar)::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+  background:
+    radial-gradient(65% 85% at 14% 18%, rgba(170, 125, 235, 0.28) 0%, transparent 60%),
+    radial-gradient(55% 80% at 88% 88%, rgba(120, 80, 205, 0.22) 0%, transparent 62%),
+    radial-gradient(24% 44% at 26% 64%, rgba(234, 193, 126, 0.18) 0%, transparent 60%),
+    radial-gradient(26% 46% at 70% 28%, rgba(143, 227, 207, 0.16) 0%, transparent 60%),
+    radial-gradient(20% 40% at 50% 72%, rgba(240, 158, 169, 0.14) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(6, 4, 14, 0.10) 0%, rgba(6, 4, 14, 0.45) 100%) !important;
+}
+.glass-panel:has(> img[class*="object-cover"]) {
+  border-radius: var(--tsar-radius-banner) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(200, 165, 250, 0.30) !important;
+  box-shadow: 0 0 0 1px rgba(165, 120, 235, 0.14), 0 22px 55px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 46px rgba(150, 105, 230, 0.10) !important;
+}
+.glass-panel:has(> img[class*="object-cover"])::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+  border-radius: inherit !important;
+  background:
+    radial-gradient(65% 85% at 14% 18%, rgba(170, 125, 235, 0.30) 0%, transparent 60%),
+    radial-gradient(55% 80% at 88% 88%, rgba(120, 80, 205, 0.24) 0%, transparent 62%),
+    radial-gradient(24% 44% at 26% 64%, rgba(234, 193, 126, 0.20) 0%, transparent 60%),
+    radial-gradient(26% 46% at 70% 28%, rgba(143, 227, 207, 0.18) 0%, transparent 60%),
+    radial-gradient(20% 40% at 50% 72%, rgba(240, 158, 169, 0.16) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(6, 4, 14, 0.10) 0%, rgba(6, 4, 14, 0.45) 100%) !important;
+}
+/*── 6d. Кастомный курсор ──*/
+* { cursor: url('cursor.cur') 8 8, url('cursor.png') 8 8, auto !important; }
+:is(button, a, .interactive-press, [role="button"], input[type="submit"], input[type="button"], li, [role="menuitem"], [role="tab"]):not(:disabled, [aria-disabled="true"]) {
+  cursor: url('cursor-pointer.cur') 8 8, url('cursor-pointer.png') 8 8, url('cursor.cur') 8 8, url('cursor.png') 8 8, pointer !important;
+}
+input, textarea, select { cursor: url('cursor-text.cur') 8 8, url('cursor-text.png') 8 8, url('cursor.cur') 8 8, url('cursor.png') 8 8, text !important; }
+/*── 7. Поля ввода ──*/
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select) {
+  background: var(--tsar-field) !important;
+  border: 1px solid var(--tsar-line) !important;
+  border-radius: 10px !important;
+  color: var(--tsar-text) !important;
+  caret-color: var(--tsar-accent);
+  transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease !important;
+  box-sizing: border-box !important;
+}
+:is(input:not([type]), input[type="text"], input[type="password"], input[type="email"],
+    input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select):focus {
+  outline: none !important;
+  background: rgba(12, 8, 22, 0.65) !important;
+  border-color: rgba(180, 140, 230, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(160, 110, 220, 0.16) !important;
+}
+:is(input, textarea, select):disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+::placeholder { color: rgba(191, 168, 222, 0.5) !important; opacity: 1; }
+select option, select optgroup { background: #15102a; color: var(--tsar-text); }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--tsar-text) !important;
+  caret-color: var(--tsar-text);
+  box-shadow: 0 0 0 1000px #100b20 inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
+input[type="checkbox"], input[type="radio"], input[type="range"], progress, meter { accent-color: var(--tsar-accent); }
+/*── 8. Клавиатурный фокус ──*/
+:is(button, a, [role="tab"], [role="menuitem"], [tabindex], .interactive-press,
+    input[type="checkbox"], input[type="radio"], input[type="range"]):focus-visible {
+  outline: 2px solid var(--tsar-ring) !important;
+  outline-offset: 2px !important;
+}
+/*── 9. Скроллбар и выделение ──*/
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: rgba(160, 130, 210, 0.3) transparent; }
+}
+::selection {
+  background: linear-gradient(90deg, rgba(150, 110, 210, 0.35), rgba(143, 227, 207, 0.35)) !important;
+  color: #ffffff !important;
+}
+/*── 10. Уменьшаем анимации ──*/
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    animation: none !important;
+  }
+}
+/*── 11. Летающие частицы ──*/
+div.pointer-events-none.fixed.inset-0.overflow-hidden { isolation: isolate !important; }
+div.pointer-events-none.fixed.inset-0.overflow-hidden::before,
+div.pointer-events-none.fixed.inset-0.overflow-hidden::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background-repeat: repeat !important;
+  background-size: 300px 300px !important;
+  will-change: background-position;
+}
+div.pointer-events-none.fixed.inset-0.overflow-hidden::before {
+  background-image:
+    radial-gradient(circle, rgba(215, 190, 255, 0.70) 0 3px, transparent 4.5px),
+    radial-gradient(circle, rgba(190, 160, 245, 0.50) 0 4px, transparent 6px),
+    radial-gradient(circle, rgba(230, 215, 255, 0.80) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(217, 183, 121, 0.55) 0 2.5px, transparent 4px);
+  background-position: 36px 40px, 150px 90px, 240px 200px, 90px 250px;
+  animation: tsar-dust-a 14s ease-in-out infinite, tsar-shimmer-a 4.6s ease-in-out infinite;
+}
+@keyframes tsar-dust-a {
+  0% { background-position: 36px 40px, 150px 90px, 240px 200px, 90px 250px; }
+  25% { background-position: 88px -40px, 108px 5px, 198px 118px, 142px 172px; }
+  50% { background-position: 22px -118px, 172px -58px, 272px 42px, 58px 102px; }
+  75% { background-position: 64px -196px, 128px -148px, 228px -76px, 104px -38px; }
+  100% { background-position: 36px -260px, 150px -210px, 240px -100px, 90px -50px; }
+}
+@keyframes tsar-shimmer-a {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 0.45; }
+}
+div.pointer-events-none.fixed.inset-0.overflow-hidden::after {
+  background-image:
+    radial-gradient(circle, rgba(240, 228, 255, 0.60) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(217, 183, 121, 0.70) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(205, 175, 250, 0.50) 0 2.5px, transparent 4px),
+    radial-gradient(circle, rgba(230, 215, 255, 0.55) 0 1px, transparent 2px);
+  background-position: 20px 20px, 120px 230px, 210px 120px, 260px 70px;
+  animation: tsar-dust-b 22s ease-in-out infinite, tsar-shimmer-b 6.8s ease-in-out infinite;
+}
+@keyframes tsar-dust-b {
+  0% { background-position: 20px 20px, 120px 230px, 210px 120px, 260px 70px; }
+  25% { background-position: 62px 88px, 88px 162px, 178px 58px, 218px 8px; }
+  50% { background-position: 12px 178px, 152px 92px, 262px 162px, 198px 108px; }
+  75% { background-position: 42px 258px, 108px 22px, 218px 242px, 248px 188px; }
+  100% { background-position: 20px -280px, 120px -70px, 210px -180px, 260px -230px; }
+}
+@keyframes tsar-shimmer-b {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.30; }
+}
+/*── 12. Иконки сайдбара ──*/
+.sidebar-icon:has(img[src$="play64.png"]) {
+  width: 28px !important;
+  height: 28px !important;
+  background-image: url('play-icon.png');
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+.sidebar-icon:has(img[src$="play64.png"]) img { display: none !important; }
+.sidebar-icon:has(img[src$="settings.png"])::before,
+.sidebar-icon:has(img[src$="mods.png"])::before,
+.sidebar-icon:has(img[src$="modpack_icon.png"])::before,
+.sidebar-icon:has(img[src$="room.png"])::before,
+.sidebar-icon:has(img[src$="group.png"])::before,
+.sidebar-icon.rounded-full:has(> svg)::before {
+  content: "" !important;
+  display: block !important;
+  width: 28px !important;
+  height: 28px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  flex-shrink: 0;
+}
+.sidebar-icon:has(img[src$="settings.png"])::before { background-image: url('settings-icon.svg'); }
+.sidebar-icon:has(img[src$="mods.png"])::before { background-image: url('mods-icon.svg'); }
+.sidebar-icon:has(img[src$="modpack_icon.png"])::before { background-image: url('modpack-icon.svg'); }
+.sidebar-icon:has(img[src$="room.png"])::before { background-image: url('rooms-icon.svg'); }
+.sidebar-icon:has(img[src$="group.png"])::before { background-image: url('friends-icon.svg'); }
+.sidebar-icon.rounded-full:has(> svg)::before { background-image: url('accounts-icon.svg'); }
+.sidebar-icon:has(img[src$="settings.png"]) img,
+.sidebar-icon:has(img[src$="mods.png"]) img,
+.sidebar-icon:has(img[src$="modpack_icon.png"]) img,
+.sidebar-icon:has(img[src$="room.png"]) img,
+.sidebar-icon:has(img[src$="group.png"]) img { display: none !important; }
+.sidebar-icon.rounded-full:has(> svg) svg { display: none !important; }
+/*── 13. Многоцветные акценты ──*/
+.sidebar-item:has(img[src$="settings.png"]) { --tsar-item: 234, 193, 126; }
+.sidebar-item:has(img[src$="mods.png"]) { --tsar-item: 116, 220, 185; }
+.sidebar-item:has(img[src$="modpack_icon.png"]) { --tsar-item: 240, 158, 169; }
+.sidebar-item:has(img[src$="room.png"]) { --tsar-item: 143, 199, 245; }
+.sidebar-item:has(img[src$="group.png"]) { --tsar-item: 242, 178, 134; }
+.sidebar-item:has(.sidebar-icon.rounded-full svg) { --tsar-item: 143, 227, 207; }
+.sidebar-item:has(img[src$="play64.png"]) { --tsar-item: 167, 127, 224; }
+.sidebar-item:has(img[src$="play64.png"]).sidebar-item-active {
+  background: linear-gradient(135deg, rgba(185, 145, 245, 0.42) 0%, rgba(150, 105, 225, 0.30) 55%, rgba(110, 75, 190, 0.45) 100%) !important;
+}
+.sidebar-item.sidebar-item-active {
+  background: linear-gradient(135deg, rgba(var(--tsar-item), 0.55) 0%, rgba(var(--tsar-item), 0.38) 55%, rgba(var(--tsar-item), 0.50) 100%) !important;
+  box-shadow: inset 0 0 18px rgba(var(--tsar-item), 0.40), 0 0 16px rgba(var(--tsar-item), 0.45) !important;
+}
+.sidebar-icon:has(img[src$="play64.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(167, 127, 224, 0.9)); }
+.sidebar-icon:has(img[src$="settings.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(234, 193, 126, 0.9)); }
+.sidebar-icon:has(img[src$="mods.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(116, 220, 185, 0.9)); }
+.sidebar-icon:has(img[src$="modpack_icon.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(240, 158, 169, 0.9)); }
+.sidebar-icon:has(img[src$="room.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(143, 199, 245, 0.9)); }
+.sidebar-icon:has(img[src$="group.png"]).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(242, 178, 134, 0.9)); }
+.sidebar-icon.rounded-full:has(> svg).sidebar-icon-active { filter: drop-shadow(0 0 9px rgba(143, 227, 207, 0.9)); }
+.sidebar-icon:has(img[src$="settings.png"]):hover { filter: drop-shadow(0 0 6px rgba(234, 193, 126, 0.55)); }
+.sidebar-icon:has(img[src$="mods.png"]):hover { filter: drop-shadow(0 0 6px rgba(116, 220, 185, 0.55)); }
+.sidebar-icon:has(img[src$="modpack_icon.png"]):hover { filter: drop-shadow(0 0 6px rgba(240, 158, 169, 0.55)); }
+.sidebar-icon:has(img[src$="room.png"]):hover { filter: drop-shadow(0 0 6px rgba(143, 199, 245, 0.55)); }
+.sidebar-icon:has(img[src$="group.png"]):hover { filter: drop-shadow(0 0 6px rgba(242, 178, 134, 0.55)); }
+.sidebar-icon:has(img[src$="play64.png"]):hover { filter: drop-shadow(0 0 6px rgba(167, 127, 224, 0.55)); }
+.sidebar-icon.rounded-full:has(> svg):hover { filter: drop-shadow(0 0 6px rgba(143, 227, 207, 0.55)); }
+.glass-panel {
+  background-image:
+    linear-gradient(120deg, rgba(234, 193, 126, 0.10) 0%, rgba(143, 227, 207, 0.09) 33%, rgba(143, 199, 245, 0.10) 68%, rgba(240, 158, 169, 0.10) 100%),
+    var(--tsar-grad-glass) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(234, 193, 126, 0.55), rgba(143, 227, 207, 0.55), rgba(143, 199, 245, 0.55), rgba(240, 158, 169, 0.55)) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(234, 193, 126, 0.95), rgba(143, 227, 207, 0.95), rgba(143, 199, 245, 0.95), rgba(240, 158, 169, 0.95)) !important;
+}

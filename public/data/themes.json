@@ -2,6 +2,33 @@
   "version": 1,
   "themes": [
     {
+      "id": "newtsar-3-0",
+      "name": "NewTsar(3.0)",
+      "author": "Tsarapcat",
+      "description": "Тёмная матовая тема: приглушённая лаванда, стеклянные панели, золотая метка выбранного пункта",
+      "version": "2.2",
+      "preview": "/themes/newtsar-3-0/preview.png",
+      "download": "/themes/newtsar-3-0/download.zip",
+      "files": [
+        "accounts-icon.svg",
+        "cursor-pointer.cur",
+        "cursor-text.cur",
+        "cursor.cur",
+        "download.zip",
+        "friends-icon.svg",
+        "modpack-icon.svg",
+        "mods-icon.svg",
+        "play-icon.png",
+        "preview.png",
+        "rooms-icon.svg",
+        "settings-icon.svg",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "published_at": "2026-09-28"
+    },
+    {
       "id": "tsar_2-0",
       "name": "Tsar_2.0",
       "author": "Tsarapcat",
