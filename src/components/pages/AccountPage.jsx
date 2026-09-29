@@ -1,6 +1,11 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
-import { ensureValidAccessToken } from "../../api/auth.js";
+import {
+  ensureValidAccessToken,
+  fetchEmailVerificationStatus,
+  mapAuthErrorMessage,
+  sendEmailVerificationCode,
+} from "../../api/auth.js";
 import { fetchMySubmissions, fetchThemesCatalog } from "../../api/themes.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import { isNewsAdmin } from "../../lib/newsAdmin.js";
@@ -9,6 +14,8 @@ import AccountAvatar from "../AccountAvatar";
 import { useI18n } from "../../i18n/I18nProvider";
 
 const SkinPreview3d = lazy(() => import("../SkinPreview3d.jsx"));
+const CODE_RESEND_COOLDOWN_SECS = 60;
+const CODE_LENGTH = 6;
 
 function getReturnPath() {
   const params = new URLSearchParams(window.location.search);
@@ -19,6 +26,150 @@ function getReturnPath() {
 
 function normalizeAuthor(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function EyeIcon({ open }) {
+  if (open) {
+    return (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden>
+        <path
+          d="M3 3l18 18M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-.88M10.73 5.08A10.5 10.5 0 0121 12c-.6 1.26-1.5 2.4-2.6 3.35M6.61 6.61A10.45 10.45 0 003 12c1.73 4.04 5.84 7 9 7 1.5 0 2.95-.4 4.24-1.1"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden>
+      <path
+        d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+function PasswordField({
+  id,
+  label,
+  value,
+  onChange,
+  disabled,
+  autoComplete,
+  showLabel,
+  hideLabel,
+}) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-bold text-white/80">
+        {label}
+      </label>
+      <div className="relative mt-2">
+        <input
+          id={id}
+          type={visible ? "text" : "password"}
+          required
+          autoComplete={autoComplete}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 pr-12 text-base text-white outline-none transition focus:border-accent/50"
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          disabled={disabled}
+          onClick={() => setVisible((prev) => !prev)}
+          aria-label={visible ? hideLabel : showLabel}
+          className="absolute inset-y-0 right-2 my-auto flex h-9 w-9 items-center justify-center rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+        >
+          <EyeIcon open={visible} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function VerificationCodeField({
+  id,
+  label,
+  value,
+  onChange,
+  disabled,
+  autoFocus,
+}) {
+  const inputRef = useRef(null);
+  const digits = value.padEnd(CODE_LENGTH, " ").slice(0, CODE_LENGTH).split("");
+
+  useEffect(() => {
+    if (autoFocus) {
+      inputRef.current?.focus();
+    }
+  }, [autoFocus]);
+
+  return (
+    <div>
+      <label htmlFor={id} className="sr-only">
+        {label}
+      </label>
+      <div className="relative mx-auto max-w-[300px]">
+        <div className="pointer-events-none grid grid-cols-6 gap-2" aria-hidden>
+          {digits.map((digit, index) => {
+            const filled = digit.trim().length > 0;
+            const isActive = value.length === index || (value.length === CODE_LENGTH && index === CODE_LENGTH - 1);
+            return (
+              <div
+                key={index}
+                className={`flex h-14 items-center justify-center rounded-xl border text-2xl font-semibold tabular-nums transition ${
+                  filled
+                    ? "border-accent/45 bg-accent/15 text-white"
+                    : isActive
+                      ? "border-accent/40 bg-black/50 text-white/30"
+                      : "border-white/15 bg-black/40 text-white/20"
+                }`}
+              >
+                {filled ? digit : "·"}
+              </div>
+            );
+          })}
+        </div>
+        <input
+          ref={inputRef}
+          id={id}
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={CODE_LENGTH}
+          value={value}
+          disabled={disabled}
+          onChange={(event) =>
+            onChange(event.target.value.replace(/\D/g, "").slice(0, CODE_LENGTH))
+          }
+          className="absolute inset-0 h-full w-full cursor-text opacity-0"
+          aria-label={label}
+        />
+      </div>
+      <div className="mt-3 flex justify-center gap-1.5" aria-hidden>
+        {Array.from({ length: CODE_LENGTH }).map((_, index) => (
+          <span
+            key={index}
+            className={`h-1.5 w-7 rounded-full transition ${
+              value.length > index ? "bg-accent" : "bg-white/15"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function ThemeStatusBadge({ status, copy }) {
@@ -102,8 +253,12 @@ export default function AccountPage({ onNavigate, path, user }) {
 
   const [tab, setTab] = useState("login");
   const [formError, setFormError] = useState("");
+  const [formInfo, setFormInfo] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [needsVerification, setNeedsVerification] = useState(false);
+  const [emailVerificationRequired, setEmailVerificationRequired] = useState(true);
+  const [registerStep, setRegisterStep] = useState("form");
+  const [sendingCode, setSendingCode] = useState(false);
+  const [resendIn, setResendIn] = useState(0);
 
   const [loginForm, setLoginForm] = useState({ login: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
@@ -115,6 +270,28 @@ export default function AccountPage({ onNavigate, path, user }) {
 
   const [userThemes, setUserThemes] = useState([]);
   const [themesLoading, setThemesLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchEmailVerificationStatus()
+      .then((status) => {
+        if (!cancelled) {
+          setEmailVerificationRequired(Boolean(status?.required));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setEmailVerificationRequired(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (resendIn <= 0) return undefined;
+    const timer = window.setTimeout(() => setResendIn((v) => Math.max(0, v - 1)), 1000);
+    return () => window.clearTimeout(timer);
+  }, [resendIn]);
 
   useEffect(() => {
     if (!user?.nickname) {
@@ -180,6 +357,7 @@ export default function AccountPage({ onNavigate, path, user }) {
   async function handleLoginSubmit(event) {
     event.preventDefault();
     setFormError("");
+    setFormInfo("");
     setSubmitting(true);
 
     const result = await login(loginForm, messages);
@@ -193,15 +371,70 @@ export default function AccountPage({ onNavigate, path, user }) {
     setFormError(result.error);
   }
 
+  async function handleSendCode({ silentSuccess = false } = {}) {
+    setFormError("");
+    if (!silentSuccess) setFormInfo("");
+    const email = registerForm.email.trim();
+    if (!email.includes("@") || email.length < 5) {
+      setFormError(copy.errors?.invalidEmail || copy.errors?.generic);
+      return false;
+    }
+
+    setSendingCode(true);
+    try {
+      await sendEmailVerificationCode(email);
+      setResendIn(CODE_RESEND_COOLDOWN_SECS);
+      if (!silentSuccess) {
+        setFormInfo(copy.codeSentHint || "Код отправлен на почту");
+      }
+      return true;
+    } catch (error) {
+      setFormError(mapAuthErrorMessage(error?.message, "register", messages));
+      return false;
+    } finally {
+      setSendingCode(false);
+    }
+  }
+
   async function handleRegisterSubmit(event) {
     event.preventDefault();
     setFormError("");
+    setFormInfo("");
+
+    const nickname = registerForm.nickname.trim();
+    const email = registerForm.email.trim();
+    const password = registerForm.password;
+
+    if (!nickname || !email || !password) {
+      setFormError(copy.errors?.generic);
+      return;
+    }
+
+    if (emailVerificationRequired && registerStep === "form") {
+      setSubmitting(true);
+      const sent = await handleSendCode({ silentSuccess: true });
+      setSubmitting(false);
+      if (!sent) return;
+      setRegisterForm((prev) => ({ ...prev, verification_code: "" }));
+      setRegisterStep("verify");
+      setFormInfo(copy.codeSentHint || "Код отправлен на почту");
+      return;
+    }
+
+    if (
+      emailVerificationRequired &&
+      registerForm.verification_code.trim().length !== CODE_LENGTH
+    ) {
+      setFormError(copy.errors?.verificationRequired || copy.errors?.generic);
+      return;
+    }
+
     setSubmitting(true);
 
     const payload = {
-      nickname: registerForm.nickname.trim(),
-      email: registerForm.email.trim(),
-      password: registerForm.password,
+      nickname,
+      email,
+      password,
     };
     if (registerForm.verification_code.trim()) {
       payload.verification_code = registerForm.verification_code.trim();
@@ -215,8 +448,18 @@ export default function AccountPage({ onNavigate, path, user }) {
       return;
     }
 
-    setNeedsVerification(Boolean(result.needsVerification));
+    if (result.needsVerification) {
+      setRegisterStep("verify");
+    }
     setFormError(result.error);
+  }
+
+  function resetRegisterFlow() {
+    setRegisterStep("form");
+    setRegisterForm((prev) => ({ ...prev, verification_code: "" }));
+    setFormError("");
+    setFormInfo("");
+    setResendIn(0);
   }
 
   async function handleLogout() {
@@ -228,6 +471,10 @@ export default function AccountPage({ onNavigate, path, user }) {
       password: "",
       verification_code: "",
     });
+    setRegisterStep("form");
+    setFormError("");
+    setFormInfo("");
+    setResendIn(0);
   }
 
   return (
@@ -397,6 +644,8 @@ export default function AccountPage({ onNavigate, path, user }) {
               onClick={() => {
                 setTab("login");
                 setFormError("");
+                setFormInfo("");
+                resetRegisterFlow();
               }}
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "login"
@@ -411,6 +660,8 @@ export default function AccountPage({ onNavigate, path, user }) {
               onClick={() => {
                 setTab("register");
                 setFormError("");
+                setFormInfo("");
+                resetRegisterFlow();
               }}
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "register"
@@ -444,23 +695,18 @@ export default function AccountPage({ onNavigate, path, user }) {
                   className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
                 />
               </div>
-              <div>
-                <label htmlFor="login-password" className="block text-sm font-bold text-white/80">
-                  {copy.password}
-                </label>
-                <input
-                  id="login-password"
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  value={loginForm.password}
-                  disabled={submitting}
-                  onChange={(event) =>
-                    setLoginForm((prev) => ({ ...prev, password: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
-                />
-              </div>
+              <PasswordField
+                id="login-password"
+                label={copy.password}
+                value={loginForm.password}
+                disabled={submitting}
+                autoComplete="current-password"
+                showLabel={copy.showPassword || "Показать пароль"}
+                hideLabel={copy.hidePassword || "Скрыть пароль"}
+                onChange={(event) =>
+                  setLoginForm((prev) => ({ ...prev, password: event.target.value }))
+                }
+              />
               {formError && (
                 <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
                   {formError}
@@ -479,89 +725,151 @@ export default function AccountPage({ onNavigate, path, user }) {
               className="mt-8 space-y-5 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-8"
               onSubmit={handleRegisterSubmit}
             >
-              <div>
-                <label htmlFor="reg-nickname" className="block text-sm font-bold text-white/80">
-                  {copy.nickname}
-                </label>
-                <input
-                  id="reg-nickname"
-                  type="text"
-                  required
-                  autoComplete="username"
-                  value={registerForm.nickname}
-                  disabled={submitting}
-                  onChange={(event) =>
-                    setRegisterForm((prev) => ({ ...prev, nickname: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
-                />
-              </div>
-              <div>
-                <label htmlFor="reg-email" className="block text-sm font-bold text-white/80">
-                  {copy.email}
-                </label>
-                <input
-                  id="reg-email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={registerForm.email}
-                  disabled={submitting}
-                  onChange={(event) =>
-                    setRegisterForm((prev) => ({ ...prev, email: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
-                />
-              </div>
-              <div>
-                <label htmlFor="reg-password" className="block text-sm font-bold text-white/80">
-                  {copy.password}
-                </label>
-                <input
-                  id="reg-password"
-                  type="password"
-                  required
-                  autoComplete="new-password"
-                  value={registerForm.password}
-                  disabled={submitting}
-                  onChange={(event) =>
-                    setRegisterForm((prev) => ({ ...prev, password: event.target.value }))
-                  }
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
-                />
-              </div>
-              {(needsVerification || registerForm.verification_code) && (
-                <div>
-                  <label htmlFor="reg-code" className="block text-sm font-bold text-white/80">
-                    {copy.verificationCode}
-                  </label>
-                  <input
-                    id="reg-code"
-                    type="text"
-                    value={registerForm.verification_code}
-                    disabled={submitting}
-                    onChange={(event) =>
-                      setRegisterForm((prev) => ({
-                        ...prev,
-                        verification_code: event.target.value,
-                      }))
-                    }
-                    className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
-                  />
+              {registerStep === "verify" ? (
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-accent/25 bg-gradient-to-b from-accent/10 to-black/20 px-5 py-7 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80">
+                      {copy.verificationStepLabel || "Подтверждение"}
+                    </p>
+                    <h3 className="mt-2 text-lg font-semibold text-white">
+                      {copy.verificationTitle || "Введите код из письма"}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/65">
+                      {t("account.verificationHintEmail", {
+                        email: registerForm.email.trim(),
+                      })}
+                    </p>
+                    <p className="mt-1 text-xs text-white/45">
+                      {copy.codeSpamHint || "Если письма нет — загляните в «Спам»"}
+                    </p>
+
+                    <div className="mt-6">
+                      <VerificationCodeField
+                        id="reg-code"
+                        label={copy.verificationCode}
+                        value={registerForm.verification_code}
+                        disabled={submitting || sendingCode}
+                        autoFocus
+                        onChange={(code) =>
+                          setRegisterForm((prev) => ({
+                            ...prev,
+                            verification_code: code,
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={sendingCode || submitting || resendIn > 0}
+                      onClick={() => void handleSendCode()}
+                      className="mt-5 text-sm font-semibold text-accent/90 underline-offset-2 transition hover:text-accent hover:underline disabled:opacity-50"
+                    >
+                      {sendingCode
+                        ? copy.sendingCode || "Отправка…"
+                        : resendIn > 0
+                          ? t("account.resendCodeIn", { seconds: resendIn })
+                          : copy.resendCode || "Отправить код снова"}
+                    </button>
+                  </div>
+
+                  {formInfo && !formError && (
+                    <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100">
+                      {formInfo}
+                    </p>
+                  )}
+                  {formError && (
+                    <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
+                      {formError}
+                    </p>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      disabled={submitting || sendingCode}
+                      onClick={resetRegisterFlow}
+                      className="flex-1 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-bold text-white/80 transition hover:text-white disabled:opacity-60"
+                    >
+                      {copy.backToForm || "Назад"}
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={
+                        submitting ||
+                        sendingCode ||
+                        registerForm.verification_code.length !== CODE_LENGTH
+                      }
+                      className="interactive-cta flex-[1.4] rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white disabled:opacity-60"
+                    >
+                      {copy.registerSubmit}
+                    </button>
+                  </div>
                 </div>
+              ) : (
+                <>
+                  <div>
+                    <label htmlFor="reg-nickname" className="block text-sm font-bold text-white/80">
+                      {copy.nickname}
+                    </label>
+                    <input
+                      id="reg-nickname"
+                      type="text"
+                      required
+                      autoComplete="username"
+                      value={registerForm.nickname}
+                      disabled={submitting || sendingCode}
+                      onChange={(event) =>
+                        setRegisterForm((prev) => ({ ...prev, nickname: event.target.value }))
+                      }
+                      className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="reg-email" className="block text-sm font-bold text-white/80">
+                      {copy.email}
+                    </label>
+                    <input
+                      id="reg-email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      value={registerForm.email}
+                      disabled={submitting || sendingCode}
+                      onChange={(event) =>
+                        setRegisterForm((prev) => ({ ...prev, email: event.target.value }))
+                      }
+                      className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
+                    />
+                  </div>
+                  <PasswordField
+                    id="reg-password"
+                    label={copy.password}
+                    value={registerForm.password}
+                    disabled={submitting || sendingCode}
+                    autoComplete="new-password"
+                    showLabel={copy.showPassword || "Показать пароль"}
+                    hideLabel={copy.hidePassword || "Скрыть пароль"}
+                    onChange={(event) =>
+                      setRegisterForm((prev) => ({ ...prev, password: event.target.value }))
+                    }
+                  />
+                  {formError && (
+                    <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
+                      {formError}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={submitting || sendingCode}
+                    className="interactive-cta w-full rounded-xl bg-accent px-6 py-3 text-base font-bold text-white disabled:opacity-60"
+                  >
+                    {emailVerificationRequired
+                      ? copy.continueToCode || "Продолжить"
+                      : copy.registerSubmit}
+                  </button>
+                </>
               )}
-              {formError && (
-                <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
-                  {formError}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="interactive-cta w-full rounded-xl bg-accent px-6 py-3 text-base font-bold text-white disabled:opacity-60"
-              >
-                {copy.registerSubmit}
-              </button>
             </form>
           )}
         </>

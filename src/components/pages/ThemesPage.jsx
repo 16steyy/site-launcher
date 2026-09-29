@@ -69,7 +69,6 @@ function ThemeModal({ theme, copy, onClose }) {
         aria-labelledby="theme-modal-title"
         className="max-h-[min(800px,calc(100vh-2rem))] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/15 bg-[#15182d] shadow-2xl"
       >
-        {/* Баннер в модальном окне */}
         <div className="relative aspect-video w-full overflow-hidden bg-white/[0.04]">
           <ThemePreview theme={theme} />
 
@@ -84,7 +83,6 @@ function ThemeModal({ theme, copy, onClose }) {
         </div>
 
         <div className="p-6 md:p-8">
-          {/* Заголовок и основная информация */}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2
@@ -106,14 +104,12 @@ function ThemeModal({ theme, copy, onClose }) {
             )}
           </div>
 
-          {/* Описание */}
           {theme.description && (
             <p className="mt-5 whitespace-pre-line text-base leading-relaxed text-white/70">
               {theme.description}
             </p>
           )}
 
-          {/* Список файлов */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
             <h3 className="text-sm font-bold uppercase tracking-wider text-white/60">
               {copy.files || "Файлы темы"}
@@ -131,60 +127,74 @@ function ThemeModal({ theme, copy, onClose }) {
             </ul>
           </div>
 
-          {/* История версий */}
-          {Array.isArray(theme.history) && theme.history.length > 0 && (
+          {theme.version && (
             <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white/60">
                 {copy.versionHistory || "История версий"}
               </h3>
 
               <div className="mt-3 space-y-2">
-                {/* Текущая версия */}
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2">
-                  <span className="font-semibold text-white">
-                    v{theme.version}
-                  </span>
+                  <div>
+                    <span className="font-semibold text-white">
+                      v{theme.version}
+                    </span>
+                    {theme.changelog && (
+                      <p className="mt-1 text-xs text-white/50">
+                        {theme.changelog}
+                      </p>
+                    )}
+                  </div>
 
                   <span className="text-right text-xs text-white/50">
                     {copy.currentVersion || "Текущая версия"}
+                    {theme.updated_at ? ` · ${theme.updated_at}` : ""}
                   </span>
                 </div>
 
-                {/* Предыдущие версии */}
-                {theme.history.map((version) => (
-                  <div
-                    key={`${version.version}-${version.date}`}
-                    className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2"
-                  >
-                    <div>
-                      <span className="font-semibold text-white/75">
-                        v{version.version}
+                {(Array.isArray(theme.history) ? theme.history : []).map(
+                  (version) => (
+                    <div
+                      key={`${version.version}-${version.date}`}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2"
+                    >
+                      <div>
+                        <span className="font-semibold text-white/75">
+                          v{version.version}
+                        </span>
+
+                        {version.description && (
+                          <p className="mt-1 text-xs text-white/40">
+                            {version.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <span className="whitespace-nowrap text-xs text-white/40">
+                        {version.date}
                       </span>
-
-                      {version.description && (
-                        <p className="mt-1 text-xs text-white/40">
-                          {version.description}
-                        </p>
-                      )}
                     </div>
-
-                    <span className="whitespace-nowrap text-xs text-white/40">
-                      {version.date}
-                    </span>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           )}
 
-          {/* Дата публикации */}
-          {theme.published_at && (
+          {(theme.first_published_at || theme.published_at) && (
             <p className="mt-4 text-xs text-white/40">
-              {copy.published || "Опубликовано"}: {theme.published_at}
+              {copy.published || "Опубликовано"}:{" "}
+              {theme.first_published_at || theme.published_at}
+              {theme.updated_at &&
+                theme.updated_at !==
+                  (theme.first_published_at || theme.published_at) && (
+                  <>
+                    {" · "}
+                    {copy.updated || "Обновлено"}: {theme.updated_at}
+                  </>
+                )}
             </p>
           )}
 
-          {/* Кнопки */}
           <div className="mt-6 flex flex-wrap gap-3">
             {theme.download && (
               <a
@@ -237,9 +247,20 @@ export default function ThemesPage({ onNavigate, path, user }) {
         const data = await response.json();
 
         if (!cancelled) {
-          setCatalog({
-            themes: Array.isArray(data?.themes) ? data.themes : [],
-          });
+          const raw = Array.isArray(data?.themes) ? data.themes : [];
+          const byId = new Map();
+          for (const theme of raw) {
+            if (!theme?.id) continue;
+            const prev = byId.get(theme.id);
+            if (!prev) {
+              byId.set(theme.id, theme);
+              continue;
+            }
+            const prevDate = String(prev.updated_at || prev.published_at || "");
+            const nextDate = String(theme.updated_at || theme.published_at || "");
+            if (nextDate >= prevDate) byId.set(theme.id, theme);
+          }
+          setCatalog({ themes: [...byId.values()] });
         }
       } catch {
         if (!cancelled) {
@@ -287,7 +308,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
     <main className="mx-auto min-h-screen w-full max-w-[1240px] px-4 pb-20 pt-10 md:px-6">
       <SiteHeader path={path} onNavigate={onNavigate} user={user} />
 
-      {/* Заголовок страницы */}
       <section className="text-center">
         <h1 className="hero-title text-5xl font-extrabold tracking-tight md:text-7xl">
           {copy.title}
@@ -309,7 +329,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </a>
       </section>
 
-      {/* Поиск */}
       <section className="mx-auto mt-10 max-w-3xl">
         <label htmlFor="theme-search" className="sr-only">
           {copy.searchPlaceholder || "Поиск тем"}
@@ -341,14 +360,12 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </div>
       </section>
 
-      {/* Загрузка каталога */}
       {loading && (
         <p className="mt-12 text-center text-white/50">
           {messages.news?.loading || "…"}
         </p>
       )}
 
-      {/* В каталоге нет тем */}
       {!loading && themes.length === 0 && (
         <section className="mx-auto mt-14 max-w-xl rounded-3xl border border-white/15 bg-white/[0.04] p-8 text-center">
           <p className="text-xl font-semibold text-white/80">
@@ -370,7 +387,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </section>
       )}
 
-      {/* Поиск не дал результатов */}
       {!loading && themes.length > 0 && filteredThemes.length === 0 && (
         <section className="mx-auto mt-14 max-w-xl rounded-3xl border border-white/15 bg-white/[0.04] p-8 text-center">
           <p className="text-xl font-semibold text-white/80">
@@ -392,7 +408,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </section>
       )}
 
-      {/* Карточки тем */}
       {!loading && filteredThemes.length > 0 && (
         <section className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredThemes.map((theme) => (
@@ -403,7 +418,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
               className="glass group flex flex-col overflow-hidden rounded-3xl border border-white/10 text-left transition hover:-translate-y-1 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/60"
               onClick={() => setSelectedTheme(theme)}
             >
-              {/* Баннер */}
               <div className="aspect-video w-full overflow-hidden bg-white/[0.04]">
                 <ThemePreview
                   theme={theme}
@@ -411,7 +425,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
                 />
               </div>
 
-              {/* Информация */}
               <div className="flex flex-1 flex-col p-5 md:p-6">
                 <h2 className="text-2xl font-extrabold leading-tight">
                   {theme.name}
@@ -444,7 +457,6 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </section>
       )}
 
-      {/* Модальное окно */}
       {selectedTheme && (
         <ThemeModal
           theme={selectedTheme}

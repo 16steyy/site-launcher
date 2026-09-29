@@ -26,7 +26,9 @@
         "theme.json"
       ],
       "history": [],
-      "published_at": "2026-09-28"
+      "first_published_at": "2026-09-28",
+      "published_at": "2026-09-28",
+      "updated_at": "2026-09-28"
     },
     {
       "id": "tsar_2-0",
@@ -46,7 +48,9 @@
         "theme.json"
       ],
       "history": [],
-      "published_at": "2026-09-24"
+      "first_published_at": "2026-09-24",
+      "published_at": "2026-09-24",
+      "updated_at": "2026-09-24"
     },
     {
       "id": "liquidmine",
@@ -76,7 +80,9 @@
         "theme.json"
       ],
       "history": [],
-      "published_at": "2026-09-23"
+      "first_published_at": "2026-09-23",
+      "published_at": "2026-09-23",
+      "updated_at": "2026-09-23"
     },
     {
       "id": "win11",
@@ -86,7 +92,6 @@
       "version": "1.0.2",
       "preview": "/themes/win11/preview.png",
       "download": "/themes/win11/download.zip",
-      "published_at": "2026-09-21",
       "files": [
         "download.zip",
         "preview.png",
@@ -97,9 +102,12 @@
         {
           "version": "1.0.0",
           "date": "2026-09-21",
-          "description": "тест"
+          "description": ""
         }
-      ]
+      ],
+      "first_published_at": "2026-09-21",
+      "published_at": "2026-09-21",
+      "updated_at": "2026-09-21"
     },
     {
       "id": "tsar-2",
@@ -109,7 +117,15 @@
       "version": "2.2",
       "preview": null,
       "download": "/themes/tsar-2/download.zip",
-      "published_at": "2026-09-20"
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-09-20",
+      "published_at": "2026-09-20",
+      "updated_at": "2026-09-20"
     },
     {
       "id": "ph",
@@ -119,7 +135,15 @@
       "version": "1.0",
       "preview": null,
       "download": "/themes/ph/download.zip",
-      "published_at": "2026-08-18"
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-08-18",
+      "published_at": "2026-08-18",
+      "updated_at": "2026-08-18"
     },
     {
       "id": "femboy-gif",
@@ -129,7 +153,15 @@
       "version": "1.0",
       "preview": null,
       "download": "/themes/femboy-gif/download.zip",
-      "published_at": "2026-08-14"
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-08-14",
+      "published_at": "2026-08-14",
+      "updated_at": "2026-08-14"
     },
     {
       "id": "vinda-95",
@@ -139,7 +171,15 @@
       "version": "1.0",
       "preview": null,
       "download": "/themes/vinda-95/download.zip",
-      "published_at": "2026-08-14"
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-08-14",
+      "published_at": "2026-08-14",
+      "updated_at": "2026-08-14"
     }
   ]
 }

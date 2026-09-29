@@ -6,7 +6,20 @@ export async function fetchThemesCatalog() {
   const response = await fetch(THEMES_CATALOG_URL, { cache: "no-store" });
   if (!response.ok) throw new Error("catalog_load_failed");
   const data = await response.json();
-  return Array.isArray(data?.themes) ? data.themes : [];
+  const raw = Array.isArray(data?.themes) ? data.themes : [];
+  const byId = new Map();
+  for (const theme of raw) {
+    if (!theme?.id) continue;
+    const prev = byId.get(theme.id);
+    if (!prev) {
+      byId.set(theme.id, theme);
+      continue;
+    }
+    const prevDate = String(prev.updated_at || prev.published_at || "");
+    const nextDate = String(theme.updated_at || theme.published_at || "");
+    if (nextDate >= prevDate) byId.set(theme.id, theme);
+  }
+  return [...byId.values()];
 }
 
 export async function fetchMySubmissions(accessToken) {

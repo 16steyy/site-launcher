@@ -38,6 +38,22 @@ export async function registerAccount({
   });
 }
 
+export async function fetchEmailVerificationStatus() {
+  return apiRequest("/auth/email/status", {
+    method: "GET",
+    skipAuth: true,
+  });
+}
+
+export async function sendEmailVerificationCode(email) {
+  return apiRequest("/auth/email/send-code", {
+    method: "POST",
+    skipAuth: true,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: String(email || "").trim() }),
+  });
+}
+
 export async function refreshSession(refreshToken) {
   return apiRequest("/auth/refresh", {
     method: "POST",
@@ -126,14 +142,38 @@ export function mapAuthErrorMessage(raw, mode, t) {
   const errors = t?.account?.errors || {};
   const message = String(raw || "").toLowerCase();
 
-  if (message.includes("verification") || message.includes("code")) {
+  if (message.includes("verification code expired") || message.includes("expired or missing")) {
+    return errors.verificationExpired || errors.verificationRequired || errors.generic;
+  }
+  if (message.includes("too many verification")) {
+    return errors.verificationAttempts || errors.rateLimit || errors.generic;
+  }
+  if (message.includes("invalid verification code")) {
+    return errors.invalidVerificationCode || errors.verificationRequired || errors.generic;
+  }
+  if (message.includes("failed to send") || message.includes("email verification is not configured")) {
+    return errors.emailSendFailed || errors.generic;
+  }
+  if (message.includes("verification code required") || message.includes("requires_verification")) {
     return errors.verificationRequired || errors.generic;
+  }
+  if (message.includes("verification")) {
+    return errors.verificationRequired || errors.generic;
+  }
+  if (message.includes("email already registered") || message.includes("email already")) {
+    return errors.emailTaken || errors.alreadyExists || errors.generic;
+  }
+  if (message.includes("nickname already")) {
+    return errors.nicknameTaken || errors.alreadyExists || errors.generic;
   }
   if (message.includes("email")) {
     return errors.invalidEmail || errors.generic;
   }
   if (message.includes("nickname") || message.includes("username")) {
     return errors.invalidNickname || errors.generic;
+  }
+  if (message.includes("password too short")) {
+    return errors.passwordTooShort || errors.invalidPassword || errors.generic;
   }
   if (message.includes("password")) {
     return errors.invalidPassword || errors.generic;
