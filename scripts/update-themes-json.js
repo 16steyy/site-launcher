@@ -135,11 +135,17 @@ function mergeHistory(a, b) {
 }
 
 function addVersionToHistory(existingTheme, currentVersion, currentDate) {
-  const existingHistory = Array.isArray(existingTheme?.history)
+  if (!existingTheme) {
+    return [];
+  }
+
+  const existingHistory = Array.isArray(existingTheme.history)
     ? [...existingTheme.history]
     : [];
 
-  const previousVersion = normalizeVersion(existingTheme?.version);
+  const previousVersion = existingTheme.version
+    ? normalizeVersion(existingTheme.version)
+    : "";
 
   if (
     previousVersion &&
