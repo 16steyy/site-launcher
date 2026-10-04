@@ -2,6 +2,29 @@
   "version": 1,
   "themes": [
     {
+      "id": "emberise",
+      "name": "emberise",
+      "author": "Tsarapcat",
+      "description": "Ember & Ice: тёмный бархат с янтарно-ледяными градиентными рамками, стеклянные панели, пилюльные кнопки, живой блик на «Играть».",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/emberise/download.zip",
+      "files": [
+        "cursor-pointer.cur",
+        "cursor-text.cur",
+        "cursor.cur",
+        "download.zip",
+        "glass-background.jpg",
+        "preview.jpg",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-10-04",
+      "published_at": "2026-10-04",
+      "updated_at": "2026-10-04"
+    },
+    {
       "id": "gubka-bob",
       "name": "губка боб",
       "author": "skxrta",

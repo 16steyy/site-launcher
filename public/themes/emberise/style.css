@@ -1,0 +1,460 @@
+/* ── EMBER & ICE v1.0 ──
+   крутая осенняя тема, с приятными оранжевыми цветами и кастомным курсором .
+*/
+/* 0. Палитра */
+:root {
+  color-scheme: dark;
+  --ink: #f0e9dd;
+  --secondary: #b5ada1;
+  --muted: #8a8176;
+  --scene: radial-gradient(120% 100% at 85% -10%, rgba(255, 150, 60, 0.12) 0%, transparent 55%), linear-gradient(160deg, #0d0b09 0%, #0a0908 100%);
+  --surface: rgba(17, 15, 19, 0.72);
+  --surface-strong: rgba(15, 13, 17, 0.86);
+  --control: rgba(24, 21, 26, 0.78);
+  --control-hover: rgba(35, 31, 37, 0.86);
+  --popup: #1a181d;
+  --edge: rgba(255, 182, 72, 0.20);
+  --edge-hover: rgba(255, 182, 72, 0.55);
+  --selected: rgba(255, 159, 46, 0.24);
+  --selected-ink: #ffcf8f;
+  --focus: rgba(255, 159, 46, 0.55);
+  --accent-color: #ff9f2e !important;
+  --accent-soft: color-mix(in srgb, var(--accent-color) 14%, #17151a);
+  --accent-mid: color-mix(in srgb, var(--accent-color) 30%, #17151a);
+  --accent-strong: color-mix(in srgb, var(--accent-color) 55%, #1b1814);
+  --accent-ice: #dfb6c6;
+  --ring: #ff9f2e;
+  --scroll: rgba(255, 159, 46, 0.5);
+  --danger-bg: rgba(255, 120, 130, 0.14);
+  --danger-ink: #ff8a93;
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 14px 38px rgba(0, 0, 0, 0.5);
+  --wallpaper-veil:
+    radial-gradient(60% 55% at 12% 0%, rgba(255, 150, 60, 0.10) 0%, transparent 60%),
+    radial-gradient(55% 50% at 96% 96%, rgba(242, 167, 255, 0.032) 0%, transparent 60%),
+    linear-gradient(165deg, rgba(12, 10, 8, 0.30) 0%, rgba(10, 9, 8, 0.16) 48%, rgba(9, 8, 7, 0.42) 100%);
+  --glass-bg: var(--surface); --glass-bg-strong: var(--surface-strong);
+  --glass-bg-inset: var(--control); --glass-bg-control: var(--control); --glass-bg-popover: var(--popup);
+  --glass-border: var(--edge); --glass-border-soft: var(--edge);
+  --glass-shadow-sm: var(--glass-shadow); --glass-tint: transparent;
+  --glass-radius: 18px; --glass-radius-sm: 10px; --glass-blur: 26px;
+}
+/* 1. База и рабочий фон на корневом слое */
+html, body, #root { height: 100%; overflow: hidden; }
+html {
+  background-color: #0b0a08 !important;
+  color: var(--ink) !important;
+}
+body {
+  margin: 0;
+  background: var(--scene) !important;
+  color: var(--ink) !important;
+  font-family: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+#root { background: var(--scene); }
+/* Фон — как в liquidmine: картинка из папки темы на корневом слое */
+#root > div.min-h-screen { color: var(--ink) !important; background: var(--wallpaper-veil), url("glass-background.jpg") center/cover no-repeat fixed !important; }
+#root > div.min-h-screen > .pointer-events-none.absolute.inset-0 { background: transparent !important; }
+/* 2. Ремап ключевых utility-классов тёмной сборки */
+#root :is([class~="text-white"], [class*="text-white/"], [class*="text-gray-"], [class*="text-slate-"], [class*="text-zinc-"]) { color: var(--secondary) !important; }
+#root :is(h1, h2, h3, h4, strong, [class*="font-semibold"], [class*="font-bold"]) { color: var(--ink) !important; }
+#root :is([class~="bg-black"], [class*="bg-black/"], [class*="bg-gray-"], [class*="bg-zinc-"], [class*="bg-slate-"],
+    [class*="bg-[#121212]"], [class*="bg-[#0c0c0c]"], [class*="bg-[#0c0c11]"],
+    [class*="bg-neutral-"], [class*="bg-[#1c1c26]"], [class*="bg-[#0f2744]"], [class*="bg-[#1e3a5f]"], [class*="bg-[#050609]"]) {
+  background-color: var(--surface-strong) !important;
+  color: var(--ink) !important;
+  border-color: var(--edge) !important;
+}
+#root [class*="border-white/"] { border-color: var(--edge) !important; }
+/* 3. Стеклянные панели: градиентная янтарно-ледяная рамка */
+.glass-panel, .glass-chip, .glass-modal, .glass-toolbar, [data-tour-id="tour-sidebar"] {
+  color: var(--ink) !important;
+  background: linear-gradient(160deg, rgba(19, 17, 21, 0.74) 0%, rgba(14, 12, 16, 0.66) 100%) padding-box,
+              linear-gradient(135deg, rgba(255, 170, 80, 0.55) 0%, rgba(255, 120, 70, 0.16) 38%, rgba(255, 92, 200, 0.096) 100%) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-highlight), var(--glass-shadow), 0 0 26px rgba(255, 150, 60, 0.08) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+}
+.glass-chip, .glass-toolbar { border-radius: 14px !important; }
+.glass-inset, .glass-control {
+  background: var(--control) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--glass-highlight) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.glass-popover, .glass-modal { color: var(--ink) !important; }
+.glass-popover { border-radius: 12px !important; }
+.glass-overlay { background: rgba(7, 7, 8, 0.46) !important; backdrop-filter: blur(10px) !important; }
+.sidebar-label { background: none !important; box-shadow: none !important; color: var(--secondary) !important; }
+.sidebar-tooltip { border: 1px solid var(--edge); box-shadow: var(--glass-shadow) !important; color: var(--ink) !important; }
+body > :is([role="dialog"], [role="menu"], [role="listbox"]),
+body > div > :is(.glass-modal, .glass-popover) { background: var(--popup) !important; color: var(--ink) !important; border-color: var(--edge) !important; }
+/* 4. Типографика, кнопки, пилюли */
+.ui-title, h1, h2, h3, h4 { color: var(--ink) !important; letter-spacing: -0.02em; }
+.ui-subtitle, .ui-body, .ui-meta, .ui-caption, .ui-section { color: var(--secondary) !important; }
+button, input, select, textarea { font-family: inherit; }
+button { flex-shrink: 0; }
+:is(.interactive-press, button, input[type="submit"], input[type="button"]) {
+  background: linear-gradient(180deg, var(--control), rgba(20, 18, 22, 0.7)) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: var(--glass-highlight), 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  box-sizing: border-box !important;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease, transform .18s ease !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):not(:disabled, [aria-disabled="true"]) { cursor: pointer; }
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):hover:not(:disabled, [aria-disabled="true"]) {
+  background: linear-gradient(180deg, var(--control-hover), rgba(24, 21, 26, 0.8)) !important;
+  border-color: var(--edge-hover) !important;
+  box-shadow: 0 0 16px rgba(255, 159, 46, 0.18), var(--glass-highlight) !important;
+  color: var(--ink) !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):active:not(:disabled, [aria-disabled="true"]) {
+  background: var(--selected) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 159, 46, 0.22) !important;
+  color: var(--selected-ink) !important;
+}
+button:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--edge-hover); }
+.interactive-press { transition: box-shadow 160ms ease !important; }
+.interactive-press:hover, .interactive-press:active, .sidebar-icon:hover, .sidebar-icon:active { transform: none !important; }
+.interactive-press::after { content: none !important; }
+#root .accent-bg {
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent-color)) !important;
+  border-color: color-mix(in srgb, var(--accent-color) 75%, #8a8176) !important;
+  color: #241301 !important;
+}
+#root .accent-bg * { color: inherit !important; }
+#root .accent-chip, #root .sidebar-icon-active, #root button.bg-white\/90 {
+  background: var(--selected) !important;
+  color: var(--selected-ink) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 14px rgba(255, 159, 46, 0.22), var(--glass-highlight) !important;
+}
+@keyframes ei-shine {
+  0% { left: -70%; }
+  55% { left: 135%; }
+  100% { left: 135%; }
+}
+@keyframes ei-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255, 180, 90, 0.35), 0 0 30px rgba(255, 150, 50, 0.42), 0 14px 30px rgba(0, 0, 0, 0.5), var(--glass-highlight), inset 0 0 20px rgba(255, 200, 120, 0.18); }
+  50% { box-shadow: 0 0 0 1px rgba(255, 200, 120, 0.55), 0 0 52px rgba(255, 165, 60, 0.62), 0 14px 32px rgba(0, 0, 0, 0.55), var(--glass-highlight), inset 0 0 30px rgba(255, 210, 140, 0.30); }
+}
+/* 5. Кнопка «Играть» — пилюля с бегущим бликом */
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar) {
+  background:
+    radial-gradient(50% 70% at 16% 18%, rgba(255, 245, 210, 0.28) 0%, transparent 60%),
+    radial-gradient(55% 80% at 88% 20%, rgba(255, 170, 70, 0.20) 0%, transparent 62%),
+    linear-gradient(135deg, #ffcf6b 0%, #ff9f2e 50%, #f07612 100%) !important;
+  background-color: rgba(255, 150, 50, 0.18) !important;
+  border: 1px solid rgba(255, 210, 140, 0.75) !important;
+  border-radius: 999px !important;
+  color: #241301 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 0 0 1px rgba(255, 180, 90, 0.35), 0 0 30px rgba(255, 150, 50, 0.42), 0 14px 30px rgba(0, 0, 0, 0.5), var(--glass-highlight), inset 0 0 20px rgba(255, 200, 120, 0.18) !important;
+  animation: ei-pulse 2.8s ease-in-out infinite !important;
+  transition: transform .18s ease, box-shadow .2s ease, filter .2s ease !important;
+}
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar)::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -70% !important;
+  width: 45% !important;
+  height: 100% !important;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35) 50%, transparent) !important;
+  transform: skewX(-18deg);
+  animation: ei-shine 3.4s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar):hover:not(:disabled) {
+  background:
+    radial-gradient(52% 70% at 16% 18%, rgba(255, 250, 220, 0.34) 0%, transparent 60%),
+    radial-gradient(55% 80% at 88% 20%, rgba(255, 185, 90, 0.26) 0%, transparent 62%),
+    linear-gradient(135deg, #ffdd85 0%, #ffb047 50%, #ff8a1e 100%) !important;
+  border-color: rgba(255, 220, 160, 0.9) !important;
+  box-shadow: 0 0 0 1px rgba(255, 195, 110, 0.5), 0 0 48px rgba(255, 170, 65, 0.6), 0 14px 34px rgba(0, 0, 0, 0.55), var(--glass-highlight), inset 0 0 28px rgba(255, 220, 150, 0.32) !important;
+  transform: translateY(-2px) !important;
+  filter: saturate(1.08);
+}
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar) > *:not(svg, img, path),
+:is(.play-btn, .play-button, .btn-play, .main-play, .start-btn, .launch-btn,
+    [class*="play-btn"], [class*="btn-play"], [class*="play-button"],
+    [data-action="play"], [data-action="start"], [data-action="launch"],
+    [aria-label*="играть" i], [aria-label*="play" i],
+    [title*="играть" i], [title*="play" i], [value*="играть" i]):not(aside *, [class*="sidebar"] *, #tsar)::before {
+  border-radius: inherit !important;
+}
+/* 6. Выбранный пункт — тёплая янтарная заливка */
+:is(.active, .is-active, .selected, .is-selected,
+    [class*="-active"], [class*="_active"], [class*="-selected"], [class*="_selected"],
+    [aria-selected="true"], [aria-pressed="true"], [aria-current]:not([aria-current="false"]),
+    [data-active="true"], [data-selected="true"], [data-state="active"], [data-state="on"]):not([class*="inactive"], [class*="unselected"], [class*="deactive"]):is(
+    button, a, li, [role="tab"], [role="menuitem"], [role="option"],
+    .interactive-press, .sidebar-item, .nav-item, [class*="item"], [class*="tab"], [class*="link"]):not(aside *, [class*="version"], [class*="loader"], [class*="banner"]) {
+  background: var(--selected) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: inset 0 0 14px rgba(255, 175, 80, 0.22), 0 0 14px rgba(255, 159, 46, 0.22) !important;
+  color: var(--selected-ink) !important;
+}
+:is(.interactive-press, button, input[type="submit"], input[type="button"]):is(:disabled, [aria-disabled="true"]) {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  background: var(--surface) !important;
+  border-color: var(--edge) !important;
+  box-shadow: none !important;
+  color: var(--muted) !important;
+}
+/* 7. Поля ввода */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]), textarea, select {
+  background: rgba(8, 7, 9, 0.5) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 10px !important;
+  caret-color: #dfb6c6;
+  box-shadow: var(--glass-highlight) !important;
+  box-sizing: border-box !important;
+  transition: border-color .18s ease, box-shadow .18s ease !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(255, 159, 46, 0.18) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--muted) !important; opacity: 0.85; }
+option { background: var(--popup); color: var(--ink); }
+input[type="checkbox"], input[type="radio"], input[type="range"], progress, meter { accent-color: var(--accent-color) !important; }
+#root .accent-checkbox { background-color: var(--control) !important; border-color: var(--edge) !important; box-shadow: none !important; }
+#root .accent-checkbox:checked, #root .accent-checkbox:indeterminate { background-color: var(--accent-color) !important; border-color: var(--accent-color) !important; }
+:is(button, a, [role="tab"], [role="menuitem"], [tabindex], .interactive-press,
+    input[type="checkbox"], input[type="radio"], input[type="range"]):focus-visible {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+}
+/* 8. Иконки: минимализм + ярко-розовый. Первую верхнюю не трогаем. */
+:root { --ei-icon: #dfb6c6; --ei-icon-soft: rgba(255, 92, 200, 0.1); }
+#root .sidebar-icon {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+#root .sidebar-icon svg {
+  color: var(--ei-icon) !important;
+  stroke: var(--ei-icon) !important;
+  stroke-width: 1.7;
+}
+#root button:hover > .sidebar-icon, #root .sidebar-icon:hover {
+  background: rgba(255, 92, 200, 0.02) !important;
+  border-color: rgba(255, 92, 200, 0.064) !important;
+}
+#root .sidebar-icon.sidebar-icon-active, #root button:hover > .sidebar-icon.sidebar-icon-active {
+  background: rgba(255, 92, 200, 0.032) !important;
+  border-color: rgba(255, 92, 200, 0.11) !important;
+  box-shadow: 0 0 18px rgba(255, 92, 200, 0.06) !important;
+}
+#root .sidebar-icon svg { filter: none !important; }
+#root .sidebar-icon img {
+  filter: brightness(0) saturate(100%) invert(1) sepia(28%) saturate(620%) hue-rotate(310deg) brightness(105%) contrast(100%) !important;
+  opacity: 0.9 !important;
+}
+#root .sidebar-icon.sidebar-icon-active img { filter: brightness(0) saturate(100%) invert(1) sepia(32%) saturate(720%) hue-rotate(310deg) brightness(110%) contrast(100%) !important; }
+/* 9. Статусные цвета */
+#root :is([class*="text-amber-"], [class*="text-yellow-"]) { color: #ffb84d !important; }
+#root :is([class*="text-emerald-"], [class*="text-green-"]) { color: #3fe0c0 !important; }
+#root :is([class*="text-sky-"], [class*="text-blue-"], [class*="text-cyan-"], [class*="text-fuchsia-"], [class*="text-pink-"], [class*="text-violet-"], [class*="text-purple-"]) { color: #dfb6c6 !important; }
+#root :is([class*="text-red-"], [class*="text-rose-"]) { color: #ff6b74 !important; }
+#root button[class*="bg-red-"] { background: var(--danger-bg) !important; color: var(--danger-ink) !important; }
+#root button[class*="bg-emerald-"], #root button[class*="bg-sky-"] { background: var(--selected) !important; color: var(--selected-ink) !important; }
+#root :is([class*="bg-[#0078d4]"], [class*="bg-[#106ebe]"], [class*="bg-[#2d7d46]"], [class*="bg-[#248338]"]) { color: #fff !important; }
+/* 10. Красная кнопка после запуска */
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar) {
+  background: linear-gradient(135deg, rgba(210, 55, 75, 0.42) 0%, rgba(165, 30, 50, 0.36) 100%) !important;
+  border-color: rgba(255, 105, 125, 0.6) !important;
+  color: #ffe4e8 !important;
+  box-shadow: 0 0 18px rgba(220, 60, 80, 0.32), inset 0 0 10px rgba(255, 90, 110, 0.16) !important;
+  border-radius: inherit;
+}
+:is(button, a, .interactive-press, [role="button"], input[type="button"], input[type="submit"]):is(
+    .stop, .is-stop, .stopping, .is-stopping, .running, .is-running, .launched, .in-game, .playing,
+    [class*="stop-"], [class*="-stop"], [class*="_stop"], [class*="stop_"],
+    [class*="-running"], [class*="_running"], [class*="running-"],
+    [class*="launched"], [class*="in-game"], [class*="in_game"], [class*="is-running"],
+    [data-action="stop"], [data-state="running"], [data-status="running"], [data-running="true"],
+    [aria-label*="останов" i], [aria-label*="stop" i], [aria-label*="запущен" i],
+    [title*="останов" i], [title*="stop" i], [title*="запущен" i], [value*="останов" i]):not([class*="stopped"], [class*="inactive"], aside *, [class*="sidebar"] *, [class*="version"], [class*="loader"], #tsar):is(:hover, :active):not(:disabled) {
+  background: linear-gradient(135deg, rgba(225, 65, 85, 0.52) 0%, rgba(185, 40, 60, 0.46) 100%) !important;
+  border-color: rgba(255, 130, 148, 0.8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 22px rgba(230, 70, 90, 0.44), inset 0 0 12px rgba(255, 100, 120, 0.22) !important;
+  border-radius: inherit;
+}
+/* 11. Версия — стеклянный чип, моно-цифры, янтарь+лёд */
+:is(.version, .version-text, .game-version,
+    [class*="version"]:not(:has([class*="version"]), select, option, ul, ol, li, input, [role="option"], [role="menuitem"])):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+  background: rgba(12, 10, 12, 0.62) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 10px !important;
+  padding: 4px 12px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: var(--glass-highlight), 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(255, 170, 70, 0.10) !important;
+  color: #ffc36b !important;
+  font-family: 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.88em !important;
+  font-variant-numeric: tabular-nums;
+}
+:is(.status-bar, .info-bar, .footer-info,
+    [class*="game-loader"], [class*="mod-loader"], [class*="modloader"], [class*="loader-name"], [class*="loader-info"]):not([role="dialog"] *, [role="listbox"] *, [role="menu"] *, #tsar) {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--secondary) !important;
+  font-variant-numeric: tabular-nums;
+}
+/* 12. Банер: картинка сохранена, тёплый ореол, белый капшн */
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.pointer-events-none[class*="bg-gradient-to-r"] {
+  background: linear-gradient(90deg, rgba(12, 8, 4, 0.35) 0%, rgba(12, 8, 4, 0.16) 58%, rgba(12, 8, 4, 0.04) 100%) !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 h2 {
+  color: #fff !important;
+  text-shadow: 0 1px 3px rgba(5, 12, 22, 0.8), 0 0 16px rgba(255, 150, 40, 0.25) !important;
+  letter-spacing: -0.02em;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 p {
+  color: rgba(255, 244, 224, 0.96) !important;
+  text-shadow: 0 1px 3px rgba(5, 12, 22, 0.85) !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 button {
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent-color)) !important;
+  color: #241301 !important;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 80%, #8a8176) !important;
+  box-shadow: 0 3px 14px rgba(255, 120, 30, 0.35) !important;
+  text-shadow: none !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 button:hover { filter: brightness(1.05) saturate(1.1); }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 a[href] {
+  background: rgba(20, 18, 22, 0.7) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--edge) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  text-shadow: none !important;
+}
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"])
+ > div.relative.z-10 a[href]:hover { background: var(--control) !important; }
+/* 13. Тулбар и поиск */
+#root .glass-toolbar { gap: 6px; }
+#root .glass-toolbar input {
+  display: block; flex: 1 1 0%; width: 100%; min-width: 0;
+  height: 34px !important; min-height: 34px !important; padding: 6px 4px !important;
+  font-size: 13px !important; line-height: 20px !important;
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+#root .glass-toolbar:has(> input:focus) { border-color: var(--focus) !important; }
+#root :is(div, label).flex > input.bg-transparent {
+  box-sizing: border-box !important;
+  height: 36px !important; min-height: 36px !important;
+  padding-top: 7px !important; padding-bottom: 7px !important;
+  font-size: 14px !important; line-height: 20px !important;
+  min-width: 0; flex-shrink: 0;
+}
+#root :is(div, label).flex:has(> input.bg-transparent) {
+  box-sizing: border-box !important;
+  height: auto !important; min-height: 42px !important;
+  padding-top: 3px !important; padding-bottom: 3px !important;
+  align-items: center !important; flex-shrink: 0 !important;
+}
+#root :is(div, label).flex > input.bg-transparent {
+  background: transparent !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important;
+}
+/* 14. Скроллбар и выделение */
+* { scrollbar-width: thin; scrollbar-color: var(--scroll) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent; border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 170, 70, 0.6), rgba(255, 92, 200, 0.1)); background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar { width: 8px; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar-track { margin-block: 20px; }
+::selection {
+  background: linear-gradient(90deg, rgba(255, 159, 46, 0.40), rgba(255, 92, 200, 0.072)) !important;
+  color: #ffffff !important;
+}
+/* 15. Курсоры */
+html, body, #root { cursor: url("cursor.cur") 8 8, url("cursor.png") 8 8, auto !important; }
+a, button, summary, select, label[for], [role="button"], [role="tab"], [role="menuitem"], .cursor-pointer,
+input[type="checkbox"], input[type="radio"], input[type="range"], input[type="submit"], input[type="file"] {
+  cursor: url("cursor-pointer.cur") 8 8, url("cursor-pointer.png") 8 8, pointer !important;
+}
+input:not([type]), input[type="text"], input[type="search"], input[type="password"], input[type="email"],
+input[type="number"], textarea, [contenteditable="true"] {
+  cursor: url("cursor-text.cur") 8 8, url("cursor-text.png") 8 8, text !important;
+}
+:is(button, a, [role="button"], [role="tab"], .cursor-pointer) * { cursor: inherit !important; }
+/* 16. Декоративные слои лаунчера гасим — как в liquidmine (иначе перекрывают фон) */
+#root > div.min-h-screen > .pointer-events-none.fixed.inset-0,
+#root > div.min-h-screen > .pointer-events-none.absolute.inset-0 { opacity: 0 !important; }
+/* 17. Снижаем движение */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+/* 18. Страховочные генерик-правила для классов из прошлых версий */
+.glass-panel > .mb-1.flex.shrink-0.items-center.justify-between.pl-3 {
+  margin: 0 16px 10px !important;
+  padding: 14px 0 10px !important;
+  min-height: 44px;
+  color: var(--secondary) !important;
+  border-bottom: 1px solid var(--edge);
+}
+button:not(.glass-panel):not(.sidebar-icon):not([class*="absolute"]):not([class*="fixed"]) { border-radius: 12px; }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink) !important;
+  box-shadow: 0 0 0 1000px #14120f inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
