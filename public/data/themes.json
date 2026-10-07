@@ -2,6 +2,26 @@
   "version": 1,
   "themes": [
     {
+      "id": "moon",
+      "name": "moon",
+      "author": "ppinger_",
+      "description": "Тёмная тема в чёрно-белых тонах: дымчатый графитовый фон, матовое стекло и белый акцент",
+      "version": "1.4",
+      "preview": "/themes/moon/preview.png",
+      "download": "/themes/moon/download.zip",
+      "files": [
+        "download.zip",
+        "preview.png",
+        "smoke-background.jpg",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-10-07",
+      "published_at": "2026-10-07",
+      "updated_at": "2026-10-07"
+    },
+    {
       "id": "emberise",
       "name": "emberise",
       "author": "Tsarapcat",

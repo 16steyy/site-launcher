@@ -1,0 +1,209 @@
+/* MonoNight 1.0 — чёрно-белая тёмная тема для 16Launcher. */
+:root {
+  color-scheme:dark;
+  --ink:#f4f4f5; --secondary:#a6a6ad; --muted:#74747c;
+  --scene:radial-gradient(ellipse at 80% 0%,#1d1d21 0%,transparent 60%),#08080a;
+  --surface:rgba(20,20,23,.66); --control:rgba(255,255,255,.06); --control-hover:rgba(255,255,255,.12);
+  --popup:#131316; --edge:rgba(255,255,255,.11); --edge-hover:rgba(255,255,255,.28);
+  --selected:rgba(255,255,255,.20); --selected-ink:#ffffff; --focus:#ffffff;
+  --scroll:#4a4a52; --danger-bg:rgba(220,70,70,.16); --danger-ink:#ff9a9a;
+  --glass-highlight:inset 0 1px 0 rgba(255,255,255,.07); --glass-shadow:0 10px 30px rgba(0,0,0,.5);
+  --accent-color:#6a6a72 !important;
+  --glass-bg:var(--surface); --glass-bg-strong:var(--surface); --glass-bg-inset:var(--control); --glass-bg-control:var(--control);
+  --glass-bg-popover:var(--popup); --glass-border:var(--edge); --glass-border-soft:var(--edge);
+  --glass-shadow-sm:var(--glass-shadow); --glass-tint:transparent;
+  --glass-radius:18px; --glass-radius-sm:10px; --glass-blur:32px;
+  --wallpaper-veil:linear-gradient(rgba(6,6,8,.30),rgba(6,6,8,.45));
+}
+/* Светлый текст на тёмном: нейтрализуем серые утилитарные классы. */
+#root :is([class*="text-gray-"],[class*="text-slate-"],[class*="text-zinc-"],[class*="text-white/"]) { color:var(--secondary) !important; }
+#root :is(h1,h2,h3,h4,strong,[class~="text-white"],[class*="font-semibold"],[class*="font-bold"]) { color:var(--ink) !important; }
+#root :is([class*="bg-black"],[class*="bg-gray-"],[class*="bg-zinc-"],[class*="bg-slate-"],[class*="bg-neutral-"],[class*="bg-[#1c1c26]"],[class*="bg-[#0f2744]"],[class*="bg-[#1e3a5f]"],[class*="bg-[#121212]"],[class*="bg-[#0c0c0c]"],[class*="bg-[#0c0c11]"],[class*="bg-[#050609]"]) {
+  background-color:rgba(255,255,255,.06) !important; color:var(--ink) !important; border-color:var(--edge) !important;
+}
+#root [class*="border-white/"] { border-color:var(--edge) !important; }
+
+html,body,#root { height:100%; overflow:hidden; color:var(--ink); font-family:"Inter","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+body { margin:0; background:var(--scene); }
+#root { background:var(--scene); }
+#root > div.min-h-screen { color:var(--ink) !important; background:var(--wallpaper-veil),url("smoke-background.jpg") center/cover no-repeat fixed !important; }
+#root > div.min-h-screen > .pointer-events-none.fixed.inset-0,
+#root > div.min-h-screen > .pointer-events-none.absolute.inset-0 { opacity:0 !important; }
+::selection { background:rgba(255,255,255,.85); color:#000; }
+
+/* Стекло */
+.glass-panel,.glass-chip,.glass-toolbar,.glass-modal,.glass-popover,.glass-control,.glass-inset,[data-tour-id="tour-sidebar"] {
+  color:var(--ink) !important; border:1px solid var(--edge) !important; background:var(--surface) !important;
+  box-shadow:var(--glass-highlight),var(--glass-shadow) !important;
+  backdrop-filter:blur(32px) saturate(120%) !important; -webkit-backdrop-filter:blur(32px) saturate(120%) !important;
+}
+.glass-panel,.glass-modal { border-radius:18px !important; }
+.glass-chip,.glass-toolbar { border-radius:14px !important; }
+.glass-inset,.glass-control { border-radius:10px !important; background:var(--control) !important; box-shadow:var(--glass-highlight) !important; backdrop-filter:none !important; }
+.glass-popover,.glass-modal,.sidebar-tooltip { background:var(--popup) !important; color:var(--ink) !important; }
+.glass-popover { border-radius:12px !important; }
+.glass-panel .glass-panel { backdrop-filter:none !important; box-shadow:none !important; }
+.glass-overlay { background:rgba(0,0,0,.55) !important; backdrop-filter:blur(8px) !important; }
+.sidebar-label { background:none !important; box-shadow:none !important; color:var(--secondary) !important; }
+.sidebar-tooltip { border:1px solid var(--edge); box-shadow:var(--glass-shadow) !important; }
+.ui-title,h1,h2 { color:var(--ink) !important; letter-spacing:-.02em; }
+.ui-subtitle,.ui-body,.ui-meta,.ui-caption,.ui-section { color:var(--secondary) !important; }
+.glass-toolbar { gap:6px; box-shadow:none !important; }
+.glass-panel.relative.flex.min-h-0.flex-1.flex-col.overflow-hidden { box-shadow:none !important; }
+dialog,[role="dialog"],[role="menu"],[role="listbox"],[role="tooltip"] { background:var(--popup) !important; color:var(--ink) !important; border-color:var(--edge) !important; }
+body > :is([role="dialog"],[role="menu"],[role="listbox"]),body > div > :is(.glass-modal,.glass-popover) { background:var(--popup) !important; color:var(--ink) !important; border-color:var(--edge) !important; }
+
+/* Кнопки и поля */
+button,input,select,textarea { font-family:inherit; }
+button { flex-shrink:0; }
+.interactive-press { transition:background .18s ease,border-color .18s ease,box-shadow .18s ease !important; }
+.interactive-press:hover,.interactive-press:active,.sidebar-icon:hover,.sidebar-icon:active { transform:none !important; }
+.interactive-press::after { content:none !important; }
+button:not(.glass-panel):not(.sidebar-icon):not([class*="absolute"]):not([class*="fixed"]) { border-radius:9px; }
+button:not(:disabled):hover { box-shadow:inset 0 0 0 1px var(--edge-hover); background-color:var(--control-hover); }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:2px solid var(--focus) !important; outline-offset:2px; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),textarea,select {
+  background:rgba(0,0,0,.35) !important; color:var(--ink) !important; border:1px solid var(--edge) !important; border-radius:10px; box-shadow:none !important;
+}
+input::placeholder,textarea::placeholder { color:var(--muted) !important; opacity:1; }
+option { background:var(--popup); color:var(--ink); }
+input[type="checkbox"],input[type="radio"],input[type="range"] { accent-color:#fff; }
+#root .glass-toolbar > input,#root .glass-toolbar input { background:transparent !important; border:0 !important; box-shadow:none !important; border-radius:0 !important; height:36px !important; padding:8px 4px !important; font-size:14px !important; }
+#root .glass-toolbar:has(input:focus) { border-color:var(--edge-hover) !important; }
+#root :is(div,label).flex > input.bg-transparent { background:transparent !important; border:0 !important; box-shadow:none !important; }
+
+/* Белый акцент: главные кнопки — белые с чёрным текстом */
+#root .accent-bg { background:linear-gradient(145deg,rgba(255,255,255,.30),rgba(255,255,255,.14)) !important; color:#fff !important; border:1px solid rgba(255,255,255,.6) !important; box-shadow:0 0 26px rgba(255,255,255,.12) !important; }
+#root .accent-bg * { color:#fff !important; }
+
+#root .accent-border { border-color:rgba(255,255,255,.7) !important; }
+
+
+#root .accent-checkbox { background-color:rgba(255,255,255,.06) !important; border-color:rgba(255,255,255,.4) !important; box-shadow:none !important; }
+#root .accent-checkbox:checked,#root .accent-checkbox:indeterminate { background-color:#fff !important; border-color:#fff !important; }
+#root button[class*="bg-red-"] { background:var(--danger-bg) !important; color:var(--danger-ink) !important; }
+
+/* Боковая панель */
+#root .sidebar-icon { background:rgba(255,255,255,.05) !important; border:1px solid var(--edge) !important; color:var(--secondary) !important; border-radius:13px !important; box-shadow:none !important; }
+#root .sidebar-icon:hover,#root button:hover > .sidebar-icon { background:var(--control-hover) !important; color:var(--ink) !important; border-color:var(--edge-hover) !important; }
+#root .sidebar-icon.sidebar-icon-active,#root button:hover > .sidebar-icon.sidebar-icon-active { background:rgba(255,255,255,.20) !important; color:#fff !important; border-color:rgba(255,255,255,.6) !important; }
+#root .sidebar-icon img { filter:brightness(0) invert(.75) !important; opacity:1 !important; }
+
+.custom-scrollbar.flex.flex-col > button { flex:0 0 auto !important; min-height:30px; padding:6px 10px !important; border-radius:8px !important; box-shadow:none !important; }
+.custom-scrollbar.flex.flex-col { gap:4px !important; padding-bottom:4px; }
+
+/* Заголовок окна и выпадающие меню */
+#root .relative.z-20.h-9 { align-items:center; }
+#root [data-no-drag] > .absolute.top-full,#root .relative.z-20.h-9 .absolute.top-full,#root .relative:has(> [data-tour-id="tour-account-switcher"]) > .absolute {
+  background:var(--popup) !important; background-image:none !important; color:var(--ink) !important; border-color:var(--edge) !important; box-shadow:0 12px 32px rgba(0,0,0,.6) !important;
+}
+#root .relative.z-20.h-9 .absolute.top-full button:hover { background-color:rgba(255,255,255,.09) !important; }
+#root .relative.z-20.h-9 > .flex.items-center > [data-no-drag] > button > img,
+#root img[src$="/help.png"],#root img[src$="/search.png"],#root img[src$="/notification.png"],#root img[src$="/notifications.png"],#root img[src$="/settings.png"] { filter:brightness(0) invert(.85) !important; opacity:1 !important; }
+
+/* Сцена со скином */
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) {
+  background:radial-gradient(ellipse at 50% 30%,#26262b,#0e0e11 75%) !important; color:var(--ink) !important; border-color:var(--edge) !important;
+}
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) > .pointer-events-none { opacity:.10 !important; }
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button { background:rgba(255,255,255,.07) !important; color:var(--ink) !important; border:1px solid var(--edge) !important; }
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) button[aria-expanded="true"] { background:rgba(255,255,255,.2) !important; color:#fff !important; }
+#root div.relative.overflow-hidden:has(canvas):not(:has(div.relative.overflow-hidden canvas)) :is(.glass-popover,ul,[role="menu"],[role="listbox"]) { background:var(--popup) !important; color:var(--ink) !important; }
+
+/* Панели со скроллом */
+#root .glass-panel > .mb-1.flex.shrink-0.items-center.justify-between.pl-3 { margin:0 16px 10px !important; padding:14px 0 10px !important; min-height:44px; font-size:13px !important; font-weight:600; color:var(--secondary) !important; border-bottom:1px solid var(--edge); }
+#root .glass-panel > .custom-scrollbar.-mr-2 { margin-right:6px !important; margin-bottom:12px; }
+#root .glass-panel.overflow-y-auto { border-right:6px solid transparent !important; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar-track { margin-block:20px; }
+#root .glass-panel.overflow-y-auto::-webkit-scrollbar-button { display:none; height:0; }
+* { scrollbar-width:thin; scrollbar-color:var(--scroll) transparent; }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-thumb { border:2px solid transparent; border-radius:8px; background:var(--scroll); background-clip:padding-box; }
+::-webkit-scrollbar-track { background:transparent; }
+
+/* Разделение вкладок */
+#root :is(.tab-split-pane-close,.tab-split-sidebar-close,.tab-split-zone-label) { background:#1a1a1e !important; color:var(--ink) !important; border-color:var(--edge) !important; }
+#root :is(.tab-split-pane-close,.tab-split-sidebar-close):hover { background:var(--danger-bg) !important; color:var(--danger-ink) !important; }
+#root .tab-drag-ghost { background:#fff !important; color:#000 !important; border-color:#fff !important; }
+#root .tab-split-zone-active .tab-split-zone-label { background:#fff !important; color:#000 !important; }
+#root .tab-split-divider { background:var(--edge) !important; }
+#root .tab-split-divider:hover { background:var(--edge-hover) !important; }
+
+/* Статусные цвета — приглушённые, читаемые на тёмном */
+#root :is([class*="text-amber-"],[class*="text-yellow-"]) { color:#e8d9a8 !important; }
+#root :is([class*="text-emerald-"],[class*="text-green-"]) { color:#a9e0c4 !important; }
+#root :is([class*="text-sky-"],[class*="text-blue-"],[class*="text-cyan-"]) { color:#b4d4f0 !important; }
+#root :is([class*="text-red-"],[class*="text-rose-"]) { color:#ff9a9a !important; }
+#root :is([class*="bg-[#0078d4]"],[class*="bg-[#106ebe]"],[class*="bg-[#2d7d46]"],[class*="bg-[#248338]"]) { color:#fff !important; }
+
+/* Баннер обновления и карусель на главной */
+#root .glass-modal[role="dialog"]:has(> div > img) { background:var(--popup) !important; color:var(--ink) !important; }
+#root .glass-modal[role="dialog"]:has(> div > img) > div:first-child > [class*="bg-gradient-to-t"] { background:linear-gradient(to top,rgba(19,19,22,.98),rgba(19,19,22,.55) 54%,rgba(19,19,22,.05)) !important; }
+#root .glass-modal[role="dialog"]:has(> div > img) > .flex.flex-wrap { background:#0e0e11 !important; border-color:var(--edge) !important; }
+#root .glass-modal[role="dialog"]:has(> div > img) button.bg-emerald-600 { background:rgba(255,255,255,.24) !important; color:#fff !important; border:1px solid rgba(255,255,255,.65) !important; }
+#root .glass-modal[role="dialog"]:has(> div > img) button[class*="bg-white/"] { background:rgba(255,255,255,.08) !important; color:var(--ink) !important; border:1px solid var(--edge) !important; }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"]) > div.pointer-events-none[class*="bg-gradient-to-r"] { background:linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.28) 58%,rgba(0,0,0,.05) 100%) !important; }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"]) > div.relative.z-10 :is(h2,p) { color:#fff !important; text-shadow:0 1px 4px rgba(0,0,0,.8) !important; }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"]) > div.relative.z-10 button { background:rgba(255,255,255,.24) !important; color:#fff !important; border:1px solid rgba(255,255,255,.65) !important; box-shadow:0 3px 14px rgba(0,0,0,.5) !important; }
+#root .glass-panel:has(> img.object-cover):has(> div[class*="bg-gradient-to-r"]) > div.relative.z-10 a[href] { background:rgba(20,20,23,.85) !important; color:#fff !important; border:1px solid var(--edge-hover) !important; }
+
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation-duration:.01ms !important; } }
+
+/* 1.2: выбранные элементы — светлая полупрозрачная плашка с белой рамкой и БЕЛЫМ текстом.
+   Так текст виден при любом способе, которым лаунчер красит активную кнопку. */
+#root :is(
+  .accent-chip,.sidebar-icon-active,.bg-white,
+  [class*="bg-white/8"],[class*="bg-white/9"],[class*="bg-white/100"],
+  button[class*="bg-emerald-"],
+  [aria-selected="true"],[aria-checked="true"],[aria-pressed="true"],[data-state="active"],[data-active="true"],[data-selected="true"],
+  [style*="var(--accent"],[style*="255, 255, 255"],[style*="#fff"],[style*="#FFF"]
+):not(input):not(canvas):not(img):not(svg):not(.accent-checkbox) {
+  background:rgba(255,255,255,.20) !important; background-color:rgba(255,255,255,.20) !important;
+  border-color:rgba(255,255,255,.6) !important; color:#fff !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35) !important;
+}
+#root :is(
+  .accent-bg,.accent-chip,.sidebar-icon-active,.bg-white,
+  [class*="bg-white/8"],[class*="bg-white/9"],[class*="bg-white/100"],
+  button[class*="bg-emerald-"],
+  [aria-selected="true"],[aria-checked="true"],[aria-pressed="true"],[data-state="active"],[data-active="true"],[data-selected="true"],
+  [style*="var(--accent"]
+) * { color:#fff !important; text-shadow:none !important; }
+#root :is(.accent-chip,.sidebar-icon-active,.bg-white,[class*="bg-white/9"],button[class*="bg-emerald-"]) img { filter:brightness(0) invert(1) !important; }
+#root .sidebar-icon-active img { filter:brightness(0) invert(1) !important; }
+
+/* Зелёный бейдж «ВЫБРАНА» и подобные: тёмно-зелёный фон, белый текст */
+#root :is(span,div)[class*="bg-emerald-"]:not(button) { background-color:#1f8f63 !important; color:#fff !important; }
+#root :is(span,div)[class*="bg-emerald-"]:not(button) * { color:#fff !important; }
+
+/* Убираем синеватый оттенок: тёмные «синие» и любые тёмные hex-фоны → нейтральный графит */
+#root :is([class*="bg-[#0"],[class*="bg-[#1"],[class*="bg-slate-"],[class*="bg-blue-9"],[class*="bg-indigo-9"],[class*="bg-sky-9"]):not([class*="bg-[#0078d4]"]):not([class*="bg-[#106ebe]"]) {
+  background-color:rgba(255,255,255,.07) !important; border-color:var(--edge) !important;
+}
+
+/* 1.3: кнопки боковой панели — подсветка строго по форме иконки.
+   Раньше кнопка-обёртка рисовала свою рамку/фон с другим радиусом поверх иконки. */
+#root :is(button,a,div,[role="button"]):has(> .sidebar-icon):not(.sidebar-icon),
+#root :is(button,a,div,[role="button"]):has(> .sidebar-icon):not(.sidebar-icon):is(:hover,:active,:focus,:focus-visible) {
+  background:transparent !important; background-color:transparent !important; background-image:none !important;
+  border:0 !important; box-shadow:none !important; outline:none !important;
+  border-radius:13px !important; filter:none !important;
+}
+#root .sidebar-icon { border-radius:13px !important; box-sizing:border-box; }
+#root .sidebar-icon:is(:hover,:active,:focus,:focus-visible) { box-shadow:none !important; outline:none !important; border-radius:13px !important; }
+#root :is(button,a,[role="button"]):has(> .sidebar-icon):focus-visible > .sidebar-icon { border-color:rgba(255,255,255,.7) !important; }
+/* если сама кнопка и есть .sidebar-icon — убираем общую внутреннюю рамку при наведении */
+#root button.sidebar-icon:not(:disabled):hover { box-shadow:none !important; }
+
+/* 1.4: индикатор активного пункта в боковой панели — сплошная белая линия. */
+#root [data-tour-id="tour-sidebar"] :is(span,div,i):empty[class*="absolute"],
+#root [data-tour-id="tour-sidebar"] :is(span,div,i).accent-bg:not(:has(*)),
+#root [data-tour-id="tour-sidebar"] :is(span,div,i)[class*="absolute"][class*="rounded-full"]:not(:has(*)),
+#root [data-tour-id="tour-sidebar"] :is(span,div,i)[class*="absolute"][class*="w-1"]:not(:has(*)),
+#root [data-tour-id="tour-sidebar"] :is(span,div,i)[class*="absolute"][class*="w-0.5"]:not(:has(*)),
+#root [data-tour-id="tour-sidebar"] :is(span,div,i)[class*="absolute"][class*="w-[3px]"]:not(:has(*)) {
+  background:#fff !important; background-color:#fff !important; background-image:none !important;
+  border:0 !important; box-shadow:none !important; outline:none !important; opacity:1 !important;
+}
+#root .sidebar-icon-active::before,#root .sidebar-icon-active::after,
+#root button:has(> .sidebar-icon-active)::before,#root button:has(> .sidebar-icon-active)::after { background:#fff !important; border-color:#fff !important; box-shadow:none !important; }
