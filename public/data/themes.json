@@ -2,6 +2,38 @@
   "version": 1,
   "themes": [
     {
+      "id": "femboy-theme",
+      "name": "Femboy-Theme",
+      "author": "Melkyy",
+      "description": "Прозрачное стекло в пастельных розово-голубых тонах, кошачий курсор с сердечками и милые иконки",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/femboy-theme/download.zip",
+      "files": [
+        "accounts-icon.svg",
+        "background.png",
+        "cursor-pointer.cur",
+        "cursor-pointer.png",
+        "cursor-text.cur",
+        "cursor-text.png",
+        "cursor.cur",
+        "cursor.png",
+        "download.zip",
+        "friends-icon.svg",
+        "modpack-icon.svg",
+        "mods-icon.svg",
+        "play-icon.png",
+        "rooms-icon.svg",
+        "settings-icon.svg",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-10-14",
+      "published_at": "2026-10-14",
+      "updated_at": "2026-10-14"
+    },
+    {
       "id": "moon",
       "name": "moon",
       "author": "ppinger_",
