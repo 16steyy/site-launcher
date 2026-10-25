@@ -20,18 +20,20 @@
     "faq": "FAQ",
     "download": "Download",
     "privacy": "Privacy",
-    "sections": "Page sections"
+    "sections": "Page sections",
+    "pages": "Site pages",
+    "status": "Status"
   },
   "hero": {
     "taglineHighlight": "Your choice",
     "taglineRest": " for playing Minecraft",
     "install": "Install launcher",
-    "previewAlt": "Open 16Launcher interface screenshot",
     "stats": {
       "stars": "GitHub stars",
       "downloads": "downloads",
       "version": "latest version"
-    }
+    },
+    "otherPlatforms": "Other platforms"
   },
   "latestNews": {
     "title": "Latest updates",
@@ -54,8 +56,14 @@
   "shots": {
     "mods": {
       "lines": [
-        { "accent": "Download", "rest": "content right in the launcher." },
-        { "accent": "Convenient", "rest": "search, filters, and room for your modpacks!" }
+        {
+          "accent": "Download",
+          "rest": "content right in the launcher."
+        },
+        {
+          "accent": "Convenient",
+          "rest": "search, filters, and room for your modpacks!"
+        }
       ]
     },
     "settings": {
@@ -113,13 +121,20 @@
     "forYou": "for you",
     "recommended": "recommended",
     "install": "Install",
-    "hide": "Hide",
-    "choose": "Choose"
+    "version": "Version {{version}}",
+    "allReleases": "All releases on GitHub"
   },
   "footer": {
     "disclaimer": "16Launcher is not an official product of Mojang or Microsoft.",
     "privacy": "Privacy Policy",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "status": "Service status",
+    "statusLabel": {
+      "operational": "All systems operational",
+      "degraded": "API is responding slowly",
+      "down": "API is down",
+      "checking": "Checking services…"
+    }
   },
   "notFoundPage": {
     "title": "Page not found",
@@ -306,5 +321,93 @@
       "required": "Fill in title, slug and date",
       "markdownLoad": "Failed to load article text"
     }
+  },
+  "gallery": {
+    "zoom": "Enlarge"
+  },
+  "markdown": {
+    "copyCode": "Copy",
+    "copied": "Copied",
+    "copyLink": "Copy link to this section",
+    "linkCopied": "Link copied"
+  },
+  "documentation": {
+    "title": "Documentation",
+    "description": "How 16Launcher themes work: installing, creating, theme.json, style.css, selectors and common problems.",
+    "badge": "Themes",
+    "updated": "Updated October 22, 2026",
+    "onThisPage": "On this page",
+    "backToTop": "Back to top",
+    "footerTitle": "Made a theme?",
+    "footerText": "Upload it to the catalog. Once reviewed, it shows up on the site.",
+    "browseThemes": "Browse themes",
+    "uploadTheme": "Upload a theme"
+  },
+  "status": {
+    "title": "Service status",
+    "subtitle": "Whether the launcher API, sign-in, downloads and the site are up. This page re-checks everything on its own every 30 seconds.",
+    "description": "Live status of 16Launcher services: API, sign-in, download mirror, theme catalog and website.",
+    "overall": {
+      "operational": "Everything works",
+      "degraded": "Some issues",
+      "major": "Major outage",
+      "checking": "Checking…"
+    },
+    "checkedJustNow": "Checked just now",
+    "checkedAgo": "Checked {{seconds}}s ago",
+    "refresh": "Check now",
+    "states": {
+      "operational": "Operational",
+      "degraded": "Slow",
+      "down": "Down",
+      "disabled": "Disabled",
+      "checking": "Checking"
+    },
+    "groups": {
+      "launcher": "Launcher",
+      "web": "Website & downloads"
+    },
+    "services": {
+      "api": {
+        "name": "Launcher API",
+        "description": "Profiles, friends, rooms, achievements"
+      },
+      "auth": {
+        "name": "Sign-in",
+        "description": "Login, sign-up, email codes"
+      },
+      "discord": {
+        "name": "Discord sign-in",
+        "description": "OAuth login"
+      },
+      "downloads": {
+        "name": "Download mirror",
+        "description": "Installers and auto-updates"
+      },
+      "site": {
+        "name": "Website",
+        "description": "16-launcher.ru"
+      },
+      "themes": {
+        "name": "Theme catalog",
+        "description": "Theme list and downloadable archives"
+      },
+      "news": {
+        "name": "News",
+        "description": "Update feed"
+      },
+      "turn": {
+        "name": "Multiplayer",
+        "description": "Rooms and playing with friends"
+      }
+    },
+    "errors": {
+      "timeout": "No response within 8 seconds",
+      "network": "Could not connect",
+      "unhealthy": "The service reported an error"
+    },
+    "ms": "{{value}} ms",
+    "footnote": "Checks run from your browser, so a VPN, an ad blocker or ISP trouble can also look like an outage. If something is broken, let us know:",
+    "or": "or"
   }
 }

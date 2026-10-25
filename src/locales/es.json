@@ -20,18 +20,20 @@
     "faq": "FAQ",
     "download": "Descargar",
     "privacy": "Privacidad",
-    "sections": "Secciones de la página"
+    "sections": "Secciones de la página",
+    "pages": "Páginas del sitio",
+    "status": "Estado"
   },
   "hero": {
     "taglineHighlight": "Tu elección",
     "taglineRest": " para jugar Minecraft",
     "install": "Instalar launcher",
-    "previewAlt": "Abrir captura de la interfaz de 16Launcher",
     "stats": {
       "stars": "estrellas en GitHub",
       "downloads": "descargas",
       "version": "última versión"
-    }
+    },
+    "otherPlatforms": "Otras plataformas"
   },
   "latestNews": {
     "title": "Últimas actualizaciones",
@@ -54,8 +56,14 @@
   "shots": {
     "mods": {
       "lines": [
-        { "accent": "Descarga", "rest": "contenido directamente en el launcher." },
-        { "accent": "Búsqueda", "rest": "cómoda, filtros y espacio para tus modpacks." }
+        {
+          "accent": "Descarga",
+          "rest": "contenido directamente en el launcher."
+        },
+        {
+          "accent": "Búsqueda",
+          "rest": "cómoda, filtros y espacio para tus modpacks."
+        }
       ]
     },
     "settings": {
@@ -113,12 +121,19 @@
     "forYou": "para ti",
     "recommended": "recomendado",
     "install": "Instalar",
-    "hide": "Ocultar",
-    "choose": "Elegir"
+    "version": "Versión {{version}}",
+    "allReleases": "Todas las versiones en GitHub"
   },
   "footer": {
     "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft.",
-    "privacy": "Política de privacidad"
+    "privacy": "Política de privacidad",
+    "status": "Estado de los servicios",
+    "statusLabel": {
+      "operational": "Todo funciona",
+      "degraded": "La API responde lento",
+      "down": "La API no responde",
+      "checking": "Comprobando servicios…"
+    }
   },
   "notFoundPage": {
     "title": "Página no encontrada",
@@ -305,5 +320,93 @@
       "required": "Completa título, slug y fecha",
       "markdownLoad": "No se pudo cargar el texto del artículo"
     }
+  },
+  "gallery": {
+    "zoom": "Ampliar"
+  },
+  "markdown": {
+    "copyCode": "Copiar",
+    "copied": "Copiado",
+    "copyLink": "Copiar enlace a esta sección",
+    "linkCopied": "Enlace copiado"
+  },
+  "documentation": {
+    "title": "Documentación",
+    "description": "Cómo funcionan los temas de 16Launcher: instalación, creación, theme.json, style.css, selectores y problemas habituales.",
+    "badge": "Temas",
+    "updated": "Actualizado el 22 de octubre de 2026",
+    "onThisPage": "En esta página",
+    "backToTop": "Volver arriba",
+    "footerTitle": "¿Has hecho un tema?",
+    "footerText": "Súbelo al catálogo. Tras la revisión aparecerá en el sitio.",
+    "browseThemes": "Catálogo de temas",
+    "uploadTheme": "Subir tema"
+  },
+  "status": {
+    "title": "Estado de los servicios",
+    "subtitle": "Si la API del launcher, el inicio de sesión, las descargas y el sitio están funcionando. La página lo vuelve a comprobar sola cada 30 segundos.",
+    "description": "Estado actual de los servicios de 16Launcher: API, inicio de sesión, espejo de descargas, catálogo de temas y sitio web.",
+    "overall": {
+      "operational": "Todo funciona",
+      "degraded": "Hay incidencias",
+      "major": "Caída grave",
+      "checking": "Comprobando…"
+    },
+    "checkedJustNow": "Comprobado ahora mismo",
+    "checkedAgo": "Comprobado hace {{seconds}} s",
+    "refresh": "Comprobar",
+    "states": {
+      "operational": "Funciona",
+      "degraded": "Lento",
+      "down": "Caído",
+      "disabled": "Desactivado",
+      "checking": "Comprobando"
+    },
+    "groups": {
+      "launcher": "Launcher",
+      "web": "Sitio y descargas"
+    },
+    "services": {
+      "api": {
+        "name": "API del launcher",
+        "description": "Perfiles, amigos, salas, logros"
+      },
+      "auth": {
+        "name": "Inicio de sesión",
+        "description": "Acceso, registro, códigos por correo"
+      },
+      "discord": {
+        "name": "Acceso con Discord",
+        "description": "Inicio de sesión OAuth"
+      },
+      "downloads": {
+        "name": "Espejo de descargas",
+        "description": "Instaladores y actualizaciones automáticas"
+      },
+      "site": {
+        "name": "Sitio web",
+        "description": "16-launcher.ru"
+      },
+      "themes": {
+        "name": "Catálogo de temas",
+        "description": "Lista de temas y archivos para descargar"
+      },
+      "news": {
+        "name": "Noticias",
+        "description": "Feed de actualizaciones"
+      },
+      "turn": {
+        "name": "Multijugador",
+        "description": "Salas y partidas con amigos"
+      }
+    },
+    "errors": {
+      "timeout": "Sin respuesta en 8 segundos",
+      "network": "No se pudo conectar",
+      "unhealthy": "El servicio informó de un error"
+    },
+    "ms": "{{value}} ms",
+    "footnote": "Las comprobaciones se hacen desde tu navegador, así que una VPN, un bloqueador de anuncios o problemas con tu proveedor también pueden parecer una caída. Si algo no funciona, escríbenos:",
+    "or": "o"
   }
 }

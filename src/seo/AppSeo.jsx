@@ -80,6 +80,17 @@ export default function AppSeo({ path, news, releaseVersion }) {
       };
     }
 
+    if (path === "/status") {
+      return {
+        locale,
+        pathname: "/status",
+        title: `${messages.status?.title || "Status"}${suffix}`,
+        description: messages.status?.description || messages.meta.description,
+        ogType: "website",
+        jsonLdType: null,
+      };
+    }
+
     if (getRouteKind(path) === "not-found") {
       return {
         locale,

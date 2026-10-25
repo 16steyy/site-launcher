@@ -9,5 +9,6 @@ export function getRouteKind(pathname) {
   if (path === "/privacy") return "privacy";
   if (path === "/admin/news") return "admin-news";
   if (path === "/documentation") return "documentation";
+  if (path === "/status") return "status";
   return "not-found";
 }

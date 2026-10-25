@@ -20,18 +20,20 @@
     "faq": "FAQ",
     "download": "Download",
     "privacy": "Datenschutz",
-    "sections": "Seitenabschnitte"
+    "sections": "Seitenabschnitte",
+    "pages": "Seiten",
+    "status": "Status"
   },
   "hero": {
     "taglineHighlight": "Deine Wahl",
     "taglineRest": " für Minecraft",
     "install": "Launcher installieren",
-    "previewAlt": "16Launcher-Oberflächenscreenshot öffnen",
     "stats": {
       "stars": "GitHub-Sterne",
       "downloads": "Downloads",
       "version": "neueste Version"
-    }
+    },
+    "otherPlatforms": "Andere Plattformen"
   },
   "latestNews": {
     "title": "Neueste Updates",
@@ -54,8 +56,14 @@
   "shots": {
     "mods": {
       "lines": [
-        { "accent": "Inhalte", "rest": "direkt im Launcher herunterladen." },
-        { "accent": "Bequeme", "rest": "Suche, Filter und Platz für deine Modpacks!" }
+        {
+          "accent": "Inhalte",
+          "rest": "direkt im Launcher herunterladen."
+        },
+        {
+          "accent": "Bequeme",
+          "rest": "Suche, Filter und Platz für deine Modpacks!"
+        }
       ]
     },
     "settings": {
@@ -113,13 +121,20 @@
     "forYou": "für dich",
     "recommended": "empfohlen",
     "install": "Installieren",
-    "hide": "Ausblenden",
-    "choose": "Auswählen"
+    "version": "Version {{version}}",
+    "allReleases": "Alle Releases auf GitHub"
   },
   "footer": {
     "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft.",
     "privacy": "Datenschutzerklärung",
-    "documentation": "Dokumentation"
+    "documentation": "Dokumentation",
+    "status": "Dienststatus",
+    "statusLabel": {
+      "operational": "Alle Dienste laufen",
+      "degraded": "API antwortet langsam",
+      "down": "API nicht erreichbar",
+      "checking": "Dienste werden geprüft…"
+    }
   },
   "notFoundPage": {
     "title": "Seite nicht gefunden",
@@ -306,5 +321,93 @@
       "required": "Titel, Slug und Datum ausfüllen",
       "markdownLoad": "Artikeltext konnte nicht geladen werden"
     }
+  },
+  "gallery": {
+    "zoom": "Vergrößern"
+  },
+  "markdown": {
+    "copyCode": "Kopieren",
+    "copied": "Kopiert",
+    "copyLink": "Link zu diesem Abschnitt kopieren",
+    "linkCopied": "Link kopiert"
+  },
+  "documentation": {
+    "title": "Dokumentation",
+    "description": "So funktionieren Themes in 16Launcher: Installation, Erstellung, theme.json, style.css, Selektoren und häufige Probleme.",
+    "badge": "Themes",
+    "updated": "Aktualisiert am 22. Oktober 2026",
+    "onThisPage": "Inhalt",
+    "backToTop": "Nach oben",
+    "footerTitle": "Ein Theme gebaut?",
+    "footerText": "Lade es in den Katalog hoch. Nach der Prüfung erscheint es auf der Website.",
+    "browseThemes": "Theme-Katalog",
+    "uploadTheme": "Theme hochladen"
+  },
+  "status": {
+    "title": "Dienststatus",
+    "subtitle": "Ob Launcher-API, Anmeldung, Downloads und Website gerade laufen. Die Seite prüft alles alle 30 Sekunden von selbst.",
+    "description": "Aktueller Status der 16Launcher-Dienste: API, Anmeldung, Download-Mirror, Theme-Katalog und Website.",
+    "overall": {
+      "operational": "Alles läuft",
+      "degraded": "Teilweise Störungen",
+      "major": "Größere Störung",
+      "checking": "Wird geprüft…"
+    },
+    "checkedJustNow": "Gerade geprüft",
+    "checkedAgo": "Vor {{seconds}} s geprüft",
+    "refresh": "Jetzt prüfen",
+    "states": {
+      "operational": "Läuft",
+      "degraded": "Langsam",
+      "down": "Ausgefallen",
+      "disabled": "Deaktiviert",
+      "checking": "Prüfung"
+    },
+    "groups": {
+      "launcher": "Launcher",
+      "web": "Website & Downloads"
+    },
+    "services": {
+      "api": {
+        "name": "Launcher-API",
+        "description": "Profile, Freunde, Räume, Erfolge"
+      },
+      "auth": {
+        "name": "Anmeldung",
+        "description": "Login, Registrierung, E-Mail-Codes"
+      },
+      "discord": {
+        "name": "Discord-Anmeldung",
+        "description": "OAuth-Login"
+      },
+      "downloads": {
+        "name": "Download-Mirror",
+        "description": "Installer und Auto-Updates"
+      },
+      "site": {
+        "name": "Website",
+        "description": "16-launcher.ru"
+      },
+      "themes": {
+        "name": "Theme-Katalog",
+        "description": "Theme-Liste und Archive zum Download"
+      },
+      "news": {
+        "name": "News",
+        "description": "Update-Feed"
+      },
+      "turn": {
+        "name": "Mehrspieler",
+        "description": "Räume und Spielen mit Freunden"
+      }
+    },
+    "errors": {
+      "timeout": "Keine Antwort innerhalb von 8 Sekunden",
+      "network": "Verbindung fehlgeschlagen",
+      "unhealthy": "Der Dienst meldet einen Fehler"
+    },
+    "ms": "{{value}} ms",
+    "footnote": "Die Prüfungen laufen in deinem Browser. Ein VPN, ein Werbeblocker oder Probleme beim Provider können deshalb ebenfalls wie eine Störung aussehen. Wenn etwas kaputt ist, schreib uns:",
+    "or": "oder"
   }
 }

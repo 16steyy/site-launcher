@@ -12,15 +12,18 @@ export default defineConfig({
         const distDir = resolve(__dirname, "dist");
         const indexHtml = resolve(distDir, "index.html");
         copyFileSync(indexHtml, resolve(distDir, "404.html"));
-        // public/themes/ конфликтует с SPA-маршрутом /themes — без index.html GitHub Pages отдаёт 404
-        const themesDir = resolve(distDir, "themes");
-        mkdirSync(themesDir, { recursive: true });
-        copyFileSync(indexHtml, resolve(themesDir, "index.html"));
-        const privacyDir = resolve(distDir, "privacy");
-        mkdirSync(privacyDir, { recursive: true });
-        copyFileSync(indexHtml, resolve(privacyDir, "index.html"));
+        for (const route of ["themes", "privacy", "documentation", "status"]) {
+          const routeDir = resolve(distDir, route);
+          mkdirSync(routeDir, { recursive: true });
+          copyFileSync(indexHtml, resolve(routeDir, "index.html"));
+        }
       },
     },
   ],
   base: "/",
+  server: {
+    host: "127.0.0.1",
+    port: 5173,
+    strictPort: true,
+  },
 });

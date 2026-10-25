@@ -32,7 +32,12 @@ function authHeaders() {
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url, { headers: authHeaders() });
+  let response = await fetch(url, { headers: authHeaders() });
+  if (response.status === 401) {
+    console.warn("[fetch-github-release] token rejected (401), retrying without auth");
+    const { Authorization, ...anonymous } = authHeaders();
+    response = await fetch(url, { headers: anonymous });
+  }
   if (!response.ok) {
     throw new Error(`${url} → ${response.status} ${response.statusText}`);
   }

@@ -17,7 +17,6 @@ import {
   todayIsoDate,
 } from "../../lib/newsAdmin.js";
 import NewsMarkdown from "../NewsMarkdown.jsx";
-import SiteHeader from "../SiteHeader.jsx";
 import { useI18n } from "../../i18n/I18nProvider";
 
 const COVER_MAX_BYTES = 5 * 1024 * 1024;
@@ -33,7 +32,7 @@ function FieldLabel({ children, hint }) {
   return (
     <div className="mb-2">
       <label className="text-sm font-bold text-white/80">{children}</label>
-      {hint ? <p className="mt-0.5 text-xs text-white/45">{hint}</p> : null}
+      {hint ? <p className="mt-0.5 text-xs text-fg-faint">{hint}</p> : null}
     </div>
   );
 }
@@ -224,59 +223,56 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
 
   if (authLoading || !isAuthenticated) {
     return (
-      <main className="mx-auto min-h-screen w-full max-w-[1100px] px-4 pb-20 pt-10 md:px-6">
-        <SiteHeader path={path} onNavigate={onNavigate} user={user} />
-        <p className="text-center text-white/60">{copy.loading}</p>
+      <main className="mx-auto w-full max-w-[1100px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
+        <p className="text-center text-fg-muted">{copy.loading}</p>
       </main>
     );
   }
 
   if (!canAccess) {
     return (
-      <main className="mx-auto min-h-screen w-full max-w-[1100px] px-4 pb-20 pt-10 md:px-6">
-        <SiteHeader path={path} onNavigate={onNavigate} user={user} />
+      <main className="mx-auto w-full max-w-[1100px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
         <section className="mt-10 rounded-3xl border border-red-400/25 bg-red-500/10 p-8 text-center">
-          <h1 className="text-3xl font-extrabold">{copy.forbiddenTitle}</h1>
-          <p className="mt-3 text-white/70">{copy.forbiddenHint}</p>
+          <h1 className="text-3xl font-bold">{copy.forbiddenTitle}</h1>
+          <p className="mt-3 text-fg-muted">{copy.forbiddenHint}</p>
         </section>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-[1100px] px-4 pb-20 pt-10 md:px-6">
-      <SiteHeader path={path} onNavigate={onNavigate} user={user} />
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
 
       <section className="text-center">
-        <h1 className="hero-title text-4xl font-extrabold tracking-tight md:text-5xl">
+        <h1 className="page-title">
           {copy.title}
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-base text-white/55">{copy.subtitle}</p>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-fg-muted">{copy.subtitle}</p>
       </section>
 
       {view === "list" ? (
         <section className="mt-10 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-white/45">
+            <p className="text-sm font-semibold text-fg-faint">
               {t("newsAdmin.postsCount", { count: posts.length })}
             </p>
             <button
               type="button"
               onClick={openCreate}
-              className="interactive-cta rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white"
+              className="btn btn-accent"
             >
               {copy.create}
             </button>
           </div>
 
           {errorMessage ? (
-            <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+            <p className="notice notice-error">
               {errorMessage}
             </p>
           ) : null}
 
           {posts.length === 0 ? (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center text-white/60">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center text-fg-muted">
               {copy.empty}
             </div>
           ) : (
@@ -287,27 +283,27 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                   className="news-card flex flex-wrap items-center justify-between gap-4 rounded-2xl p-5"
                 >
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
+                    <p className="text-xs font-semibold text-fg-faint">
                       {post.date}
                       {post.version ? ` • v${post.version}` : ""}
                     </p>
-                    <h2 className="mt-1 truncate text-xl font-extrabold">{post.title}</h2>
+                    <h2 className="mt-1 truncate text-xl font-bold">{post.title}</h2>
                     {post.excerpt ? (
-                      <p className="mt-1 line-clamp-2 text-sm text-white/60">{post.excerpt}</p>
+                      <p className="mt-1 line-clamp-2 text-sm text-fg-muted">{post.excerpt}</p>
                     ) : null}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
                       onClick={() => openEdit(post)}
-                      className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/85 transition hover:text-white"
+                      className="btn btn-soft"
                     >
                       {copy.edit}
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(post)}
-                      className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 transition hover:bg-red-500/20"
+                      className="notice notice-error"
                     >
                       {copy.delete}
                     </button>
@@ -325,7 +321,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
               setView("list");
               resetEditor();
             }}
-            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
+            className="btn btn-soft"
           >
             {copy.backToList}
           </button>
@@ -334,12 +330,12 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
             onSubmit={handleSubmit}
             className="mt-6 space-y-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8"
           >
-            <h2 className="text-2xl font-extrabold">
+            <h2 className="text-2xl font-bold">
               {editingSlug ? copy.editTitle : copy.createTitle}
             </h2>
 
             {loadingPost ? (
-              <p className="text-sm text-white/55">{copy.loadingPost}</p>
+              <p className="text-sm text-fg-muted">{copy.loadingPost}</p>
             ) : null}
 
             <div className="grid gap-5 md:grid-cols-2">
@@ -401,7 +397,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 onChange={(event) => setCoverFile(event.target.files?.[0] || null)}
-                className="block w-full text-sm text-white/70 file:mr-4 file:rounded-lg file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
+                className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-from file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
               />
             </div>
 
@@ -412,10 +408,10 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                   <button
                     type="button"
                     onClick={() => setPreviewMode("edit")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider ${
+                    className={`rounded-lg px-3 py-1.5 text-xs font-bold ${
                       previewMode === "edit"
                         ? "bg-accent text-white"
-                        : "border border-white/15 bg-white/5 text-white/70"
+                        : "border border-white/15 bg-white/5 text-fg-muted"
                     }`}
                   >
                     {copy.previewEdit}
@@ -423,10 +419,10 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                   <button
                     type="button"
                     onClick={() => setPreviewMode("preview")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider ${
+                    className={`rounded-lg px-3 py-1.5 text-xs font-bold ${
                       previewMode === "preview"
                         ? "bg-accent text-white"
-                        : "border border-white/15 bg-white/5 text-white/70"
+                        : "border border-white/15 bg-white/5 text-fg-muted"
                     }`}
                   >
                     {copy.previewView}
@@ -447,20 +443,20 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                   {form.markdown.trim() ? (
                     <NewsMarkdown markdown={form.markdown} />
                   ) : (
-                    <p className="text-sm text-white/45">{copy.previewEmpty}</p>
+                    <p className="text-sm text-fg-faint">{copy.previewEmpty}</p>
                   )}
                 </div>
               )}
             </div>
 
             {errorMessage ? (
-              <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+              <p className="notice notice-error">
                 {errorMessage}
               </p>
             ) : null}
 
             {status === "success" ? (
-              <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+              <p className="notice notice-success">
                 {copy.saveSuccess}
               </p>
             ) : null}
@@ -469,7 +465,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
               <button
                 type="submit"
                 disabled={status === "saving" || loadingPost}
-                className="interactive-cta rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn btn-accent disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {status === "saving" ? copy.saving : copy.save}
               </button>

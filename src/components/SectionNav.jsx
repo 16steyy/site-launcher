@@ -1,53 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function SectionNav({
-  sections,
-  activeSection,
-  onSectionClick,
-  ariaLabel,
-  className = "",
-}) {
-  const navRef = useRef(null);
+export default function SectionNav({ sections, ariaLabel, className = "" }) {
   const itemRefs = useRef({});
+  const [activeSection, setActiveSection] = useState("");
   const [indicator, setIndicator] = useState({ x: 0, width: 0, visible: false });
 
   useEffect(() => {
+    const nodes = sections
+      .map(({ id }) => document.getElementById(id))
+      .filter(Boolean);
+    if (!nodes.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActiveSection(visible[0].target.id);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.15, 0.35, 0.55] }
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [sections]);
+
+  useEffect(() => {
     function updateIndicator() {
-      if (!activeSection) {
+      const item = itemRefs.current[activeSection];
+      if (!activeSection || !item) {
         setIndicator((prev) => ({ ...prev, visible: false }));
         return;
       }
-
-      const nav = navRef.current;
-      const item = itemRefs.current[activeSection];
-      if (!nav || !item) return;
-
-      setIndicator({
-        x: item.offsetLeft,
-        width: item.offsetWidth,
-        visible: true,
-      });
+      setIndicator({ x: item.offsetLeft, width: item.offsetWidth, visible: true });
     }
 
     updateIndicator();
-    const nav = navRef.current;
     window.addEventListener("resize", updateIndicator);
-    nav?.addEventListener("scroll", updateIndicator, { passive: true });
-    return () => {
-      window.removeEventListener("resize", updateIndicator);
-      nav?.removeEventListener("scroll", updateIndicator);
-    };
+    return () => window.removeEventListener("resize", updateIndicator);
   }, [activeSection, sections]);
 
-  useEffect(() => {
-    const item = itemRefs.current[activeSection];
-    item?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-  }, [activeSection]);
+  function handleClick(event, id) {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveSection(id);
+  }
 
   return (
     <nav
-      ref={navRef}
-      className={`site-nav-pills relative flex w-full min-w-0 max-w-full shrink-0 items-center gap-0.5 overflow-x-auto rounded-full border border-white/[0.08] bg-white/[0.03] p-1 md:w-auto md:max-w-none md:overflow-visible ${className}`}
+      className={`site-nav-sections relative flex items-center gap-0.5 ${className}`}
       aria-label={ariaLabel}
     >
       <span
@@ -66,12 +67,8 @@ export default function SectionNav({
             itemRefs.current[id] = el;
           }}
           href={`#${id}`}
-          className={`site-nav-anchor shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold sm:px-3.5 sm:text-sm md:px-4 ${
-            activeSection === id
-              ? "is-active"
-              : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
-          }`}
-          onClick={(event) => onSectionClick(event, id)}
+          className={`site-nav-link ${activeSection === id ? "is-active" : ""}`}
+          onClick={(event) => handleClick(event, id)}
         >
           {label}
         </a>

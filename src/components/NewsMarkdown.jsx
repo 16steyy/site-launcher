@@ -1,8 +1,10 @@
-import { Children, useMemo } from "react";
+import { Children, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ImageLightbox, { useImageLightbox } from "./ImageLightbox";
 import NewsImageSlider from "./NewsImageSlider";
+import { useI18n } from "../i18n/I18nProvider";
+import { extractHeadings } from "../lib/markdownHeadings";
 
 const IMAGE_LINE_RE =
   /^\s*!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)\s*$/;
@@ -119,68 +121,202 @@ function extractNewsSlider(children) {
   }
 }
 
+export function prepareNewsMarkdown(markdown) {
+  return markdown ? transformNewsMarkdownSliders(normalizeMarkdownLinks(markdown)) : "";
+}
+
+function useCopiedFlag(durationMs = 1400) {
+  const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef(0);
+  useEffect(() => () => window.clearTimeout(timeoutRef.current), []);
+
+  async function copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      return;
+    }
+    setCopied(true);
+    window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => setCopied(false), durationMs);
+  }
+
+  return [copied, copy];
+}
+
+const CODE_LANGUAGE_LABELS = { css: "CSS", json: "JSON", js: "JavaScript", bash: "Shell", sh: "Shell" };
+
+function CodeBlock({ children }) {
+  const { messages } = useI18n();
+  const copy = messages.markdown || {};
+  const [copied, copyText] = useCopiedFlag();
+  const code = Children.toArray(children)[0];
+  const language = String(code?.props?.className || "").match(/language-([\w-]+)/)?.[1] || "";
+  const text = String(code?.props?.children ?? "").replace(/\n$/, "");
+  const label = CODE_LANGUAGE_LABELS[language] || "";
+
+  return (
+    <div className={`code-block${label ? "" : " is-bare"}`}>
+      <div className="code-block-head">
+        <span>{label}</span>
+        <button
+          type="button"
+          className={`code-block-copy${copied ? " is-copied" : ""}`}
+          onClick={() => copyText(text)}
+        >
+          {copied ? copy.copied : copy.copyCode}
+        </button>
+      </div>
+      <pre className="overflow-x-auto px-4 pb-4 pt-1 font-mono text-sm leading-relaxed text-fg">
+        {children}
+      </pre>
+    </div>
+  );
+}
+
+function AnchoredHeading({ as: Tag, id, className, children }) {
+  const { messages } = useI18n();
+  const copy = messages.markdown || {};
+  const [copied, copyText] = useCopiedFlag();
+
+  function handleClick(event) {
+    event.preventDefault();
+    const url = new URL(window.location.href);
+    url.hash = id;
+    window.history.replaceState(window.history.state, "", url);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    copyText(url.toString());
+  }
+
+  return (
+    <Tag id={id} className={`doc-heading ${className}`}>
+      {children}
+      {id ? (
+        <a
+          href={`#${id}`}
+          className={`doc-heading-anchor${copied ? " is-copied" : ""}`}
+          aria-label={copy.copyLink}
+          title={copied ? copy.linkCopied : copy.copyLink}
+          onClick={handleClick}
+        >
+          {copied ? "✓" : "#"}
+        </a>
+      ) : null}
+    </Tag>
+  );
+}
+
 export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
   const { image, alt, hasGallery, openImage, closeImage, showPrev, showNext } = useImageLightbox();
+
+  const normalizedMarkdown = useMemo(() => prepareNewsMarkdown(markdown), [markdown]);
+
+  const headingIds = useMemo(() => {
+    if (!documentMode) return null;
+    return new Map(extractHeadings(normalizedMarkdown).map((heading) => [heading.line, heading.id]));
+  }, [documentMode, normalizedMarkdown]);
 
   const components = useMemo(
     () => ({
       h1: ({ children }) =>
         documentMode ? (
-          <h1 className="hero-title text-4xl font-extrabold tracking-tight md:text-5xl">{children}</h1>
+          <h1 className="page-title">{children}</h1>
         ) : (
-          <h2 className="text-3xl font-extrabold">{children}</h2>
+          <h2 className="mt-8 text-2xl font-bold text-white">{children}</h2>
         ),
-      h2: ({ children }) =>
+      h2: ({ children, node }) =>
         documentMode ? (
-          <h2 className="mt-10 text-2xl font-extrabold md:text-3xl">{children}</h2>
+          <AnchoredHeading
+            as="h2"
+            id={headingIds?.get(node?.position?.start?.line)}
+            className="!mt-14 text-2xl font-bold tracking-tight text-white"
+          >
+            {children}
+          </AnchoredHeading>
         ) : (
-          <h3 className="text-2xl font-extrabold">{children}</h3>
+          <h3 className="mt-6 text-xl font-semibold text-white">{children}</h3>
         ),
-      h3: ({ children }) =>
+      h3: ({ children, node }) =>
         documentMode ? (
-          <h3 className="mt-6 text-xl font-bold">{children}</h3>
+          <AnchoredHeading
+            as="h3"
+            id={headingIds?.get(node?.position?.start?.line)}
+            className="!mt-9 text-lg font-semibold text-white"
+          >
+            {children}
+          </AnchoredHeading>
         ) : (
-          <h4 className="text-xl font-bold">{children}</h4>
+          <h4 className="mt-4 text-lg font-semibold text-white">{children}</h4>
         ),
       p: ({ children }) => <p className="news-markdown-paragraph">{children}</p>,
-      ul: ({ children }) => <ul className="space-y-3">{children}</ul>,
-      ol: ({ children }) => <ol className="news-markdown-ordered-list space-y-3">{children}</ol>,
-      li: ({ children }) => (
-        <li className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">{children}</li>
+      ul: ({ children, className }) => (
+        <ul className={`news-markdown-list space-y-1.5 ${className || ""}`}>{children}</ul>
       ),
+      ol: ({ children }) => <ol className="news-markdown-ordered-list space-y-1.5">{children}</ol>,
+      li: ({ children, className }) =>
+        className?.includes("task-list-item") ? (
+          <li className="task-list-item">
+            <label>{children}</label>
+          </li>
+        ) : (
+          <li className="pl-1">{children}</li>
+        ),
+      input: ({ type, checked }) =>
+        type === "checkbox" ? (
+          <input type="checkbox" className="task-check" defaultChecked={checked} />
+        ) : null,
+      blockquote: ({ children }) => <blockquote className="markdown-callout">{children}</blockquote>,
       img: ({ src, alt: imageAlt }) => {
         const resolvedSrc = resolveRelativeUrl(src, assetBaseUrl);
         return (
           <button
             type="button"
-            className="group relative mt-4 block w-full cursor-zoom-in"
+            className="relative mt-4 block w-full cursor-zoom-in"
             onClick={() => openImage(resolvedSrc)}
           >
             <img
               src={resolvedSrc}
               alt={imageAlt || ""}
-              className="news-inline-image rounded-2xl border border-white/15 transition-transform duration-300 ease-out group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
+              className="news-inline-image rounded-2xl border border-white/10"
             />
-            <div className="pointer-events-none absolute inset-0 rounded-2xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
           </button>
         );
       },
-      a: ({ href, children }) => (
-        <a
-          href={href}
-          className="font-semibold text-accent underline decoration-accent/40 underline-offset-2 transition hover:brightness-110"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {children}
-        </a>
-      ),
-      strong: ({ children }) => <strong className="font-bold text-white/95">{children}</strong>,
-      em: ({ children }) => <em className="italic text-white/85">{children}</em>,
+      a: ({ href, children }) => {
+        const className =
+          "font-medium text-accent-hi underline decoration-accent-to/50 underline-offset-2 transition hover:text-white";
+        if (href?.startsWith("/") && !href.startsWith("//")) {
+          return (
+            <a
+              href={href}
+              className={className}
+              onClick={(event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+                event.preventDefault();
+                const url = new URL(href, window.location.origin);
+                const lang = new URLSearchParams(window.location.search).get("lang");
+                if (lang && !url.searchParams.has("lang")) url.searchParams.set("lang", lang);
+                window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
+                window.dispatchEvent(new PopStateEvent("popstate"));
+                window.scrollTo({ top: 0 });
+              }}
+            >
+              {children}
+            </a>
+          );
+        }
+        return (
+          <a href={href} className={className} target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        );
+      },
+      strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+      em: ({ children }) => <em className="italic">{children}</em>,
       code: ({ children, className }) => {
         if (className) return <code className={className}>{children}</code>;
         return (
-          <code className="rounded-md border border-white/10 bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em] text-white/90">
+          <code className="rounded border border-white/10 bg-ink-3 px-1.5 py-0.5 font-mono text-[0.88em] text-fg">
             {children}
           </code>
         );
@@ -198,13 +334,9 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
             />
           );
         }
-        return (
-          <pre className="overflow-x-auto rounded-xl border border-white/10 bg-white/5 p-4 font-mono text-sm text-white/85">
-            {children}
-          </pre>
-        );
+        return <CodeBlock>{children}</CodeBlock>;
       },
-      hr: () => <hr className="my-8 border-white/15" />,
+      hr: () => <hr className="!my-10 border-white/10" />,
       table: ({ children }) => (
         <div className="news-markdown-table-wrap overflow-x-auto rounded-xl border border-white/10">
           <table className="news-markdown-table w-full min-w-[36rem] border-collapse text-left text-base">
@@ -212,29 +344,26 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
           </table>
         </div>
       ),
-      thead: ({ children }) => <thead className="bg-white/10 text-white">{children}</thead>,
+      thead: ({ children }) => <thead className="bg-ink-3 text-white">{children}</thead>,
       tbody: ({ children }) => <tbody>{children}</tbody>,
       tr: ({ children }) => <tr className="border-t border-white/10">{children}</tr>,
       th: ({ children }) => (
-        <th className="px-4 py-3 align-top font-bold text-white">{children}</th>
+        <th className="px-4 py-3 align-top font-semibold text-white">{children}</th>
       ),
       td: ({ children }) => (
-        <td className="px-4 py-3 align-top text-white/80">{children}</td>
+        <td className="px-4 py-3 align-top text-fg-muted">{children}</td>
       ),
     }),
-    [assetBaseUrl, documentMode, openImage]
-  );
-
-  const normalizedMarkdown = useMemo(
-    () => (markdown ? transformNewsMarkdownSliders(normalizeMarkdownLinks(markdown)) : ""),
-    [markdown]
+    [assetBaseUrl, documentMode, headingIds, openImage]
   );
 
   if (!normalizedMarkdown.trim()) return null;
 
   return (
     <>
-      <section className="news-markdown mt-8 space-y-4 text-lg text-white/80">
+      <section
+        className={`news-markdown${documentMode ? " is-document" : ""} mt-8 space-y-4 text-[1.0625rem] text-fg`}
+      >
         <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
           {normalizedMarkdown}
         </ReactMarkdown>

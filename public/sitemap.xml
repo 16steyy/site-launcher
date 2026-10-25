@@ -57,6 +57,17 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/documentation?lang=en" />
   </url>
   <url>
+    <loc>https://16-launcher.ru/status</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/status?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/status?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/status?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/status?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/status?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/status?lang=en" />
+  </url>
+  <url>
     <loc>https://16-launcher.ru/themes/upload</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
@@ -77,6 +88,18 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/account?lang=de" />
     <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/account?lang=es" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/account?lang=en" />
+  </url>
+  <url>
+    <loc>https://16-launcher.ru/news/update-3-2-9</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://16-launcher.ru/news/update-3-2-9?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://16-launcher.ru/news/update-3-2-9?lang=en" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://16-launcher.ru/news/update-3-2-9?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://16-launcher.ru/news/update-3-2-9?lang=de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://16-launcher.ru/news/update-3-2-9?lang=es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://16-launcher.ru/news/update-3-2-9?lang=en" />
   </url>
   <url>
     <loc>https://16-launcher.ru/news/update-3-2-8</loc>

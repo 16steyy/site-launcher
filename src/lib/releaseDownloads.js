@@ -29,7 +29,6 @@ export function getDownloadMirrorBase(override) {
       ? DEFAULT_DOWNLOAD_MIRROR_BASE
       : override;
 
-  // Очищаем лишние слеши и захардкоженные версии в конце URL, если они были переданы
   return String(value)
     .replace(/\/+$/, "")
     .replace(/\/v\d+\.\d+\.\d+$/, "");

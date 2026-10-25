@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const TYPING_MS = 62;
-const SELECT_DELAY_MS = 450;
+const SELECT_DELAY_MS = 380;
 
 export default function HeroTagline({ highlight, rest, className = "", style }) {
   const fullText = `${highlight}${rest}`;
@@ -43,7 +43,10 @@ export default function HeroTagline({ highlight, rest, className = "", style }) 
 
   return (
     <p className={className} style={style} aria-label={fullText}>
-      <span className={`hero-tagline-highlight${isSelecting ? " is-selected" : ""}`}>
+      <span
+        className={`hero-tagline-highlight${isSelecting ? " is-selected" : ""}`}
+        style={{ "--sel-steps": Math.max(highlight.length, 1) }}
+      >
         {highlightVisible}
       </span>
       <span>{restVisible}</span>

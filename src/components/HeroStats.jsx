@@ -10,42 +10,35 @@ function formatCount(value) {
   return new Intl.NumberFormat().format(value);
 }
 
-function StatItem({ label, value, suffix = "" }) {
-  const { value: animated, ref } = useAnimatedCounter(value);
-
+function Stat({ value, label }) {
   return (
-    <div ref={ref} className="hero-stat-item text-center">
-      <p className="hero-stat-value text-3xl font-extrabold tracking-tight md:text-4xl">
-        {formatCount(animated)}
-        {suffix}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-white/55 md:text-base">{label}</p>
+    <div className="px-5 text-center sm:px-8">
+      <p className="text-2xl font-bold tabular-nums tracking-tight text-white md:text-3xl">{value}</p>
+      <p className="mt-0.5 text-sm text-fg-muted">{label}</p>
+    </div>
+  );
+}
+
+function CountStat({ value, label }) {
+  const { value: animated, ref } = useAnimatedCounter(value);
+  return (
+    <div ref={ref}>
+      <Stat value={`${formatCount(animated)}+`} label={label} />
     </div>
   );
 }
 
 export default function HeroStats({ stars, downloads, version, labels = {} }) {
-  const showStats = stars > 0 || downloads > 0 || version;
-
-  if (!showStats) return null;
+  if (!(stars > 0 || downloads > 0 || version)) return null;
 
   return (
     <div
-      className="hero-stats reveal mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-10 gap-y-4 md:mt-10 md:gap-x-14"
-      style={{ animationDelay: "260ms" }}
+      className="reveal panel mx-auto mt-10 inline-flex flex-wrap items-center justify-center gap-y-3 divide-x divide-white/10 px-2 py-4"
+      style={{ animationDelay: "220ms" }}
     >
-      {stars > 0 && <StatItem label={labels.stars} value={stars} suffix="+" />}
-      {downloads > 0 && <StatItem label={labels.downloads} value={downloads} suffix="+" />}
-      {version && (
-        <div className="hero-stat-item text-center">
-          <p className="hero-stat-value text-3xl font-extrabold tracking-tight md:text-4xl">
-            v{version}
-          </p>
-          <p className="mt-1 text-sm font-semibold text-white/55 md:text-base">
-            {labels.version}
-          </p>
-        </div>
-      )}
+      {downloads > 0 && <CountStat value={downloads} label={labels.downloads} />}
+      {stars > 0 && <CountStat value={stars} label={labels.stars} />}
+      {version && <Stat value={`v${version}`} label={labels.version} />}
     </div>
   );
 }

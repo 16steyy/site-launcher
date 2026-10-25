@@ -1,12 +1,11 @@
 import { useEffect, useRef } from "react";
 import heroPreviewVideo from "../../assets/launcher.mp4";
 
-const TILT_X = 4;
-const TILT_Y = 5;
+const MAX_TILT_DEG = 3.5;
 
 export default function HeroPreview() {
   const videoRef = useRef(null);
-  const canTiltRef = useRef(true);
+  const stageRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -27,72 +26,67 @@ export default function HeroPreview() {
   }, []);
 
   useEffect(() => {
-    const tiltQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)"
-    );
-    const syncTilt = () => {
-      canTiltRef.current = !tiltQuery.matches;
-    };
+    const stage = stageRef.current;
+    if (!stage) return;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!finePointer || reducedMotion) return;
 
-    syncTilt();
-    tiltQuery.addEventListener("change", syncTilt);
-    return () => tiltQuery.removeEventListener("change", syncTilt);
+    let frame = 0;
+    let point = null;
+
+    function apply() {
+      frame = 0;
+      if (!point) {
+        stage.style.setProperty("--tilt-x", "0deg");
+        stage.style.setProperty("--tilt-y", "0deg");
+        stage.style.setProperty("--glow-x", "50%");
+        stage.style.setProperty("--glow-y", "50%");
+        stage.classList.remove("is-tilting");
+        return;
+      }
+      const rect = stage.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (point.x - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (point.y - rect.top) / rect.height));
+      stage.style.setProperty("--tilt-x", `${((0.5 - y) * MAX_TILT_DEG * 2).toFixed(2)}deg`);
+      stage.style.setProperty("--tilt-y", `${((x - 0.5) * MAX_TILT_DEG * 2).toFixed(2)}deg`);
+      stage.style.setProperty("--glow-x", `${(x * 100).toFixed(1)}%`);
+      stage.style.setProperty("--glow-y", `${(y * 100).toFixed(1)}%`);
+      stage.classList.add("is-tilting");
+    }
+
+    function schedule(nextPoint) {
+      point = nextPoint;
+      if (!frame) frame = window.requestAnimationFrame(apply);
+    }
+
+    const onMove = (event) => schedule({ x: event.clientX, y: event.clientY });
+    const onLeave = () => schedule(null);
+
+    stage.addEventListener("pointermove", onMove);
+    stage.addEventListener("pointerleave", onLeave);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      stage.removeEventListener("pointermove", onMove);
+      stage.removeEventListener("pointerleave", onLeave);
+    };
   }, []);
 
-  function handleTilt(event) {
-    if (!canTiltRef.current) return;
-
-    const frame = event.currentTarget;
-    const tilt = frame.querySelector(".hero-preview-tilt");
-    if (!tilt) return;
-
-    const rect = frame.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const rotateX = ((y / rect.height) * 2 - 1) * TILT_X;
-    const rotateY = ((x / rect.width) * 2 - 1) * -TILT_Y;
-
-    tilt.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
-    tilt.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    tilt.classList.add("is-tilting");
-  }
-
-  function resetTilt(event) {
-    const tilt = event.currentTarget.querySelector(".hero-preview-tilt");
-    if (!tilt) return;
-
-    tilt.style.setProperty("--rx", "0deg");
-    tilt.style.setProperty("--ry", "0deg");
-    tilt.classList.remove("is-tilting");
-  }
-
   return (
-    <div
-      className="hero-preview reveal mx-auto mt-10 max-w-4xl"
-      style={{ animationDelay: "200ms" }}
-    >
-      <div
-        className="hero-preview-frame relative block w-full"
-        onMouseMove={handleTilt}
-        onMouseLeave={resetTilt}
-      >
-        <div className="hero-preview-tilt relative">
-          <div className="hero-preview-glow pointer-events-none absolute -inset-4 rounded-[2rem] opacity-70" aria-hidden />
-          <div className="hero-preview-glow-secondary pointer-events-none absolute -inset-8 rounded-[2.5rem]" aria-hidden />
-          <div className="glass hero-preview-shell relative overflow-hidden rounded-2xl p-2 shadow-[0_24px_80px_rgba(0,0,0,0.5)] md:rounded-3xl md:p-3">
-            <video
-              ref={videoRef}
-              src={heroPreviewVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="hero-preview-image block w-full rounded-xl object-cover object-top"
-            />
-            <div className="hero-preview-shine pointer-events-none absolute inset-2 rounded-xl md:inset-3" aria-hidden />
-            <div className="hero-preview-vignette pointer-events-none absolute inset-2 rounded-xl md:inset-3" aria-hidden />
-          </div>
+    <div className="reveal mx-auto mt-12 max-w-5xl" style={{ animationDelay: "160ms" }}>
+      <div ref={stageRef} className="hero-preview-stage">
+        <div className="hero-preview-shell">
+          <video
+            ref={videoRef}
+            src={heroPreviewVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="hero-preview-image"
+          />
+          <span className="hero-preview-glare" aria-hidden />
         </div>
       </div>
     </div>

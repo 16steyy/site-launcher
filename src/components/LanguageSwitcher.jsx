@@ -90,16 +90,14 @@ export default function LanguageSwitcher() {
     <div ref={rootRef} className={`language-switcher relative ${open ? "is-open" : ""}`}>
       <button
         type="button"
-        className="language-switcher-trigger interactive-row"
+        className="language-switcher-trigger"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={messages.language?.label}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <span className="language-switcher-icon-wrap">
-          <img src={languageIcon} alt="" className="language-switcher-icon" />
-        </span>
-        <span className="language-switcher-label hidden sm:inline">
+        <img src={languageIcon} alt="" className="language-switcher-icon" />
+        <span className="language-switcher-label hidden lg:inline">
           {localeLabels[locale]}
         </span>
         <svg
@@ -123,7 +121,6 @@ export default function LanguageSwitcher() {
         aria-label={messages.language?.label}
         aria-hidden={!open}
       >
-        <p className="language-switcher-menu-title">{messages.language?.label}</p>
         <ul className="language-switcher-list">
           {locales.map((code) => {
             const active = code === locale;

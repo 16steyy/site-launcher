@@ -15,18 +15,14 @@ import styleCharacter from "../assets/style.png";
 import windowsIcon from "../assets/windows.png";
 import macosIcon from "../assets/macos.png";
 import linuxIcon from "../assets/linux.png";
-import githubIcon from "../assets/github.png";
-import discordIcon from "../assets/discord.png";
-import telegramIcon from "../assets/telegram.png";
-import boostyIcon from "../assets/boosty.png";
 import newsData from "./content/news.json";
 import HeroPreview from "./components/HeroPreview";
 import HeroStats from "./components/HeroStats";
 import HeroTagline from "./components/HeroTagline";
 import HeroTitle from "./components/HeroTitle";
 import LatestNewsSection from "./components/LatestNewsSection";
-import LanguageSwitcher from "./components/LanguageSwitcher";
-import SectionNav from "./components/SectionNav";
+import SiteHeader from "./components/SiteHeader";
+import SiteFooter from "./components/SiteFooter";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NewsMarkdown from "./components/NewsMarkdown";
 import NewsShareQr from "./components/NewsShareQr";
@@ -37,12 +33,15 @@ import DocumentationPage from "./components/pages/DocumentationPage";
 import ThemeUploadPage from "./components/pages/ThemeUploadPage";
 import ThemesPage from "./components/pages/ThemesPage";
 import NewsAdminPage from "./components/pages/NewsAdminPage";
+import StatusPage from "./components/pages/StatusPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useAuth } from "./hooks/useAuth";
+import { usePointerEffects } from "./hooks/usePointerEffects";
 import { useI18n } from "./i18n/I18nProvider";
 import { getRouteKind } from "./routing";
 import {
+  extractFilenameFromDownloadUrl,
   normalizeReleaseData,
   pickMainDownloadLink,
   RELEASE_LINK_KEYS,
@@ -64,102 +63,56 @@ const NEWS_RAW_BASE =
 const NEWS_INDEX_PATH = "news/index.json";
 const NEWS_REFRESH_INTERVAL_MS = 1 * 60 * 1000;
 
-const HOME_ANCHOR_SECTIONS = [
-  { id: "features", labelKey: "features" },
-  { id: "screenshots", labelKey: "screenshots" },
-  { id: "faq", labelKey: "faq" },
-  { id: "download", labelKey: "download" },
-];
+const HOME_ANCHOR_SECTIONS = ["features", "screenshots", "faq", "download"];
 
-const SOCIAL_LINKS = [
-  {
-    href: "https://github.com/launcherdev11",
-    icon: githubIcon,
-    label: "GitHub",
-  },
-  {
-    href: "https://discord.gg/55Y95EfsHM",
-    icon: discordIcon,
-    label: "Discord",
-  },
-  {
-    href: "https://t.me/of16launcher",
-    icon: telegramIcon,
-    label: "Telegram",
-  },
-  {
-    href: "https://boosty.to/16steyy",
-    icon: boostyIcon,
-    label: "Boosty",
-  },
-];
-
-const CHARACTER_SHOT_CLASSES =
-  "mx-auto h-auto max-h-[min(200px,34vh)] w-auto max-w-[min(280px,72vw)] object-contain object-bottom md:mx-0 md:max-h-[min(600px,82vh)] md:w-full md:max-w-[min(860px,38vw)]";
-
-const CHARACTER_WRAP_DEFAULT_CLASSES =
-  "relative order-2 flex min-h-0 flex-[0_0_auto] flex-col items-center justify-end px-1 md:order-1 md:min-h-0 md:flex-[1_1_28%] md:basis-[28%] md:justify-end md:px-2";
-
-const CHARACTER_SHOT_CLASSES_STYLE_RUN =
-  "mx-auto h-auto max-h-[min(200px,34vh)] w-auto max-w-[min(300px,78vw)] object-contain object-bottom md:mx-0 md:max-h-[min(1020px,86vh)] md:w-full md:max-w-[min(980px,45vw)]";
-
-const CHARACTER_WRAP_CLASSES_STYLE_RUN =
-  "relative order-2 flex min-h-0 flex-[0_0_auto] flex-col items-center justify-end px-1 md:order-1 md:min-h-0 md:flex-[1_1_33%] md:basis-[33%] md:justify-end md:px-2";
+const OS_NAMES = { windows: "Windows", macos: "macOS", linux: "Linux" };
 
 const FEATURE_ICONS = [rocketIcon, modsIcon, shieldIcon];
 
 const SHOT_LAYOUT = [
-  {
-    id: "mods",
-    headlinePosition: "top",
-    headingAlign: "center",
-    image: modsShot,
-    character: coolCharacter,
-    characterClasses: CHARACTER_SHOT_CLASSES,
-  },
-  {
-    id: "settings",
-    headlinePosition: "top",
-    image: settingsShot,
-    character: styleCharacter,
-    characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
-    characterWrapClasses: CHARACTER_WRAP_CLASSES_STYLE_RUN,
-    headingAlign: "center",
-  },
-  {
-    id: "modpacks",
-    headlinePosition: "top",
-    headingAlign: "center",
-    image: modpacksShot,
-    character: armCharacter,
-    characterClasses: CHARACTER_SHOT_CLASSES,
-  },
-  {
-    id: "java",
-    headlinePosition: "top",
-    image: javaShot,
-    character: runCharacter,
-    characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
-    characterWrapClasses: CHARACTER_WRAP_CLASSES_STYLE_RUN,
-    headingAlign: "center",
-  },
-  {
-    id: "rooms",
-    headlinePosition: "top",
-    image: roomsShot,
-    character: runCharacter,
-    characterClasses: CHARACTER_SHOT_CLASSES_STYLE_RUN,
-    characterWrapClasses: CHARACTER_WRAP_CLASSES_STYLE_RUN,
-    headingAlign: "center",
-  },
+  { id: "mods", image: modsShot, character: coolCharacter },
+  { id: "settings", image: settingsShot, character: styleCharacter },
+  { id: "modpacks", image: modpacksShot, character: armCharacter },
+  { id: "java", image: javaShot, character: runCharacter },
+  { id: "rooms", image: roomsShot, character: runCharacter },
 ];
 
-function scrollToSection(event, sectionId) {
-  event.preventDefault();
-  document.getElementById(sectionId)?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
+function DownloadIcon({ className = "h-5 w-5" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <g className="download-arrow">
+        <path d="M12 4v11" />
+        <path d="m7 10 5 5 5-5" />
+      </g>
+      <path d="M5 20h14" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ className = "" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
 }
 
 function detectOS() {
@@ -333,14 +286,11 @@ function normalizeNewsData(input, sourceUrl = "") {
   return { page, posts };
 }
 
-function HomePage({ onNavigate, path, news }) {
-  const { locale, messages } = useI18n();
-  const [linuxOpen, setLinuxOpen] = useState(false);
+function HomePage({ onNavigate, news }) {
+  const { locale, messages, t } = useI18n();
   const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
   const [userOS, setUserOS] = useState("unknown");
-  const { image: lightboxImage, openImage: openLightboxImage, closeImage: closeLightboxImage } =
-    useImageLightbox();
-  const [activeSection, setActiveSection] = useState("");
+  const lightbox = useImageLightbox();
   const [links, setLinks] = useState(() => emptyReleaseData().links);
   const [githubStats, setGithubStats] = useState({ stars: 0, downloads: 0 });
   const [releaseVersion, setReleaseVersion] = useState("");
@@ -353,13 +303,9 @@ function HomePage({ onNavigate, path, news }) {
         const data = await fetchGithubReleaseData();
         setLinks(data.links);
         setReleaseVersion(data.version);
-        setGithubStats({
-          stars: data.stars,
-          downloads: data.downloads,
-        });
+        setGithubStats({ stars: data.stars, downloads: data.downloads });
       } catch {
-        const fallback = emptyReleaseData();
-        setLinks(fallback.links);
+        setLinks(emptyReleaseData().links);
         setGithubStats({ stars: 0, downloads: 0 });
         setReleaseVersion("");
       }
@@ -368,29 +314,7 @@ function HomePage({ onNavigate, path, news }) {
     loadLatestRelease();
   }, []);
 
-  useEffect(() => {
-    const sections = HOME_ANCHOR_SECTIONS.map(({ id }) =>
-      document.getElementById(id)
-    ).filter(Boolean);
-    if (!sections.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) {
-          setActiveSection(visible[0].target.id);
-        }
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.15, 0.35, 0.55] }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, [locale]);
-
-  useRevealScroll([linuxOpen, locale, news?.posts?.length]);
+  useRevealScroll([locale, news?.posts?.length]);
 
   const mainDownloadLink = useMemo(
     () => pickMainDownloadLink(links, userOS, FALLBACK_RELEASES_URL),
@@ -415,28 +339,28 @@ function HomePage({ onNavigate, path, news }) {
     [messages.shots]
   );
 
+  const shotGallery = useMemo(() => shots.map((shot) => shot.image), [shots]);
+
+  const downloadRows = useMemo(() => {
+    const rows = [
+      { os: "windows", icon: windowsIcon, files: [{ key: "windows" }] },
+      { os: "macos", icon: macosIcon, files: [{ key: "macos" }] },
+      {
+        os: "linux",
+        icon: linuxIcon,
+        files: [
+          { key: "linuxAppImage", label: ".AppImage" },
+          { key: "linuxDeb", label: ".deb" },
+          { key: "linuxRpm", label: ".rpm" },
+        ],
+      },
+    ];
+    return rows.sort((a, b) => (b.os === userOS) - (a.os === userOS));
+  }, [userOS]);
+
   const faqItems = messages.faq?.items || [];
-  const faqBaseDelay = 160 + shots.length * 120;
-  const downloadBaseDelay = faqBaseDelay + 120 + faqItems.length * 60;
-
-  const navSections = useMemo(
-    () =>
-      HOME_ANCHOR_SECTIONS.map(({ id, labelKey }) => ({
-        id,
-        label: messages.nav[labelKey],
-      })),
-    [messages.nav]
-  );
-
-  const downloadCardClass =
-    "glass reveal reveal-scroll interactive-row flex min-w-0 flex-col gap-4 rounded-2xl px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:rounded-3xl sm:px-6 sm:py-5 md:px-7";
-  const downloadInfoClass = "flex min-w-0 flex-wrap items-center gap-2.5 sm:gap-4";
-  const downloadIconClass = "h-8 w-8 shrink-0 sm:h-9 sm:w-9";
-  const downloadOsClass = "text-2xl font-extrabold sm:text-4xl md:text-5xl";
-  const downloadBadgeClass =
-    "rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold sm:px-3 sm:py-1 sm:text-sm";
-  const downloadActionClass =
-    "inline-flex shrink-0 items-center justify-center self-stretch rounded-full bg-accent px-6 py-2.5 text-base font-bold sm:self-auto sm:px-8 sm:py-2.5 sm:text-xl md:px-10 md:py-3 md:text-2xl";
+  const userOsName = OS_NAMES[userOS];
+  const heroMeta = [userOsName, releaseVersion && `v${releaseVersion}`].filter(Boolean);
 
   function toggleFaqItem(index) {
     setOpenFaqItems((prev) => {
@@ -454,259 +378,136 @@ function HomePage({ onNavigate, path, news }) {
     if (section.lines) {
       return section.lines.map((line, i) => (
         <span key={i} className="block">
-          <span className="text-accent">{line.accent}</span>{" "}
-          <span className="text-white">{line.rest}</span>
+          <span className="text-accent-bright">{line.accent}</span> {line.rest}
         </span>
       ));
     }
     return (
       <>
-        <span className="text-accent">{section.accentPart}</span>{" "}
-        <span className="text-white">{section.restPart}</span>
+        <span className="text-accent-bright">{section.accentPart}</span> {section.restPart}
       </>
     );
   }
 
-  function handleFeatureCursor(event) {
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const rotateX = ((y / rect.height) * 2 - 1) * -4;
-    const rotateY = ((x / rect.width) * 2 - 1) * 5;
-
-    card.style.setProperty("--mx", `${x}px`);
-    card.style.setProperty("--my", `${y}px`);
-    card.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
-    card.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-  }
-
-  function resetFeatureCursor(event) {
-    const card = event.currentTarget;
-    card.style.setProperty("--rx", "0deg");
-    card.style.setProperty("--ry", "0deg");
-  }
-
   return (
-    <main className="home-page-main w-full min-w-0 pb-16">
-      <div className="site-header-shell min-w-0 px-3 pt-2.5 pb-2 sm:px-4 sm:pt-3 md:px-6">
-        <header className="site-header glass mx-auto flex w-full min-w-0 max-w-[1240px] flex-col gap-2 rounded-2xl px-2.5 py-2 sm:gap-2.5 sm:rounded-[1.35rem] sm:px-3 sm:py-2.5 md:flex-row md:items-center md:justify-between md:gap-3 md:px-5 md:py-3">
-          <SectionNav
-            className="order-2 md:order-none"
-            sections={navSections}
-            activeSection={activeSection}
-            onSectionClick={(event, id) => {
-              scrollToSection(event, id);
-              setActiveSection(id);
-            }}
-            ariaLabel={messages.nav.sections}
-          />
+    <main className="w-full min-w-0">
+      <section className="mx-auto max-w-[1240px] px-4 pb-12 pt-16 text-center md:px-6 md:pb-16 md:pt-24">
+        <HeroTitle className="reveal text-6xl md:text-8xl" />
+        <HeroTagline
+          highlight={messages.hero.taglineHighlight}
+          rest={messages.hero.taglineRest}
+          className="reveal mt-5 text-2xl font-medium text-fg-muted md:text-4xl"
+          style={{ animationDelay: "80ms" }}
+        />
 
-          <div className="order-1 flex min-w-0 items-center justify-between gap-2 md:order-none md:shrink-0 md:justify-end md:gap-3">
-            <LanguageSwitcher />
-            <nav className="site-nav-pages flex shrink-0 items-center gap-0.5 rounded-full border border-white/[0.08] bg-white/[0.03] p-1">
-              <a
-                href="/"
-                className={`site-nav-page whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:text-sm md:px-4 ${
-                  path === "/"
-                    ? "is-active"
-                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
-                }`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  onNavigate("/");
-                }}
-              >
-                {messages.nav.home}
-              </a>
-              <a
-                href="/news"
-                className={`site-nav-page whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:text-sm md:px-4 ${
-                  path.startsWith("/news")
-                    ? "is-active"
-                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
-                }`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  onNavigate("/news");
-                }}
-              >
-                {messages.nav.news}
-              </a>
-              <a
-                href="/themes"
-                className={`site-nav-page whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:text-sm md:px-4 ${
-                  path.startsWith("/themes")
-                    ? "is-active"
-                    : "text-white/55 hover:bg-white/[0.06] hover:text-white/90"
-                }`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  onNavigate("/themes");
-                }}
-              >
-                {messages.nav.themes || messages.themes?.nav}
-              </a>
-            </nav>
-          </div>
-        </header>
-      </div>
-
-      <div className="mx-auto max-w-[1240px] px-4 md:px-6">
-        <section className="py-16 text-center md:py-24">
-          <HeroTitle className="text-5xl font-extrabold tracking-tight md:text-7xl" />
-          <HeroTagline
-            highlight={messages.hero.taglineHighlight}
-            rest={messages.hero.taglineRest}
-            className="reveal mt-3 text-2xl font-semibold text-white/70 md:text-4xl"
-            style={{ animationDelay: "110ms" }}
-          />
-          <HeroPreview />
-          <HeroStats
-            stars={githubStats.stars}
-            downloads={githubStats.downloads}
-            version={releaseVersion}
-            labels={messages.hero.stats}
-          />
+        <div className="reveal mt-10 flex flex-col items-center gap-3" style={{ animationDelay: "120ms" }}>
           <a
             href={mainDownloadLink}
-            className="reveal interactive-cta mx-auto mt-10 inline-flex min-w-72 items-center justify-center rounded-2xl bg-accent px-8 py-5 text-2xl font-bold text-white shadow-glow md:mt-12"
-            style={{ animationDelay: "320ms" }}
+            className="btn btn-accent btn-xl w-full max-w-xs sm:w-auto sm:min-w-[18rem]"
+            data-magnetic
           >
-            <span className="relative z-[1]">{messages.hero.install}</span>
+            <DownloadIcon />
+            {messages.hero.install}
           </a>
-        </section>
+          <p className="text-sm text-fg-faint">
+            {heroMeta.length ? `${heroMeta.join(" · ")} · ` : null}
+            <a
+              href="#download"
+              className="text-fg-muted underline decoration-white/20 underline-offset-4 transition hover:text-white"
+              onClick={(event) => {
+                event.preventDefault();
+                document.getElementById("download")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              {messages.hero.otherPlatforms}
+            </a>
+          </p>
+        </div>
 
-        <section id="features" className="scroll-anchor py-20 md:py-28">
-          <div className="grid gap-6 md:grid-cols-3">
-            {features.map((feature, i) => (
-              <article
-                key={`feature-${i}`}
-                className="reveal reveal-scroll glass interactive-feature-card rounded-3xl p-8 text-center"
-                style={{ animationDelay: `${60 + i * 70}ms` }}
-                onMouseMove={handleFeatureCursor}
-                onMouseLeave={resetFeatureCursor}
+        <HeroPreview />
+        <HeroStats
+          stars={githubStats.stars}
+          downloads={githubStats.downloads}
+          version={releaseVersion}
+          labels={messages.hero.stats}
+        />
+      </section>
+
+      <section id="features" className="scroll-anchor mx-auto max-w-[1240px] px-4 py-10 md:px-6 md:py-14">
+        <div className="grid gap-4 md:grid-cols-3">
+          {features.map((feature, i) => (
+            <article
+              key={`feature-${i}`}
+              className="card feature-card reveal reveal-scroll p-6"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <span className="feature-icon">
+                <img src={feature.icon} alt="" className="h-6 w-6" />
+              </span>
+              <h3 className="mt-5 text-xl font-semibold text-white">{feature.title}</h3>
+              <p className="mt-2 leading-relaxed text-fg-muted">{feature.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div id="screenshots" className="scroll-anchor">
+        {shots.map((section, index) => {
+          const characterRight = index % 2 === 1;
+          return (
+            <section
+              key={section.id}
+              className={`shot-section mx-auto max-w-[1240px] px-4 py-12 md:px-6 md:py-16 ${
+                characterRight ? "is-right" : "is-left"
+              }`}
+            >
+              <h2 className="section-title reveal reveal-scroll mx-auto max-w-4xl text-balance text-center">
+                {renderShotHeadline(section)}
+              </h2>
+
+              <div
+                className={`shot-frame reveal reveal-scroll mt-10 flex flex-col gap-3 md:mt-12 md:items-end ${
+                  characterRight ? "md:flex-row-reverse" : "md:flex-row"
+                }`}
+                style={{ animationDelay: "60ms" }}
               >
-                <img src={feature.icon} alt="" className="mx-auto h-11 w-11" />
-                <h3 className="mt-5 text-4xl font-extrabold">{feature.title}</h3>
-                <p className="mt-4 text-2xl font-semibold text-white/70">{feature.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+                <div className="order-2 flex shrink-0 justify-center md:order-none md:w-[24%]">
+                  <img
+                    src={section.character}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="shot-character h-auto max-h-[200px] w-auto object-contain object-bottom md:max-h-[460px] md:w-full"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="shot-image-button order-1 min-w-0 flex-1 md:order-none"
+                  onClick={() => lightbox.openImage(section.image, shotGallery)}
+                >
+                  <img
+                    src={section.image}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full"
+                  />
+                  <span className="shot-zoom-hint">{messages.gallery?.zoom}</span>
+                </button>
+              </div>
+            </section>
+          );
+        })}
       </div>
 
-      {shots.map((section, index) => {
-        const isModsBlock = section.id === "mods";
-        const alignClass =
-          section.headingAlign === "right" ? "text-right" : "text-center";
-        const headlineTop = section.headlinePosition !== "bottom";
-        const biasLeft = index % 2 === 0;
-        const characterClasses =
-          section.characterClasses || CHARACTER_SHOT_CLASSES;
-        const headlineText = isModsBlock
-          ? "text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
-          : "text-4xl font-extrabold leading-tight tracking-tight text-balance md:text-6xl";
-        const headlineMarginTop = "mt-10 md:mt-14";
-        const headlineMarginBottom = "mb-10 md:mb-14";
-        const headlineBlock = isModsBlock
-          ? `mx-auto w-full max-w-7xl px-2 md:px-4 ${headlineText} ${alignClass}`
-          : `mx-auto w-full max-w-6xl px-4 md:px-8 ${headlineText} ${alignClass}`;
-        const sectionPad = biasLeft
-          ? "px-4 sm:px-6 md:pl-10 md:pr-20 lg:pl-16 lg:pr-28 xl:pl-24 xl:pr-36"
-          : "px-4 sm:px-6 md:pl-20 md:pr-10 lg:pl-28 lg:pr-16 xl:pl-36 xl:pr-24";
-
-        const baseDelay = 160 + index * 120;
-
-        return (
-          <section
-            key={section.id}
-            id={index === 0 ? "screenshots" : undefined}
-            className={`feature-shot-section scroll-anchor relative isolate w-full overflow-hidden py-20 md:py-28 ${
-              index === 0 ? "mt-5 md:mt-20" : ""
-            }`}
-          >
-            {biasLeft ? (
-              <div
-                className="pointer-events-none absolute -left-[15%] top-1/2 h-[min(120%,800px)] w-[min(75vw,900px)] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(44,96,255,0.38),transparent)] blur-2xl"
-                aria-hidden
-              />
-            ) : (
-              <div
-                className="pointer-events-none absolute -right-[15%] top-1/2 h-[min(120%,800px)] w-[min(75vw,900px)] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(86,115,255,0.36),transparent)] blur-2xl"
-                aria-hidden
-              />
-            )}
-            {headlineTop && (
-              <h2
-                className={`${headlineBlock} ${headlineMarginBottom} reveal reveal-scroll`}
-                style={{ animationDelay: `${baseDelay}ms` }}
-              >
-                {renderShotHeadline(section)}
-              </h2>
-            )}
-
-            <div className={sectionPad}>
-              <div
-                className={`glass shot-glass-panel relative reveal reveal-scroll flex w-full max-w-[min(1920px,100%)] flex-col gap-4 rounded-2xl p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:flex-row md:items-stretch md:gap-0 md:p-5 ${
-                  biasLeft ? "ml-0 mr-auto" : "ml-auto mr-0"
-                }`}
-                style={{ animationDelay: `${baseDelay + 70}ms` }}
-              >
-                {section.character ? (
-                  <div
-                    className={
-                      section.characterWrapClasses ||
-                      CHARACTER_WRAP_DEFAULT_CLASSES
-                    }
-                  >
-                    <img
-                      src={section.character}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      className={`relative z-[1] ${characterClasses}`}
-                    />
-                  </div>
-                ) : null}
-                <div
-                  className={`order-1 min-w-0 flex-[1_1_auto] md:order-2 ${
-                    section.character
-                      ? "md:flex-[1_1_72%] md:basis-[72%]"
-                      : "md:flex-[1_1_100%] md:basis-full"
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="group relative block h-full w-full"
-                    onClick={() => openLightboxImage(section.image)}
-                  >
-                    <img
-                      src={section.image}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full rounded-xl object-contain object-left-top shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-out md:object-cover group-hover:scale-[1.03] group-hover:shadow-[0_20px_50px_rgba(44,96,255,0.2)]"
-                    />
-                    <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 opacity-0 transition-opacity duration-200 group-hover:bg-black/35 group-hover:opacity-100" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {!headlineTop && (
-              <h2
-                className={`${headlineBlock} ${headlineMarginTop} reveal reveal-scroll`}
-                style={{ animationDelay: `${baseDelay}ms` }}
-              >
-                {renderShotHeadline(section)}
-              </h2>
-            )}
-          </section>
-        );
-      })}
-
-      <ImageLightbox image={lightboxImage} onClose={closeLightboxImage} />
+      <ImageLightbox
+        image={lightbox.image}
+        alt={lightbox.alt}
+        hasGallery={lightbox.hasGallery}
+        onClose={lightbox.closeImage}
+        onPrev={lightbox.showPrev}
+        onNext={lightbox.showNext}
+      />
 
       <div className="mx-auto max-w-[1240px] px-4 md:px-6">
         <LatestNewsSection
@@ -715,212 +516,148 @@ function HomePage({ onNavigate, path, news }) {
           openLabel={messages.news.open}
           posts={news?.posts}
           onNavigate={onNavigate}
-          baseDelay={160 + shots.length * 120}
         />
 
-        <section id="faq" className="scroll-anchor py-20 md:py-28">
-          <h2
-            className="reveal reveal-scroll text-center text-5xl font-extrabold md:text-6xl"
-            style={{ animationDelay: `${faqBaseDelay}ms` }}
-          >
-            {messages.faq?.title}
-          </h2>
-          <div className="mx-auto mt-12 max-w-5xl space-y-4">
+        <section id="faq" className="scroll-anchor py-16 md:py-20">
+          <h2 className="section-title reveal reveal-scroll text-center">{messages.faq?.title}</h2>
+          <div className="mx-auto mt-10 max-w-3xl space-y-3">
             {faqItems.map((item, index) => {
               const isOpen = openFaqItems.has(index);
               return (
-                <button
+                <div
                   key={index}
-                  type="button"
-                  className="faq-item glass reveal reveal-scroll rounded-3xl px-6 py-5 text-left md:px-7"
-                  style={{ animationDelay: `${faqBaseDelay + 50 + index * 55}ms` }}
-                  onClick={() => toggleFaqItem(index)}
-                  aria-expanded={isOpen}
+                  className={`card faq-item reveal reveal-scroll ${isOpen ? "is-open" : ""}`}
+                  style={{ animationDelay: `${index * 40}ms` }}
                 >
-                  <span className="relative z-[1] flex w-full items-center justify-between gap-4">
-                    <span className="text-2xl font-extrabold leading-snug md:text-3xl">
-                      {item.question}
-                    </span>
-                    <svg
-                      className={`faq-chevron linux-chevron h-6 w-6 shrink-0 text-white/70 ${isOpen ? "is-open" : ""}`}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden
-                    >
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </span>
-                  <div className={`faq-answer-wrap${isOpen ? " is-open" : ""}`}>
+                  <button
+                    type="button"
+                    id={`faq-q-${index}`}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left md:px-6"
+                    onClick={() => toggleFaqItem(index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-a-${index}`}
+                  >
+                    <span className="text-base font-semibold text-white md:text-lg">{item.question}</span>
+                    <ChevronIcon
+                      className={`faq-chevron h-5 w-5 shrink-0 text-fg-faint ${isOpen ? "is-open" : ""}`}
+                    />
+                  </button>
+                  <div
+                    id={`faq-a-${index}`}
+                    role="region"
+                    aria-labelledby={`faq-q-${index}`}
+                    className={`faq-answer-wrap${isOpen ? " is-open" : ""}`}
+                  >
                     <div className="faq-answer-inner">
-                      <p className="faq-answer relative z-[1] mt-4 text-lg font-semibold leading-relaxed text-white/70 md:text-xl">
-                        {item.answer}
-                      </p>
+                      <p className="px-5 pb-5 leading-relaxed text-fg-muted md:px-6">{item.answer}</p>
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
         </section>
 
-        <section id="download" className="scroll-anchor py-24 md:py-32">
-          <h2
-            className="reveal reveal-scroll text-center text-4xl font-extrabold sm:text-5xl md:text-6xl"
-            style={{ animationDelay: `${downloadBaseDelay}ms` }}
-          >
-            {messages.download.title}
-          </h2>
-          <div className="mx-auto mt-8 max-w-5xl space-y-4 sm:mt-12 sm:space-y-5">
-            <a
-              href={links.windows}
-              className={downloadCardClass}
-              style={{ animationDelay: `${downloadBaseDelay + 50}ms` }}
-            >
-              <div className={downloadInfoClass}>
-                <img src={windowsIcon} alt="" className={downloadIconClass} />
-                <span className={downloadOsClass}>Windows</span>
-                {userOS === "windows" && (
-                  <span className={downloadBadgeClass}>{messages.download.forYou}</span>
-                )}
-              </div>
-              <span className={downloadActionClass}>{messages.download.install}</span>
-            </a>
+        <section id="download" className="scroll-anchor pb-24 pt-16 md:pb-28 md:pt-20">
+          <h2 className="section-title reveal reveal-scroll text-center">{messages.download.title}</h2>
+          {releaseVersion ? (
+            <p className="reveal reveal-scroll mt-3 text-center text-fg-muted">
+              {t("download.version", { version: releaseVersion })}
+            </p>
+          ) : null}
 
-            <a
-              href={links.macos}
-              className={downloadCardClass}
-              style={{ animationDelay: `${downloadBaseDelay + 100}ms` }}
-            >
-              <div className={downloadInfoClass}>
-                <img src={macosIcon} alt="" className={downloadIconClass} />
-                <span className={downloadOsClass}>macOS</span>
-                {userOS === "macos" && (
-                  <span className={downloadBadgeClass}>{messages.download.forYou}</span>
-                )}
-              </div>
-              <span className={downloadActionClass}>{messages.download.install}</span>
-            </a>
+          <div className="mx-auto mt-10 max-w-3xl space-y-3">
+            {downloadRows.map((row, index) => {
+              const isUserOs = row.os === userOS;
+              const single = row.files.length === 1 ? links[row.files[0].key] : "";
+              const fileName = single ? extractFilenameFromDownloadUrl(single) : "";
+              return (
+                <div
+                  key={row.os}
+                  className={`card reveal reveal-scroll flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between ${
+                    isUserOs ? "!border-accent-to/40" : ""
+                  }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="flex min-w-0 items-center gap-4">
+                    <img src={row.icon} alt="" className="h-9 w-9 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-xl font-semibold text-white">{OS_NAMES[row.os]}</span>
+                        {isUserOs && (
+                          <span className="chip chip-accent">
+                            {row.os === "linux" ? messages.download.recommended : messages.download.forYou}
+                          </span>
+                        )}
+                      </div>
+                      {fileName && fileName !== "releases" ? (
+                        <p className="mt-0.5 truncate font-mono text-xs text-fg-faint">{fileName}</p>
+                      ) : null}
+                    </div>
+                  </div>
 
-            <div
-              className="glass reveal reveal-scroll min-w-0 rounded-2xl px-4 py-4 sm:rounded-3xl sm:px-6 sm:py-5 md:px-7"
-              style={{ animationDelay: `${downloadBaseDelay + 150}ms` }}
-            >
-              <button
-                type="button"
-                onClick={() => setLinuxOpen((prev) => !prev)}
-                className="interactive-row flex w-full min-w-0 flex-col gap-4 rounded-2xl text-left sm:flex-row sm:items-center sm:justify-between sm:gap-3"
-              >
-                <span className={downloadInfoClass}>
-                  <img src={linuxIcon} alt="" className={downloadIconClass} />
-                  <span className={downloadOsClass}>Linux</span>
-                  {userOS === "linux" && (
-                    <span className={downloadBadgeClass}>{messages.download.recommended}</span>
+                  {single ? (
+                    <a href={single} className={`btn ${isUserOs ? "btn-accent" : "btn-soft"} sm:min-w-[9rem]`}>
+                      <DownloadIcon className="h-4 w-4" />
+                      {messages.download.install}
+                    </a>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-2 sm:flex">
+                      {row.files.map((file, fileIndex) => (
+                        <a
+                          key={file.key}
+                          href={links[file.key]}
+                          title={extractFilenameFromDownloadUrl(links[file.key])}
+                          className={`btn ${isUserOs && fileIndex === 0 ? "btn-accent" : "btn-soft"} px-3`}
+                        >
+                          {file.label}
+                        </a>
+                      ))}
+                    </div>
                   )}
-                </span>
-                <span className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:shrink-0 sm:gap-3">
-                  <span className={`${downloadActionClass} min-w-0 flex-1 sm:flex-none`}>
-                    {linuxOpen ? messages.download.hide : messages.download.choose}
-                  </span>
-                  <svg
-                    className={`linux-chevron h-5 w-5 shrink-0 text-white/70 sm:h-6 sm:w-6 ${linuxOpen ? "is-open" : ""}`}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </button>
-
-              {linuxOpen && (
-                <div className="mt-4 grid gap-3 sm:mt-5 md:grid-cols-3">
-                  <a
-                    href={links.linuxDeb}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 5}ms` }}
-                  >
-                    .deb
-                  </a>
-                  <a
-                    href={links.linuxRpm}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 10}ms` }}
-                  >
-                    .rpm
-                  </a>
-                  <a
-                    href={links.linuxAppImage}
-                    className="interactive-row rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-center text-xl font-bold reveal reveal-scroll"
-                    style={{ animationDelay: `${downloadBaseDelay + 15}ms` }}
-                  >
-                    .AppImage
-                  </a>
                 </div>
-              )}
-            </div>
+              );
+            })}
           </div>
+
+          <p className="mt-6 text-center text-sm">
+            <a
+              href={FALLBACK_RELEASES_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="text-fg-muted underline decoration-white/20 underline-offset-4 transition hover:text-white"
+            >
+              {messages.download.allReleases}
+            </a>
+          </p>
         </section>
-
-        <footer className="pt-4 text-center text-base font-semibold text-white/60">
-          {messages.footer.disclaimer}
-
-          <div className="mt-3">
-            <a
-              href="/documentation"
-              className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
-              onClick={(event) => {
-                event.preventDefault();
-                onNavigate("/documentation");
-              }}
-            >
-              {messages.footer.documentation || messages.documentation?.nav}
-            </a>
-          </div>
-          <div className="mt-3">
-
-            <a
-              href="/privacy"
-              className="text-sm font-bold text-white/70 underline decoration-white/25 underline-offset-4 transition hover:text-white"
-              onClick={(event) => {
-                event.preventDefault();
-                onNavigate("/privacy");
-              }}
-            >
-              {messages.footer.privacy || messages.privacy?.nav}
-            </a>
-          </div>
-
-
-
-          <div className="mt-4 flex items-center justify-center gap-3">
-            {SOCIAL_LINKS.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={item.label}
-                className="group inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 p-2 transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5 hover:rotate-3"
-              >
-                <img
-                  src={item.icon}
-                  alt=""
-                  className="h-7 w-7 transition-transform duration-200 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(134,59,255,0.65)]"
-                />
-              </a>
-            ))}
-          </div>
-        </footer>
       </div>
     </main>
+  );
+}
+
+function BackLink({ href, label, onNavigate }) {
+  return (
+    <a
+      href={href}
+      className="btn btn-ghost btn-sm -ml-2"
+      onClick={(event) => {
+        event.preventDefault();
+        onNavigate(href);
+      }}
+    >
+      <ChevronIcon className="h-4 w-4 rotate-90" />
+      {label}
+    </a>
+  );
+}
+
+function PostMeta({ post }) {
+  return (
+    <p className="flex flex-wrap items-center gap-2 text-sm text-fg-faint">
+      {post.date ? <span>{post.date}</span> : null}
+      {post.version ? <span className="chip chip-accent">{post.version}</span> : null}
+    </p>
   );
 }
 
@@ -931,59 +668,36 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
   const posts = Array.isArray(news.posts) ? news.posts : [];
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-[1240px] px-4 pb-20 pt-10 md:px-6">
-      <header className="mb-10 flex items-center justify-between gap-3">
-        <a
-          href="/"
-          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
-          onClick={(event) => {
-            event.preventDefault();
-            onNavigate("/");
-          }}
-        >
-          {messages.news.backHome}
-        </a>
-        <LanguageSwitcher />
-      </header>
-
+    <main className="mx-auto w-full max-w-[1240px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
       <section className="text-center">
-        <h1 className="hero-title text-5xl font-extrabold tracking-tight md:text-7xl">
-          {pageTitle}
-        </h1>
-        <p className="mx-auto mt-4 max-w-3xl text-lg text-white/70 md:text-2xl">
-          {pageSubtitle}
-        </p>
-        {isLoading && (
-          <p className="mx-auto mt-4 max-w-3xl text-base text-white/50">
-            {messages.news.loading}
-          </p>
-        )}
+        <h1 className="page-title">{pageTitle}</h1>
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-muted">{pageSubtitle}</p>
+        {isLoading && messages.news.loading ? (
+          <p className="mt-4 text-fg-faint">{messages.news.loading}</p>
+        ) : null}
         {loadError && (
-          <p className="mx-auto mt-4 max-w-3xl text-base text-amber-300/95">
-            {messages.news.loadError}
-          </p>
+          <p className="notice notice-warning mx-auto mt-6 max-w-xl">{messages.news.loadError}</p>
         )}
       </section>
 
-      <section className="mt-14 grid gap-6 md:grid-cols-2">
+      <section className="mt-12 grid gap-4 md:grid-cols-2">
         {posts.map((post) => (
-          <article key={post.slug} className="news-card rounded-3xl p-6 md:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
-              {post.date} {post.version ? `• ${post.version}` : ""}
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight">{post.title}</h2>
-            <p className="mt-4 text-lg text-white/70">{post.excerpt}</p>
-            <a
-              href={`/news/${post.slug}`}
-              className="mt-8 inline-flex rounded-xl bg-accent px-5 py-3 text-base font-bold text-white transition hover:brightness-110"
-              onClick={(event) => {
-                event.preventDefault();
-                onNavigate(`/news/${post.slug}`);
-              }}
-            >
-              {messages.news.open}
-            </a>
-          </article>
+          <a
+            key={post.slug}
+            href={`/news/${post.slug}`}
+            className="news-card group flex flex-col rounded-2xl p-6 md:p-7"
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`/news/${post.slug}`);
+            }}
+          >
+            <PostMeta post={post} />
+            <h2 className="mt-3 text-2xl font-semibold leading-snug text-white">{post.title}</h2>
+            {post.excerpt ? <p className="mt-3 flex-1 text-fg-muted">{post.excerpt}</p> : null}
+            <span className="mt-6 text-sm font-semibold text-accent-hi transition group-hover:text-white">
+              {messages.news.open} →
+            </span>
+          </a>
         ))}
       </section>
     </main>
@@ -1066,25 +780,10 @@ function NewsArticlePage({ slug, onNavigate, news }) {
 
   if (!post) {
     return (
-      <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
-        <header className="flex items-center justify-between gap-3">
-          <a
-            href="/news"
-            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
-            onClick={(event) => {
-              event.preventDefault();
-              onNavigate("/news");
-            }}
-          >
-            {messages.news.backToNews}
-          </a>
-          <LanguageSwitcher />
-        </header>
-        <div className="mt-12 rounded-3xl border border-white/15 bg-white/5 p-8">
-          <h1 className="text-4xl font-extrabold">{messages.news.notFound}</h1>
-          <p className="mt-4 text-white/70">
-            
-          </p>
+      <main className="mx-auto w-full max-w-[860px] px-4 pb-20 pt-10 md:px-6">
+        <BackLink href="/news" label={messages.news.backToNews} onNavigate={onNavigate} />
+        <div className="panel mt-6 p-8 text-center">
+          <h1 className="text-3xl font-bold text-white">{messages.news.notFound}</h1>
         </div>
       </main>
     );
@@ -1108,63 +807,46 @@ function NewsArticlePage({ slug, onNavigate, news }) {
     : "";
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-[920px] px-4 pb-20 pt-10 md:px-6">
-      <header className="flex items-center justify-between gap-3">
-        <a
-          href="/news"
-          className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white"
-          onClick={(event) => {
-            event.preventDefault();
-            onNavigate("/news");
-          }}
-        >
-          {messages.news.backToNews}
-        </a>
-        <LanguageSwitcher />
-      </header>
+    <main className="mx-auto w-full max-w-[860px] px-4 pb-20 pt-10 md:px-6">
+      <BackLink href="/news" label={messages.news.backToNews} onNavigate={onNavigate} />
 
-      <article className="mt-8 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-10">
+      <article className="panel mt-6 p-6 md:p-10">
         <div className="flex items-start justify-between gap-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/55">
-            {post.date} {post.version ? `• ${post.version}` : ""}
-          </p>
+          <PostMeta post={post} />
           <NewsShareQr slug={post.slug} title={post.title} />
         </div>
-        <h1 className="mt-2 text-4xl font-extrabold leading-tight md:text-5xl">
+        <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-white md:text-4xl">
           {post.title}
         </h1>
 
         {articleState.loading && (
-          <p className="mt-8 text-base text-white/55">{messages.news.articleLoading}</p>
+          <p className="mt-8 text-fg-faint">{messages.news.articleLoading}</p>
         )}
 
         {articleState.error && (
-          <p className="mt-8 text-base text-amber-300/95">{messages.news.articleError}</p>
+          <p className="notice notice-warning mt-8">{messages.news.articleError}</p>
         )}
 
         {articleState.markdown?.trim() ? (
           <NewsMarkdown markdown={articleState.markdown} assetBaseUrl={markdownAssetBaseUrl} />
         ) : (
           <>
-            <section className="mt-8 space-y-4 text-lg text-white/80">
+            <section className="mt-8 space-y-4 text-lg leading-relaxed text-fg">
               {mergedDescription.map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
             </section>
 
-            <section className="mt-10">
-              <h2 className="text-2xl font-extrabold">{messages.news.changes}</h2>
-              <ul className="mt-4 space-y-3 text-white/85">
-                {mergedChangelog.map((item, index) => (
-                  <li
-                    key={index}
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {mergedChangelog.length ? (
+              <section className="mt-10">
+                <h2 className="text-xl font-semibold text-white">{messages.news.changes}</h2>
+                <ul className="news-markdown-list mt-4 space-y-2 text-fg">
+                  {mergedChangelog.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
           </>
         )}
       </article>
@@ -1179,6 +861,8 @@ export default function App() {
   const [newsLoadError, setNewsLoadError] = useState(false);
   const [releaseVersion, setReleaseVersion] = useState("");
   const { user } = useAuth();
+  const { messages } = useI18n();
+  usePointerEffects();
 
   async function refreshNews({ isBackground = false } = {}) {
     if (!isBackground) {
@@ -1233,15 +917,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    async function loadReleaseVersion() {
-      try {
-        const data = await fetchGithubReleaseData();
+    fetchGithubReleaseData()
+      .then((data) => {
         if (data.version) setReleaseVersion(data.version);
-      } catch {
-      }
-    }
-
-    loadReleaseVersion();
+      })
+      .catch(() => {});
   }, []);
 
   function navigate(nextPath) {
@@ -1264,103 +944,63 @@ export default function App() {
 
   const route = getRouteKind(path);
 
+  const homeSections = useMemo(
+    () => HOME_ANCHOR_SECTIONS.map((id) => ({ id, label: messages.nav[id] })),
+    [messages.nav]
+  );
+
+  let page;
   if (route === "themes") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <ThemesPage onNavigate={navigate} path={path} user={user} />
-      </>
+    page = <ThemesPage onNavigate={navigate} path={path} user={user} />;
+  } else if (route === "themes-upload") {
+    page = <ThemeUploadPage onNavigate={navigate} path={path} user={user} />;
+  } else if (route === "account") {
+    page = <AccountPage onNavigate={navigate} path={path} user={user} />;
+  } else if (route === "privacy") {
+    page = <PrivacyPage />;
+  } else if (route === "documentation") {
+    page = <DocumentationPage onNavigate={navigate} />;
+  } else if (route === "status") {
+    page = <StatusPage />;
+  } else if (route === "admin-news") {
+    page = (
+      <NewsAdminPage
+        onNavigate={navigate}
+        path={path}
+        user={user}
+        news={news}
+        onNewsSaved={() => refreshNews({ isBackground: true })}
+      />
     );
-  }
-
-  if (route === "themes-upload") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <ThemeUploadPage onNavigate={navigate} path={path} user={user} />
-      </>
+  } else if (route === "news") {
+    page = (
+      <NewsListPage
+        onNavigate={navigate}
+        news={news}
+        isLoading={newsLoading}
+        loadError={newsLoadError}
+      />
     );
-  }
-
-  if (route === "account") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <AccountPage onNavigate={navigate} path={path} user={user} />
-      </>
-    );
-  }
-
-  if (route === "privacy") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <PrivacyPage onNavigate={navigate} path={path} user={user} />
-      </>
-    );
-  }
-
-  if (route === "documentation") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <DocumentationPage onNavigate={navigate} path={path} user={user} />
-      </>
-    );
-  }
-
-  if (route === "admin-news") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <NewsAdminPage
-          onNavigate={navigate}
-          path={path}
-          user={user}
-          news={news}
-          onNewsSaved={() => refreshNews({ isBackground: true })}
-        />
-      </>
-    );
-  }
-
-  if (route === "news") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <NewsListPage
-          onNavigate={navigate}
-          news={news}
-          isLoading={newsLoading}
-          loadError={newsLoadError}
-        />
-      </>
-    );
-  }
-
-  if (route === "article") {
-    const slug = path.replace("/news/", "");
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <NewsArticlePage slug={slug} onNavigate={navigate} news={news} />
-      </>
-    );
-  }
-
-  if (route === "not-found") {
-    return (
-      <>
-        <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-        <NotFoundPage onNavigate={navigate} />
-      </>
-    );
+  } else if (route === "article") {
+    page = <NewsArticlePage slug={path.replace("/news/", "")} onNavigate={navigate} news={news} />;
+  } else if (route === "not-found") {
+    page = <NotFoundPage onNavigate={navigate} />;
+  } else {
+    page = <HomePage onNavigate={navigate} news={news} />;
   }
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
+      <div className="grid-glow" aria-hidden />
       <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
-      <HomePage onNavigate={navigate} path={path} news={news} />
-    </>
+      <SiteHeader
+        path={path}
+        onNavigate={navigate}
+        user={user}
+        sections={route === "home" ? homeSections : undefined}
+      />
+      {page}
+      <SiteFooter onNavigate={navigate} />
+    </div>
   );
 }

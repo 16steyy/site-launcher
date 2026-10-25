@@ -7,5 +7,5 @@ import zh from "./documentation/zh.md?raw";
 const DOCUMENTATION_MARKDOWN = { ru, en, zh, de, es };
 
 export function getDocumentationMarkdown(locale) {
-  return DOCUMENTATION_MARKDOWN[locale] || DOCUMENTATION.en;
+  return DOCUMENTATION_MARKDOWN[locale] || DOCUMENTATION_MARKDOWN.en;
 }

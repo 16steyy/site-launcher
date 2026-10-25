@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 
-import SiteHeader from "../SiteHeader";
 import { useI18n } from "../../i18n/I18nProvider";
 
 const THEMES_CATALOG_URL = "/data/themes.json";
@@ -11,7 +10,7 @@ function ThemePreview({ theme, className = "" }) {
   if (!theme.preview || imageFailed) {
     return (
       <div
-        className={`flex h-full items-center justify-center bg-gradient-to-br from-indigo-500/15 via-transparent to-violet-500/15 text-sm font-semibold text-white/35 ${className}`}
+        className={`flex h-full items-center justify-center bg-gradient-to-br from-accent-from/20 via-transparent to-accent-to/10 text-sm font-semibold text-fg-faint ${className}`}
       >
         16Launcher
       </div>
@@ -67,7 +66,7 @@ function ThemeModal({ theme, copy, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="theme-modal-title"
-        className="max-h-[min(800px,calc(100vh-2rem))] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/15 bg-[#15182d] shadow-2xl"
+        className="max-h-[min(800px,calc(100vh-2rem))] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/10 bg-ink-1 shadow-2xl"
       >
         <div className="relative aspect-video w-full overflow-hidden bg-white/[0.04]">
           <ThemePreview theme={theme} />
@@ -87,31 +86,31 @@ function ThemeModal({ theme, copy, onClose }) {
             <div>
               <h2
                 id="theme-modal-title"
-                className="text-3xl font-extrabold text-white"
+                className="text-3xl font-bold text-white"
               >
                 {theme.name}
               </h2>
 
-              <p className="mt-1 text-sm font-semibold text-white/55">
+              <p className="mt-1 text-sm font-semibold text-fg-muted">
                 {copy.author}: {theme.author || "—"}
               </p>
             </div>
 
             {theme.version && (
-              <span className="rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/60">
+              <span className="rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold text-fg-muted">
                 v{theme.version}
               </span>
             )}
           </div>
 
           {theme.description && (
-            <p className="mt-5 whitespace-pre-line text-base leading-relaxed text-white/70">
+            <p className="mt-5 whitespace-pre-line text-base leading-relaxed text-fg-muted">
               {theme.description}
             </p>
           )}
 
           <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-white/60">
+            <h3 className="text-sm font-bold text-fg-muted">
               {copy.files || "Файлы темы"}
             </h3>
 
@@ -119,7 +118,7 @@ function ThemeModal({ theme, copy, onClose }) {
               {files.map((file) => (
                 <li
                   key={file}
-                  className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-sm text-white/75"
+                  className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-sm text-fg-muted"
                 >
                   {file}
                 </li>
@@ -129,7 +128,7 @@ function ThemeModal({ theme, copy, onClose }) {
 
           {theme.version && (
             <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white/60">
+              <h3 className="text-sm font-bold text-fg-muted">
                 {copy.versionHistory || "История версий"}
               </h3>
 
@@ -140,13 +139,13 @@ function ThemeModal({ theme, copy, onClose }) {
                       v{theme.version}
                     </span>
                     {theme.changelog && (
-                      <p className="mt-1 text-xs text-white/50">
+                      <p className="mt-1 text-xs text-fg-faint">
                         {theme.changelog}
                       </p>
                     )}
                   </div>
 
-                  <span className="text-right text-xs text-white/50">
+                  <span className="text-right text-xs text-fg-faint">
                     {copy.currentVersion || "Текущая версия"}
                     {theme.updated_at ? ` · ${theme.updated_at}` : ""}
                   </span>
@@ -159,18 +158,18 @@ function ThemeModal({ theme, copy, onClose }) {
                       className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2"
                     >
                       <div>
-                        <span className="font-semibold text-white/75">
+                        <span className="font-semibold text-fg-muted">
                           v{version.version}
                         </span>
 
                         {version.description && (
-                          <p className="mt-1 text-xs text-white/40">
+                          <p className="mt-1 text-xs text-fg-faint">
                             {version.description}
                           </p>
                         )}
                       </div>
 
-                      <span className="whitespace-nowrap text-xs text-white/40">
+                      <span className="whitespace-nowrap text-xs text-fg-faint">
                         {version.date}
                       </span>
                     </div>
@@ -181,7 +180,7 @@ function ThemeModal({ theme, copy, onClose }) {
           )}
 
           {(theme.first_published_at || theme.published_at) && (
-            <p className="mt-4 text-xs text-white/40">
+            <p className="mt-4 text-xs text-fg-faint">
               {copy.published || "Опубликовано"}:{" "}
               {theme.first_published_at || theme.published_at}
               {theme.updated_at &&
@@ -200,7 +199,7 @@ function ThemeModal({ theme, copy, onClose }) {
               <a
                 href={theme.download}
                 download
-                className="inline-flex items-center justify-center rounded-xl bg-accent px-5 py-3 text-sm font-bold text-white transition hover:brightness-110"
+                className="btn btn-accent"
               >
                 {copy.download}
               </a>
@@ -209,7 +208,7 @@ function ThemeModal({ theme, copy, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/[0.05] px-5 py-3 text-sm font-bold text-white/80 transition hover:text-white"
+              className="btn btn-soft"
             >
               {copy.close || "Закрыть"}
             </button>
@@ -305,21 +304,20 @@ export default function ThemesPage({ onNavigate, path, user }) {
   }, [themes, searchQuery]);
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-[1240px] px-4 pb-20 pt-10 md:px-6">
-      <SiteHeader path={path} onNavigate={onNavigate} user={user} />
+    <main className="mx-auto w-full max-w-[1240px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
 
       <section className="text-center">
-        <h1 className="hero-title text-5xl font-extrabold tracking-tight md:text-7xl">
+        <h1 className="page-title">
           {copy.title}
         </h1>
 
-        <p className="mx-auto mt-4 max-w-3xl text-lg text-white/70 md:text-2xl">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-muted">
           {copy.subtitle}
         </p>
 
         <a
           href="/themes/upload"
-          className="mt-8 inline-flex rounded-xl bg-accent px-6 py-3 text-base font-bold text-white transition hover:brightness-110"
+          className="btn btn-accent btn-lg mt-8"
           onClick={(event) => {
             event.preventDefault();
             onNavigate("/themes/upload");
@@ -344,7 +342,7 @@ export default function ThemesPage({ onNavigate, path, user }) {
               copy.searchPlaceholder ||
               "Поиск тем по названию, автору или описанию"
             }
-            className="w-full rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-4 pr-12 text-base text-white outline-none placeholder:text-white/40 transition focus:border-accent focus:ring-2 focus:ring-accent/40"
+            className="input pr-12"
           />
 
           {searchQuery && (
@@ -352,7 +350,7 @@ export default function ThemesPage({ onNavigate, path, user }) {
               type="button"
               aria-label={copy.clearSearch || "Очистить поиск"}
               onClick={() => setSearchQuery("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white/50 transition hover:text-white"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-fg-faint transition hover:text-white"
             >
               ×
             </button>
@@ -361,22 +359,22 @@ export default function ThemesPage({ onNavigate, path, user }) {
       </section>
 
       {loading && (
-        <p className="mt-12 text-center text-white/50">
+        <p className="mt-12 text-center text-fg-faint">
           {messages.news?.loading || "…"}
         </p>
       )}
 
       {!loading && themes.length === 0 && (
-        <section className="mx-auto mt-14 max-w-xl rounded-3xl border border-white/15 bg-white/[0.04] p-8 text-center">
+        <section className="panel mx-auto mt-14 max-w-xl p-8 text-center">
           <p className="text-xl font-semibold text-white/80">
             {copy.empty}
           </p>
 
-          <p className="mt-3 text-white/60">{copy.emptyCta}</p>
+          <p className="mt-3 text-fg-muted">{copy.emptyCta}</p>
 
           <a
             href="/themes/upload"
-            className="mt-6 inline-flex rounded-xl bg-accent px-5 py-3 text-base font-bold text-white transition hover:brightness-110"
+            className="btn btn-accent btn-lg mt-6"
             onClick={(event) => {
               event.preventDefault();
               onNavigate("/themes/upload");
@@ -388,12 +386,12 @@ export default function ThemesPage({ onNavigate, path, user }) {
       )}
 
       {!loading && themes.length > 0 && filteredThemes.length === 0 && (
-        <section className="mx-auto mt-14 max-w-xl rounded-3xl border border-white/15 bg-white/[0.04] p-8 text-center">
+        <section className="panel mx-auto mt-14 max-w-xl p-8 text-center">
           <p className="text-xl font-semibold text-white/80">
             {copy.searchEmpty || "Ничего не найдено"}
           </p>
 
-          <p className="mt-3 text-white/60">
+          <p className="mt-3 text-fg-muted">
             {copy.searchEmptyHint ||
               "Попробуйте изменить поисковый запрос."}
           </p>
@@ -401,7 +399,7 @@ export default function ThemesPage({ onNavigate, path, user }) {
           <button
             type="button"
             onClick={() => setSearchQuery("")}
-            className="mt-6 inline-flex rounded-xl bg-accent px-5 py-3 text-base font-bold text-white transition hover:brightness-110"
+            className="btn btn-accent btn-lg mt-6"
           >
             {copy.clearSearch || "Очистить поиск"}
           </button>
@@ -409,13 +407,13 @@ export default function ThemesPage({ onNavigate, path, user }) {
       )}
 
       {!loading && filteredThemes.length > 0 && (
-        <section className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredThemes.map((theme) => (
             <button
               key={theme.id}
               type="button"
               aria-label={`${copy.open || "Открыть обзор"}: ${theme.name}`}
-              className="glass group flex flex-col overflow-hidden rounded-3xl border border-white/10 text-left transition hover:-translate-y-1 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/60"
+              className="card card-hover group flex flex-col overflow-hidden text-left"
               onClick={() => setSelectedTheme(theme)}
             >
               <div className="aspect-video w-full overflow-hidden bg-white/[0.04]">
@@ -426,29 +424,29 @@ export default function ThemesPage({ onNavigate, path, user }) {
               </div>
 
               <div className="flex flex-1 flex-col p-5 md:p-6">
-                <h2 className="text-2xl font-extrabold leading-tight">
+                <h2 className="text-xl font-semibold leading-tight text-white">
                   {theme.name}
                 </h2>
 
-                <p className="mt-1 text-sm font-semibold text-white/55">
+                <p className="mt-1 text-sm font-semibold text-fg-muted">
                   {t("themes.author", {
                     author: theme.author || "—",
                   })}
                 </p>
 
                 {theme.description && (
-                  <p className="mt-3 line-clamp-3 flex-1 text-base text-white/70">
+                  <p className="mt-3 line-clamp-3 flex-1 text-base text-fg-muted">
                     {theme.description}
                   </p>
                 )}
 
                 {theme.version && (
-                  <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-white/40">
-                    v{theme.version}
+                  <p className="mt-3">
+                    <span className="chip">v{theme.version}</span>
                   </p>
                 )}
 
-                <span className="mt-5 inline-flex items-center justify-center rounded-xl bg-accent px-5 py-3 text-sm font-bold text-white transition group-hover:brightness-110">
+                <span className="btn btn-soft mt-5 group-hover:border-accent-to/40">
                   {copy.open || "Открыть обзор"}
                 </span>
               </div>

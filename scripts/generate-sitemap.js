@@ -98,6 +98,7 @@ async function generateSitemap() {
     renderUrlEntry({ pathname: "/themes", changefreq: "weekly", priority: "0.7" }),
     renderUrlEntry({ pathname: "/privacy", changefreq: "yearly", priority: "0.5" }),
     renderUrlEntry({ pathname: "/documentation", changefreq: "yearly", priority: "0.5" }),
+    renderUrlEntry({ pathname: "/status", changefreq: "daily", priority: "0.4" }),
     renderUrlEntry({ pathname: "/themes/upload", changefreq: "monthly", priority: "0.4" }),
     renderUrlEntry({ pathname: "/account", changefreq: "monthly", priority: "0.3", lastmod: undefined }),
     ...posts.map((post) =>

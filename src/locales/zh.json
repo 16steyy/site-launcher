@@ -20,18 +20,20 @@
     "faq": "常见问题",
     "download": "下载",
     "privacy": "隐私政策",
-    "sections": "页面章节"
+    "sections": "页面章节",
+    "pages": "网站页面",
+    "status": "服务状态"
   },
   "hero": {
     "taglineHighlight": "你的选择",
     "taglineRest": "，畅玩 Minecraft",
     "install": "安装启动器",
-    "previewAlt": "打开 16Launcher 界面截图",
     "stats": {
       "stars": "GitHub 星标",
       "downloads": "下载量",
       "version": "最新版本"
-    }
+    },
+    "otherPlatforms": "其他平台"
   },
   "latestNews": {
     "title": "最新更新",
@@ -54,8 +56,14 @@
   "shots": {
     "mods": {
       "lines": [
-        { "accent": "在启动器内", "rest": "直接下载内容。" },
-        { "accent": "便捷", "rest": "搜索、筛选，为你的整合包留出空间！" }
+        {
+          "accent": "在启动器内",
+          "rest": "直接下载内容。"
+        },
+        {
+          "accent": "便捷",
+          "rest": "搜索、筛选，为你的整合包留出空间！"
+        }
       ]
     },
     "settings": {
@@ -113,12 +121,19 @@
     "forYou": "推荐",
     "recommended": "推荐",
     "install": "安装",
-    "hide": "收起",
-    "choose": "选择"
+    "version": "版本 {{version}}",
+    "allReleases": "GitHub 上的全部版本"
   },
   "footer": {
     "disclaimer": "16Launcher 不是 Mojang 或 Microsoft 的官方产品。",
-    "privacy": "隐私政策"
+    "privacy": "隐私政策",
+    "status": "服务状态",
+    "statusLabel": {
+      "operational": "所有服务正常",
+      "degraded": "API 响应缓慢",
+      "down": "API 无法访问",
+      "checking": "正在检查服务…"
+    }
   },
   "notFoundPage": {
     "title": "页面未找到",
@@ -305,5 +320,93 @@
       "required": "请填写标题、slug 和日期",
       "markdownLoad": "无法加载文章正文"
     }
+  },
+  "gallery": {
+    "zoom": "放大"
+  },
+  "markdown": {
+    "copyCode": "复制",
+    "copied": "已复制",
+    "copyLink": "复制本节链接",
+    "linkCopied": "链接已复制"
+  },
+  "documentation": {
+    "title": "文档",
+    "description": "16Launcher 主题说明：安装、创建、theme.json、style.css、选择器和常见问题。",
+    "badge": "主题",
+    "updated": "更新于 2026 年 10 月 22 日",
+    "onThisPage": "本页目录",
+    "backToTop": "回到顶部",
+    "footerTitle": "做好主题了？",
+    "footerText": "上传到主题目录，审核通过后就会出现在网站上。",
+    "browseThemes": "主题目录",
+    "uploadTheme": "上传主题"
+  },
+  "status": {
+    "title": "服务状态",
+    "subtitle": "启动器 API、登录、下载和网站当前是否可用。本页每 30 秒自动重新检查一次。",
+    "description": "16Launcher 各项服务的实时状态：API、登录、下载镜像、主题目录和网站。",
+    "overall": {
+      "operational": "一切正常",
+      "degraded": "部分服务异常",
+      "major": "严重故障",
+      "checking": "正在检查…"
+    },
+    "checkedJustNow": "刚刚检查",
+    "checkedAgo": "{{seconds}} 秒前检查",
+    "refresh": "立即检查",
+    "states": {
+      "operational": "正常",
+      "degraded": "缓慢",
+      "down": "不可用",
+      "disabled": "已关闭",
+      "checking": "检查中"
+    },
+    "groups": {
+      "launcher": "启动器",
+      "web": "网站与下载"
+    },
+    "services": {
+      "api": {
+        "name": "启动器 API",
+        "description": "资料、好友、房间、成就"
+      },
+      "auth": {
+        "name": "登录",
+        "description": "登录、注册、邮箱验证码"
+      },
+      "discord": {
+        "name": "Discord 登录",
+        "description": "OAuth 登录"
+      },
+      "downloads": {
+        "name": "下载镜像",
+        "description": "安装包与自动更新"
+      },
+      "site": {
+        "name": "网站",
+        "description": "16-launcher.ru"
+      },
+      "themes": {
+        "name": "主题目录",
+        "description": "主题列表与下载包"
+      },
+      "news": {
+        "name": "新闻",
+        "description": "更新动态"
+      },
+      "turn": {
+        "name": "联机",
+        "description": "房间与好友联机"
+      }
+    },
+    "errors": {
+      "timeout": "8 秒内无响应",
+      "network": "无法连接",
+      "unhealthy": "服务报告了错误"
+    },
+    "ms": "{{value}} 毫秒",
+    "footnote": "检查是在你的浏览器里进行的，所以 VPN、广告拦截器或运营商的问题也可能显示为故障。如果确实有东西坏了，请告诉我们：",
+    "or": "或"
   }
 }

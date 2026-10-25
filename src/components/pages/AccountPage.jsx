@@ -9,7 +9,6 @@ import {
 import { fetchMySubmissions, fetchThemesCatalog } from "../../api/themes.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import { isNewsAdmin } from "../../lib/newsAdmin.js";
-import SiteHeader from "../SiteHeader";
 import AccountAvatar from "../AccountAvatar";
 import { useI18n } from "../../i18n/I18nProvider";
 
@@ -70,7 +69,7 @@ function PasswordField({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-bold text-white/80">
+      <label htmlFor={id} className="block text-sm font-semibold text-fg">
         {label}
       </label>
       <div className="relative mt-2">
@@ -82,7 +81,7 @@ function PasswordField({
           value={value}
           disabled={disabled}
           onChange={onChange}
-          className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 pr-12 text-base text-white outline-none transition focus:border-accent/50"
+          className="input pr-12"
         />
         <button
           type="button"
@@ -90,7 +89,7 @@ function PasswordField({
           disabled={disabled}
           onClick={() => setVisible((prev) => !prev)}
           aria-label={visible ? hideLabel : showLabel}
-          className="absolute inset-y-0 right-2 my-auto flex h-9 w-9 items-center justify-center rounded-lg text-white/55 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+          className="absolute inset-y-0 right-2 my-auto flex h-9 w-9 items-center justify-center rounded-lg text-fg-muted transition hover:bg-white/10 hover:text-white disabled:opacity-40"
         >
           <EyeIcon open={visible} />
         </button>
@@ -134,7 +133,7 @@ function VerificationCodeField({
                     ? "border-accent/45 bg-accent/15 text-white"
                     : isActive
                       ? "border-accent/40 bg-black/50 text-white/30"
-                      : "border-white/15 bg-black/40 text-white/20"
+                      : "border-white/15 bg-ink-0/60 text-white/20"
                 }`}
               >
                 {filled ? digit : "·"}
@@ -188,7 +187,7 @@ function ThemeStatusBadge({ status, copy }) {
 
   return (
     <span
-      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[0.68rem] font-bold uppercase tracking-wider ${styles[key]}`}
+      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[0.68rem] font-bold ${styles[key]}`}
     >
       {labels[key]}
     </span>
@@ -199,7 +198,7 @@ function UserThemeCard({ theme, copy }) {
   const isPublished = theme.status === "approved" || !theme.status;
 
   return (
-    <article className="account-theme-card group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+    <article className="card card-hover group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
       <div className="relative aspect-video w-full overflow-hidden bg-white/[0.04]">
         {theme.preview ? (
           <img
@@ -209,7 +208,7 @@ function UserThemeCard({ theme, copy }) {
             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-indigo-500/10 via-transparent to-violet-500/10 text-sm font-bold text-white/30">
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-accent-from/15 via-transparent to-accent-to/10 text-sm font-bold text-white/30">
             16Launcher
           </div>
         )}
@@ -218,26 +217,26 @@ function UserThemeCard({ theme, copy }) {
         </div>
       </div>
       <div className="flex flex-1 flex-col p-4 md:p-5">
-        <h3 className="text-lg font-extrabold leading-tight">{theme.name}</h3>
+        <h3 className="text-lg font-bold leading-tight">{theme.name}</h3>
         {theme.version && (
-          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/40">
+          <p className="mt-1 text-xs font-semibold text-fg-faint">
             v{theme.version}
           </p>
         )}
         {theme.description && (
-          <p className="mt-2 flex-1 text-sm text-white/65 line-clamp-2">{theme.description}</p>
+          <p className="mt-2 flex-1 text-sm text-fg-muted line-clamp-2">{theme.description}</p>
         )}
         {isPublished && theme.download && (
           <a
             href={theme.download}
             download
-            className="interactive-cta mt-4 inline-flex items-center justify-center rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-white"
+            className="btn btn-accent mt-4"
           >
             {copy.downloadTheme}
           </a>
         )}
         {!isPublished && theme.submitted_at && (
-          <p className="mt-3 text-xs text-white/40">
+          <p className="mt-3 text-xs text-fg-faint">
             {copy.submittedAt}: {theme.submitted_at}
           </p>
         )}
@@ -478,31 +477,28 @@ export default function AccountPage({ onNavigate, path, user }) {
   }
 
   return (
-    <main className="account-page mx-auto min-h-screen w-full max-w-[1100px] px-4 pb-20 pt-10 md:px-6">
-      <SiteHeader path={path} onNavigate={onNavigate} user={user} />
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-20 pt-12 md:px-6 md:pt-16">
 
       <section className="relative text-center">
-        <div className="account-hero-glow pointer-events-none" aria-hidden />
-        <h1 className="hero-title text-5xl font-extrabold tracking-tight md:text-6xl">
+        <h1 className="page-title">
           {copy.title}
         </h1>
         {user && (
-          <p className="mx-auto mt-3 max-w-lg text-base text-white/55 md:text-lg">
+          <p className="mx-auto mt-3 max-w-lg text-base text-fg-muted md:text-lg">
             {copy.profileSubtitle}
           </p>
         )}
       </section>
 
       {loading ? (
-        <p className="mt-10 text-center text-white/50">…</p>
+        <p className="mt-10 text-center text-fg-faint">…</p>
       ) : user ? (
         <div className="mt-10 space-y-10">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-stretch">
-            <div className="account-profile-card shot-glass-panel relative overflow-hidden rounded-3xl p-6 md:p-8">
-              <div className="account-card-shimmer pointer-events-none" aria-hidden />
+            <div className="panel relative overflow-hidden rounded-3xl p-6 md:p-8">
               <div className="relative z-10">
                 <div className="flex items-start justify-between gap-4">
-                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/45">
+                  <p className="text-sm font-bold text-fg-faint">
                     {copy.loggedInAs || copy.nickname}
                   </p>
                   <span className="account-online-dot" title={copy.online} aria-hidden />
@@ -517,21 +513,21 @@ export default function AccountPage({ onNavigate, path, user }) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="account-nickname-gradient truncate text-3xl font-extrabold md:text-4xl">
+                    <p className="text-white truncate text-3xl font-bold md:text-4xl">
                       {user.nickname}
                     </p>
                     {user.email && (
-                      <p className="mt-1 truncate text-sm text-white/50">{user.email}</p>
+                      <p className="mt-1 truncate text-sm text-fg-faint">{user.email}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-2">
-                  <span className="account-stat-pill">
+                  <span className="chip">
                     {t("account.themesCount", { count: themeCount })}
                   </span>
                   {publishedCount > 0 && (
-                    <span className="account-stat-pill account-stat-pill--accent">
+                    <span className="chip chip-accent">
                       {t("account.publishedCount", { count: publishedCount })}
                     </span>
                   )}
@@ -541,7 +537,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                   <button
                     type="button"
                     onClick={() => onNavigate("/themes/upload")}
-                    className="interactive-cta rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white"
+                    className="btn btn-accent"
                   >
                     {copy.uploadTheme}
                   </button>
@@ -549,7 +545,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                     <button
                       type="button"
                       onClick={() => onNavigate("/admin/news")}
-                      className="rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/85 transition hover:text-white"
+                      className="btn btn-soft"
                     >
                       {messages.newsAdmin?.openAdmin || "News admin"}
                     </button>
@@ -557,7 +553,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="interactive-row rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/75 transition hover:text-white"
+                    className="btn btn-soft"
                   >
                     {copy.logout}
                   </button>
@@ -566,12 +562,12 @@ export default function AccountPage({ onNavigate, path, user }) {
             </div>
 
             <div className="flex flex-col">
-              <p className="mb-3 text-center text-sm font-bold uppercase tracking-wider text-white/40 lg:text-left">
+              <p className="mb-3 text-center text-sm font-bold text-fg-faint lg:text-left">
                 {copy.skinPreview || "3D skin"}
               </p>
               <Suspense
                 fallback={
-                  <div className="flex h-[min(420px,50vh)] flex-1 items-center justify-center rounded-3xl border border-white/15 bg-black/40 text-white/40">
+                  <div className="flex h-[min(420px,50vh)] flex-1 items-center justify-center rounded-3xl border border-white/15 bg-ink-0/60 text-fg-faint">
                     …
                   </div>
                 }
@@ -579,10 +575,10 @@ export default function AccountPage({ onNavigate, path, user }) {
                 <SkinPreview3d
                   user={user}
                   interactive={false}
-                  className="account-skin-frame relative flex h-[min(420px,50vh)] w-full flex-1 flex-col overflow-hidden rounded-3xl border border-white/15 bg-black/40 shadow-xl"
+                  className="relative flex h-[min(420px,50vh)] w-full flex-1 flex-col overflow-hidden rounded-3xl border border-white/15 bg-ink-0/60 shadow-xl"
                 />
               </Suspense>
-              <p className="mt-2 text-center text-xs text-white/35 lg:text-left">
+              <p className="mt-2 text-center text-xs text-fg-faint lg:text-left">
                 {copy.skinPreviewHint}
               </p>
             </div>
@@ -591,32 +587,32 @@ export default function AccountPage({ onNavigate, path, user }) {
           <section className="reveal">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-extrabold md:text-3xl">{copy.myWorks}</h2>
-                <p className="mt-1 text-sm text-white/50">{copy.myWorksSubtitle}</p>
+                <h2 className="text-2xl font-bold md:text-3xl">{copy.myWorks}</h2>
+                <p className="mt-1 text-sm text-fg-faint">{copy.myWorksSubtitle}</p>
               </div>
               <button
                 type="button"
                 onClick={() => onNavigate("/themes")}
-                className="text-sm font-bold text-accent transition hover:brightness-125"
+                className="text-sm font-bold text-accent-hi transition"
               >
                 {copy.browseAllThemes} →
               </button>
             </div>
 
             {themesLoading && (
-              <p className="rounded-2xl border border-white/10 bg-white/[0.03] py-10 text-center text-white/45">
+              <p className="rounded-2xl border border-white/10 bg-white/[0.03] py-10 text-center text-fg-faint">
                 …
               </p>
             )}
 
             {!themesLoading && userThemes.length === 0 && (
-              <div className="account-empty-works shot-glass-panel rounded-3xl p-8 text-center md:p-10">
+              <div className="panel rounded-3xl p-8 text-center md:p-10">
                 <p className="text-xl font-semibold text-white/80">{copy.myWorksEmpty}</p>
-                <p className="mx-auto mt-2 max-w-md text-sm text-white/55">{copy.myWorksEmptyHint}</p>
+                <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">{copy.myWorksEmptyHint}</p>
                 <button
                   type="button"
                   onClick={() => onNavigate("/themes/upload")}
-                  className="interactive-cta mt-6 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white"
+                  className="btn btn-accent mt-6"
                 >
                   {copy.uploadTheme}
                 </button>
@@ -650,7 +646,7 @@ export default function AccountPage({ onNavigate, path, user }) {
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "login"
                   ? "bg-accent text-white"
-                  : "border border-white/20 bg-white/5 text-white/70"
+                  : "border border-white/20 bg-white/5 text-fg-muted"
               }`}
             >
               {copy.login}
@@ -666,7 +662,7 @@ export default function AccountPage({ onNavigate, path, user }) {
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "register"
                   ? "bg-accent text-white"
-                  : "border border-white/20 bg-white/5 text-white/70"
+                  : "border border-white/20 bg-white/5 text-fg-muted"
               }`}
             >
               {copy.register}
@@ -675,11 +671,11 @@ export default function AccountPage({ onNavigate, path, user }) {
 
           {tab === "login" ? (
             <form
-              className="mt-8 space-y-5 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-8"
+              className="panel mt-8 space-y-5 p-6 md:p-8"
               onSubmit={handleLoginSubmit}
             >
               <div>
-                <label htmlFor="login-field" className="block text-sm font-bold text-white/80">
+                <label htmlFor="login-field" className="block text-sm font-semibold text-fg">
                   {copy.loginField || copy.login}
                 </label>
                 <input
@@ -692,7 +688,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                   onChange={(event) =>
                     setLoginForm((prev) => ({ ...prev, login: event.target.value }))
                   }
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
+                  className="input mt-2"
                 />
               </div>
               <PasswordField
@@ -708,38 +704,38 @@ export default function AccountPage({ onNavigate, path, user }) {
                 }
               />
               {formError && (
-                <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
+                <p className="notice notice-error">
                   {formError}
                 </p>
               )}
               <button
                 type="submit"
                 disabled={submitting}
-                className="interactive-cta w-full rounded-xl bg-accent px-6 py-3 text-base font-bold text-white disabled:opacity-60"
+                className="btn btn-accent btn-lg w-full disabled:opacity-60"
               >
                 {copy.loginSubmit}
               </button>
             </form>
           ) : (
             <form
-              className="mt-8 space-y-5 rounded-3xl border border-white/15 bg-white/[0.04] p-6 md:p-8"
+              className="panel mt-8 space-y-5 p-6 md:p-8"
               onSubmit={handleRegisterSubmit}
             >
               {registerStep === "verify" ? (
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-accent/25 bg-gradient-to-b from-accent/10 to-black/20 px-5 py-7 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80">
+                    <p className="text-xs font-semibold text-accent-hi">
                       {copy.verificationStepLabel || "Подтверждение"}
                     </p>
                     <h3 className="mt-2 text-lg font-semibold text-white">
                       {copy.verificationTitle || "Введите код из письма"}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/65">
+                    <p className="mt-2 text-sm leading-relaxed text-fg-muted">
                       {t("account.verificationHintEmail", {
                         email: registerForm.email.trim(),
                       })}
                     </p>
-                    <p className="mt-1 text-xs text-white/45">
+                    <p className="mt-1 text-xs text-fg-faint">
                       {copy.codeSpamHint || "Если письма нет — загляните в «Спам»"}
                     </p>
 
@@ -763,7 +759,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                       type="button"
                       disabled={sendingCode || submitting || resendIn > 0}
                       onClick={() => void handleSendCode()}
-                      className="mt-5 text-sm font-semibold text-accent/90 underline-offset-2 transition hover:text-accent hover:underline disabled:opacity-50"
+                      className="mt-5 text-sm font-semibold text-accent-hi underline-offset-2 transition hover:text-white hover:underline disabled:opacity-50"
                     >
                       {sendingCode
                         ? copy.sendingCode || "Отправка…"
@@ -774,12 +770,12 @@ export default function AccountPage({ onNavigate, path, user }) {
                   </div>
 
                   {formInfo && !formError && (
-                    <p className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100">
+                    <p className="notice notice-success">
                       {formInfo}
                     </p>
                   )}
                   {formError && (
-                    <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
+                    <p className="notice notice-error">
                       {formError}
                     </p>
                   )}
@@ -789,7 +785,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                       type="button"
                       disabled={submitting || sendingCode}
                       onClick={resetRegisterFlow}
-                      className="flex-1 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-bold text-white/80 transition hover:text-white disabled:opacity-60"
+                      className="btn btn-soft flex-1 disabled:opacity-60"
                     >
                       {copy.backToForm || "Назад"}
                     </button>
@@ -800,7 +796,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                         sendingCode ||
                         registerForm.verification_code.length !== CODE_LENGTH
                       }
-                      className="interactive-cta flex-[1.4] rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white disabled:opacity-60"
+                      className="btn btn-accent flex-[1.4] disabled:opacity-60"
                     >
                       {copy.registerSubmit}
                     </button>
@@ -809,7 +805,7 @@ export default function AccountPage({ onNavigate, path, user }) {
               ) : (
                 <>
                   <div>
-                    <label htmlFor="reg-nickname" className="block text-sm font-bold text-white/80">
+                    <label htmlFor="reg-nickname" className="block text-sm font-semibold text-fg">
                       {copy.nickname}
                     </label>
                     <input
@@ -822,11 +818,11 @@ export default function AccountPage({ onNavigate, path, user }) {
                       onChange={(event) =>
                         setRegisterForm((prev) => ({ ...prev, nickname: event.target.value }))
                       }
-                      className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
+                      className="input mt-2"
                     />
                   </div>
                   <div>
-                    <label htmlFor="reg-email" className="block text-sm font-bold text-white/80">
+                    <label htmlFor="reg-email" className="block text-sm font-semibold text-fg">
                       {copy.email}
                     </label>
                     <input
@@ -839,7 +835,7 @@ export default function AccountPage({ onNavigate, path, user }) {
                       onChange={(event) =>
                         setRegisterForm((prev) => ({ ...prev, email: event.target.value }))
                       }
-                      className="mt-2 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none transition focus:border-accent/50"
+                      className="input mt-2"
                     />
                   </div>
                   <PasswordField
@@ -855,14 +851,14 @@ export default function AccountPage({ onNavigate, path, user }) {
                     }
                   />
                   {formError && (
-                    <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200">
+                    <p className="notice notice-error">
                       {formError}
                     </p>
                   )}
                   <button
                     type="submit"
                     disabled={submitting || sendingCode}
-                    className="interactive-cta w-full rounded-xl bg-accent px-6 py-3 text-base font-bold text-white disabled:opacity-60"
+                    className="btn btn-accent btn-lg w-full disabled:opacity-60"
                   >
                     {emailVerificationRequired
                       ? copy.continueToCode || "Продолжить"
