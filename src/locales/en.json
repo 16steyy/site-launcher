@@ -191,6 +191,16 @@
     "uploadSubmit": "Submit for moderation",
     "uploadSuccess": "Theme submitted for moderation",
     "uploadSuccessHint": "Review usually takes 1–2 days",
+    "rulesTitle": "Theme submission rules",
+    "rulesIntro": "By submitting a theme you confirm that it follows these rules. Themes that break them will be rejected by moderators.",
+    "rules": [
+      "No 18+ content: nudity, pornography, excessive gore or shock content.",
+      "No copying other people's work: themes, images, fonts or code by other authors without their permission. Submit only what you made yourself or what is free to use.",
+      "No politics, propaganda, extremist symbols or calls to violence.",
+      "No insults, discrimination, harassment or hate speech.",
+      "No advertising, links to third-party services, malicious code or hidden functionality.",
+      "The theme name and description must not be misleading or pass your work off as someone else's."
+    ],
     "loginRequired": "Sign in to upload a theme",
     "versionHistory": "Version history",
     "currentVersion": "Current version",

@@ -191,6 +191,16 @@
     "uploadSubmit": "Zur Moderation senden",
     "uploadSuccess": "Theme zur Moderation gesendet",
     "uploadSuccessHint": "Die Prüfung dauert normalerweise 1–2 Tage",
+    "rulesTitle": "Regeln für das Einreichen von Themes",
+    "rulesIntro": "Mit dem Einreichen bestätigst du, dass dein Theme diese Regeln einhält. Themes, die dagegen verstoßen, werden von den Moderatoren abgelehnt.",
+    "rules": [
+      "Keine Inhalte ab 18: Nacktheit, Pornografie, übermäßige Gewalt oder Schockinhalte.",
+      "Kein Kopieren fremder Arbeiten: Themes, Bilder, Schriften oder Code anderer Autoren ohne deren Erlaubnis. Reiche nur ein, was du selbst gemacht hast oder frei verwenden darfst.",
+      "Keine Politik, Propaganda, extremistischen Symbole oder Aufrufe zur Gewalt.",
+      "Keine Beleidigungen, Diskriminierung, Mobbing oder Hassrede.",
+      "Keine Werbung, Links zu Drittdiensten, Schadcode oder versteckten Funktionen.",
+      "Name und Beschreibung des Themes dürfen nicht irreführen oder deine Arbeit als fremde Arbeit ausgeben."
+    ],
     "loginRequired": "Melde dich an, um ein Theme hochzuladen",
     "versionHistory": "Versionsverlauf",
     "currentVersion": "Aktuelle Version",

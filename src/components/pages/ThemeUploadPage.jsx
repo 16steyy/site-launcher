@@ -12,6 +12,7 @@ import { useI18n } from "../../i18n/I18nProvider";
 export default function ThemeUploadPage({ onNavigate, path, user }) {
   const { messages, t } = useI18n();
   const copy = messages.themes || {};
+  const rules = Array.isArray(copy.rules) ? copy.rules : [];
   const { loading: authLoading, isAuthenticated } = useAuth();
 
   const [name, setName] = useState("");
@@ -104,8 +105,21 @@ export default function ThemeUploadPage({ onNavigate, path, user }) {
           </div>
         </div>
       ) : (
+        <>
+        {rules.length > 0 && (
+          <section className="notice notice-warning mt-10 !p-5 md:!p-6">
+            <h2 className="text-base font-bold text-amber-100">{copy.rulesTitle}</h2>
+            <p className="mt-1 font-normal">{copy.rulesIntro}</p>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 font-normal">
+              {rules.map((rule) => (
+                <li key={rule}>{rule}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <form
-          className="panel mt-10 space-y-6 p-6 md:p-8"
+          className="panel mt-6 space-y-6 p-6 md:p-8"
           onSubmit={handleSubmit}
         >
           <div>
@@ -159,6 +173,7 @@ export default function ThemeUploadPage({ onNavigate, path, user }) {
             {status === "uploading" ? "…" : copy.uploadSubmit}
           </button>
         </form>
+        </>
       )}
     </main>
   );

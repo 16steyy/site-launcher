@@ -190,6 +190,16 @@
     "uploadSubmit": "Enviar a moderación",
     "uploadSuccess": "Tema enviado a moderación",
     "uploadSuccessHint": "La revisión suele tardar 1–2 días",
+    "rulesTitle": "Reglas para enviar temas",
+    "rulesIntro": "Al enviar un tema confirmas que cumple estas reglas. Los moderadores rechazarán los temas que las incumplan.",
+    "rules": [
+      "Nada de contenido +18: desnudos, pornografía, violencia excesiva o contenido impactante.",
+      "Prohibido copiar el trabajo de otros: temas, imágenes, fuentes o código de otros autores sin su permiso. Envía solo lo que hayas hecho tú o lo que se pueda usar libremente.",
+      "Nada de política, propaganda, símbolos extremistas ni llamamientos a la violencia.",
+      "Nada de insultos, discriminación, acoso ni discurso de odio.",
+      "Sin publicidad, enlaces a servicios de terceros, código malicioso ni funciones ocultas.",
+      "El nombre y la descripción del tema no deben engañar ni hacer pasar tu trabajo por el de otra persona."
+    ],
     "loginRequired": "Inicia sesión para subir un tema",
     "versionHistory": "Historial de versiones",
     "currentVersion": "Versión actual",
