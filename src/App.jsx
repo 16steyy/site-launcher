@@ -187,10 +187,12 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = NEWS_FETCH_TIMEOU
   }
 }
 
+// raw.githubusercontent.com first: its cache lives ~5 min. jsDelivr caches
+// branch refs (@main) for up to 12 h and ignores ?t=, so it is only a fallback.
 function newsSourceCandidates(relativePath) {
   return [
-    toAbsoluteUrl(NEWS_CDN_BASE, relativePath),
     toAbsoluteUrl(NEWS_RAW_BASE, relativePath),
+    toAbsoluteUrl(NEWS_CDN_BASE, relativePath),
   ];
 }
 
