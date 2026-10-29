@@ -56,6 +56,9 @@ export function buildMirrorUrl(mirrorBase, version, filename) {
 
 export function githubUrlToMirrorUrl(githubUrl, mirrorBase, version) {
   const filename = extractFilenameFromDownloadUrl(githubUrl);
+  // Fallback links point at the releases page (".../releases"), not a file:
+  // there is nothing to mirror, keep the original link instead of a 404.
+  if (!filename.includes(".")) return "";
   return buildMirrorUrl(mirrorBase, version, filename);
 }
 
