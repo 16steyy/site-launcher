@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>16Launcher — Новости лаунчера</title>
+    <link>https://16-launcher.ru/ru/news/</link>
+    <atom:link href="https://16-launcher.ru/rss.xml" rel="self" type="application/rss+xml" />
+    <description>Все обновления в одном месте. Нажми на карточку, чтобы открыть changelog.</description>
+    <language>ru</language>
+    <lastBuildDate>Thu, 29 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <image>
+      <url>https://16-launcher.ru/icon.png</url>
+      <title>16Launcher — Новости лаунчера</title>
+      <link>https://16-launcher.ru/ru/news/</link>
+    </image>
+    <item>
+      <title>Обновление 3.3.0</title>
+      <link>https://16-launcher.ru/ru/news/update-3-3-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-3-0/</guid>
+      <pubDate>Thu, 29 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Новая вкладка сборок, бэкапы, анализатор конфликтов и логов, новый интерфейс.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.3.0/assets/cover.png" alt="" /></p><p>Новая вкладка сборок, бэкапы, анализатор конфликтов и логов, новый интерфейс.</p>]]></content:encoded>
+      <category>3.3.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.3.0/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.9</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-9/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-9/</guid>
+      <pubDate>Fri, 25 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Исправление существующих багов, добавление новых функций.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.9/assets/cover.png" alt="" /></p><p>Исправление существующих багов, добавление новых функций.</p>]]></content:encoded>
+      <category>3.2.9</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.9/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.8</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-8/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-8/</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Исправление последних существующих багов.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.8/assets/cover.png" alt="" /></p><p>Исправление последних существующих багов.</p>]]></content:encoded>
+      <category>3.2.8</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.8/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.7</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-7/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-7/</guid>
+      <pubDate>Sat, 29 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Добавлено обучение для новых полльзователей.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.7/assets/cover.png" alt="" /></p><p>Добавлено обучение для новых полльзователей.</p>]]></content:encoded>
+      <category>3.2.7</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.7/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.2</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-2/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-2/</guid>
+      <pubDate>Mon, 24 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Добавлено обучение для новых полльзователей.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.2/assets/cover.png" alt="" /></p><p>Добавлено обучение для новых полльзователей.</p>]]></content:encoded>
+      <category>3.2.2</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.2/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.1</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-1/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-1/</guid>
+      <pubDate>Sun, 23 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Улучшение вкладки комнат и их приватизация.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.1/assets/cover.png" alt="" /></p><p>Улучшение вкладки комнат и их приватизация.</p>]]></content:encoded>
+      <category>3.2.1</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.1/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.2.0</title>
+      <link>https://16-launcher.ru/ru/news/update-3-2-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-2-0/</guid>
+      <pubDate>Fri, 21 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Улучшение вкладки комнат и их приватизация.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.0/assets/cover.png" alt="" /></p><p>Улучшение вкладки комнат и их приватизация.</p>]]></content:encoded>
+      <category>3.2.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.2.0/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.1.0</title>
+      <link>https://16-launcher.ru/ru/news/update-3-1-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-1-0/</guid>
+      <pubDate>Tue, 18 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Система аккаунтов</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.1.0/assets/cover.png" alt="" /></p><p>Система аккаунтов</p>]]></content:encoded>
+      <category>3.1.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.1.0/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 3.0.0</title>
+      <link>https://16-launcher.ru/ru/news/update-3-0-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-3-0-0/</guid>
+      <pubDate>Sat, 15 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Система аккаунтов</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.0.0/assets/cover.png" alt="" /></p><p>Система аккаунтов</p>]]></content:encoded>
+      <category>3.0.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/3.0.0/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 2.1.5</title>
+      <link>https://16-launcher.ru/ru/news/update-2-1-5/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-2-1-5/</guid>
+      <pubDate>Sun, 12 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Microsoft авторизация.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.1.5/assets/cover.png" alt="" /></p><p>Microsoft авторизация.</p>]]></content:encoded>
+      <category>2.1.5</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.1.5/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 2.1.0</title>
+      <link>https://16-launcher.ru/ru/news/update-2-1-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-2-1-0/</guid>
+      <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Двухпанельный режим, поддержка CurseForge и еще много нового!</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.1.0/assets/cover.png" alt="" /></p><p>Двухпанельный режим, поддержка CurseForge и еще много нового!</p>]]></content:encoded>
+      <category>2.1.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.1.0/assets/cover.png" medium="image" />
+    </item>
+    <item>
+      <title>Обновление 2.0.0</title>
+      <link>https://16-launcher.ru/ru/news/update-2-0-0/</link>
+      <guid isPermaLink="true">https://16-launcher.ru/ru/news/update-2-0-0/</guid>
+      <pubDate>Sun, 22 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Новый интерфейс, оптимизация.</description>
+      <content:encoded><![CDATA[<p><img src="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.0.0/assets/cover.png" alt="" /></p><p>Новый интерфейс, оптимизация.</p>]]></content:encoded>
+      <category>2.0.0</category>
+      <media:content url="https://raw.githubusercontent.com/16steyy/16Launcher-Site-News/main/news/updates/2.0.0/assets/cover.png" medium="image" />
+    </item>
+  </channel>
+</rss>

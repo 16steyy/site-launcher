@@ -10,7 +10,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { useI18n } from "../../i18n/I18nProvider";
 
 export default function ThemeUploadPage({ onNavigate, path, user }) {
-  const { messages, t } = useI18n();
+  const { messages, t, localePath } = useI18n();
   const copy = messages.themes || {};
   const rules = Array.isArray(copy.rules) ? copy.rules : [];
   const { loading: authLoading, isAuthenticated } = useAuth();
@@ -86,7 +86,7 @@ export default function ThemeUploadPage({ onNavigate, path, user }) {
           <p className="mt-2 text-fg-muted">{copy.uploadSuccessHint}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <a
-              href="/themes"
+              href={localePath("/themes")}
               className="btn btn-accent"
               onClick={(event) => {
                 event.preventDefault();
@@ -149,7 +149,7 @@ export default function ThemeUploadPage({ onNavigate, path, user }) {
               required
               disabled={status === "uploading"}
               onChange={(event) => setFile(event.target.files?.[0] || null)}
-              className="mt-2 w-full rounded-xl border border-dashed border-white/20 bg-black/20 px-4 py-3 text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-from file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
+              className="mt-2 w-full rounded-xl border border-dashed border-white/20 bg-black/20 px-4 py-3 text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-from file:px-4 file:py-2 file:text-sm file:font-bold file:text-ink-0"
             />
             <p className="mt-2 text-sm text-fg-faint">{copy.uploadHint}</p>
           </div>

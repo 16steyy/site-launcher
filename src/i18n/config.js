@@ -55,6 +55,11 @@ export function detectSystemLocale() {
   return DEFAULT_LOCALE;
 }
 
+export function getLocaleFromPath(pathname) {
+  const match = (pathname || "").match(/^\/([a-z]{2})(?=\/|$)/);
+  return match && SUPPORTED_LOCALES.includes(match[1]) ? match[1] : null;
+}
+
 export function getLocaleFromSearch() {
   if (typeof window === "undefined") return null;
 
@@ -63,25 +68,28 @@ export function getLocaleFromSearch() {
   return null;
 }
 
-export function getInitialLocale() {
-  const fromUrl = getLocaleFromSearch();
-  if (fromUrl) return fromUrl;
-
-  if (typeof localStorage === "undefined") return detectSystemLocale();
-
+export function getSavedLocale() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && SUPPORTED_LOCALES.includes(saved)) return saved;
   } catch {
   }
-
-  return detectSystemLocale();
+  return null;
 }
 
-export function syncLocaleToUrl(locale) {
-  if (typeof window === "undefined") return;
+export function saveLocale(locale) {
+  try {
+    localStorage.setItem(STORAGE_KEY, locale);
+  } catch {
+  }
+}
 
-  const url = new URL(window.location.href);
-  url.searchParams.set("lang", locale);
-  window.history.replaceState(window.history.state, "", url);
+export function getInitialLocale() {
+  if (typeof window === "undefined") return DEFAULT_LOCALE;
+  return (
+    getLocaleFromPath(window.location.pathname) ||
+    getLocaleFromSearch() ||
+    getSavedLocale() ||
+    detectSystemLocale()
+  );
 }

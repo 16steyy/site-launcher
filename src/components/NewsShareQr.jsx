@@ -11,9 +11,9 @@ const SITE_ICON_URL = "/icon.png";
 
 function buildShareUrl(slug) {
   if (typeof window === "undefined") {
-    return `https://16-launcher.ru/news/${slug}`;
+    return `https://16-launcher.ru/news/${slug}/`;
   }
-  return `${window.location.origin}/news/${slug}`;
+  return `${window.location.origin}/news/${slug}/`;
 }
 
 function buildTelegramShareUrl(url, title) {

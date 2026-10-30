@@ -1,4 +1,7 @@
+import { useI18n } from "../i18n/I18nProvider";
+
 export default function LatestNewsSection({ title, viewAllLabel, openLabel, posts, onNavigate }) {
+  const { localePath } = useI18n();
   const items = (posts || []).slice(0, 2);
   if (!items.length) return null;
 
@@ -7,7 +10,7 @@ export default function LatestNewsSection({ title, viewAllLabel, openLabel, post
       <div className="reveal reveal-scroll flex flex-col items-center justify-between gap-4 md:flex-row md:items-end">
         <h2 className="section-title text-center md:text-left">{title}</h2>
         <a
-          href="/news"
+          href={localePath("/news")}
           className="btn btn-soft"
           onClick={(event) => {
             event.preventDefault();
@@ -22,7 +25,7 @@ export default function LatestNewsSection({ title, viewAllLabel, openLabel, post
         {items.map((post, index) => (
           <a
             key={post.slug}
-            href={`/news/${post.slug}`}
+            href={localePath(`/news/${post.slug}`)}
             className="news-card reveal reveal-scroll group flex flex-col rounded-2xl p-6 md:p-7"
             style={{ animationDelay: `${index * 60}ms` }}
             onClick={(event) => {

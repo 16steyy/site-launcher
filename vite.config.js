@@ -1,22 +1,19 @@
-import { copyFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+
+import { prerenderPages } from "./scripts/prerender-pages.js";
 
 export default defineConfig({
   plugins: [
     react(),
     {
-      name: "copy-404-for-github-pages",
-      closeBundle() {
-        const distDir = resolve(__dirname, "dist");
-        const indexHtml = resolve(distDir, "index.html");
-        copyFileSync(indexHtml, resolve(distDir, "404.html"));
-        for (const route of ["themes", "privacy", "documentation", "status"]) {
-          const routeDir = resolve(distDir, route);
-          mkdirSync(routeDir, { recursive: true });
-          copyFileSync(indexHtml, resolve(routeDir, "index.html"));
-        }
+      // Writes /<locale>/<route>/index.html (plus legacy unprefixed copies and
+      // 404.html) with a per-page <head>. See scripts/prerender-pages.js.
+      name: "prerender-pages-for-github-pages",
+      apply: "build",
+      async closeBundle() {
+        await prerenderPages(resolve(__dirname, "dist"));
       },
     },
   ],

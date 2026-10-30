@@ -28,7 +28,7 @@ function UserIcon() {
 }
 
 export default function SiteHeader({ path, onNavigate, user, sections }) {
-  const { messages } = useI18n();
+  const { messages, localePath } = useI18n();
   const nav = messages.nav || {};
 
   function go(event, href) {
@@ -39,7 +39,7 @@ export default function SiteHeader({ path, onNavigate, user, sections }) {
   const pageLinks = NAV_LINKS.map(({ href, key, match }) => (
     <a
       key={href}
-      href={href}
+      href={localePath(href)}
       className={`site-nav-link ${match(path) ? "is-active" : ""}`}
       aria-current={match(path) ? "page" : undefined}
       onClick={(event) => go(event, href)}
@@ -54,7 +54,7 @@ export default function SiteHeader({ path, onNavigate, user, sections }) {
     <header className="site-header">
       <div className="mx-auto flex h-16 w-full max-w-[1240px] items-center gap-4 px-4 md:px-6">
         <a
-          href="/"
+          href={localePath("/")}
           className="site-logo flex shrink-0 items-center gap-2.5 text-[1.05rem] font-bold tracking-tight text-white"
           onClick={(event) => go(event, "/")}
         >
@@ -80,7 +80,7 @@ export default function SiteHeader({ path, onNavigate, user, sections }) {
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitcher />
           <a
-            href="/account"
+            href={localePath("/account")}
             className={`btn btn-sm h-9 gap-2 px-2.5 ${accountActive ? "btn-tint" : "btn-soft"}`}
             aria-label={user?.nickname || messages.account?.title}
             onClick={(event) => go(event, "/account")}

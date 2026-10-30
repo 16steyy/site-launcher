@@ -397,7 +397,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 onChange={(event) => setCoverFile(event.target.files?.[0] || null)}
-                className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-from file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
+                className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-from file:px-4 file:py-2 file:text-sm file:font-bold file:text-ink-0"
               />
             </div>
 
@@ -410,7 +410,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                     onClick={() => setPreviewMode("edit")}
                     className={`rounded-lg px-3 py-1.5 text-xs font-bold ${
                       previewMode === "edit"
-                        ? "bg-accent text-white"
+                        ? "bg-accent text-ink-0"
                         : "border border-white/15 bg-white/5 text-fg-muted"
                     }`}
                   >
@@ -421,7 +421,7 @@ export default function NewsAdminPage({ onNavigate, path, user, news, onNewsSave
                     onClick={() => setPreviewMode("preview")}
                     className={`rounded-lg px-3 py-1.5 text-xs font-bold ${
                       previewMode === "preview"
-                        ? "bg-accent text-white"
+                        ? "bg-accent text-ink-0"
                         : "border border-white/15 bg-white/5 text-fg-muted"
                     }`}
                   >

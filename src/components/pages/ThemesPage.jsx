@@ -220,7 +220,7 @@ function ThemeModal({ theme, copy, onClose }) {
 }
 
 export default function ThemesPage({ onNavigate, path, user }) {
-  const { messages, t } = useI18n();
+  const { messages, t, localePath } = useI18n();
   const copy = messages.themes || {};
 
   const [catalog, setCatalog] = useState({ themes: [] });
@@ -316,7 +316,7 @@ export default function ThemesPage({ onNavigate, path, user }) {
         </p>
 
         <a
-          href="/themes/upload"
+          href={localePath("/themes/upload")}
           className="btn btn-accent btn-lg mt-8"
           onClick={(event) => {
             event.preventDefault();
@@ -373,7 +373,7 @@ export default function ThemesPage({ onNavigate, path, user }) {
           <p className="mt-3 text-fg-muted">{copy.emptyCta}</p>
 
           <a
-            href="/themes/upload"
+            href={localePath("/themes/upload")}
             className="btn btn-accent btn-lg mt-6"
             onClick={(event) => {
               event.preventDefault();

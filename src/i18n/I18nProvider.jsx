@@ -15,15 +15,36 @@ import zh from "../locales/zh.json";
 import {
   DEFAULT_LOCALE,
   getInitialLocale,
+  getLocaleFromPath,
   LOCALE_LABELS,
   SUPPORTED_LOCALES,
-  STORAGE_KEY,
-  syncLocaleToUrl,
+  saveLocale,
 } from "./config";
+import {
+  changeLocation,
+  LOCATION_CHANGE_EVENT,
+  localizePath,
+  splitLocalePath,
+} from "../routing";
 
 const MESSAGES = { ru, en, zh, de, es };
 
 const I18nContext = createContext(null);
+
+export function ensureLocalizedLocation() {
+  const url = new URL(window.location.href);
+  const hasLegacyParam = url.searchParams.has("lang");
+  if (getLocaleFromPath(url.pathname) && !hasLegacyParam) return;
+
+  const locale = getInitialLocale();
+  const { path } = splitLocalePath(url.pathname);
+  url.searchParams.delete("lang");
+  window.history.replaceState(
+    window.history.state,
+    "",
+    localizePath(`${path}${url.search}${url.hash}`, locale)
+  );
+}
 
 export function I18nProvider({ children }) {
   const [locale, setLocaleState] = useState(getInitialLocale);
@@ -32,24 +53,38 @@ export function I18nProvider({ children }) {
 
   const setLocale = useCallback((nextLocale) => {
     if (!SUPPORTED_LOCALES.includes(nextLocale)) return;
-    setLocaleState(nextLocale);
-    syncLocaleToUrl(nextLocale);
-    try {
-      localStorage.setItem(STORAGE_KEY, nextLocale);
-    } catch {
+    saveLocale(nextLocale);
+    const { path } = splitLocalePath(window.location.pathname);
+    changeLocation(
+      localizePath(`${path}${window.location.search}${window.location.hash}`, nextLocale)
+    );
+  }, []);
+
+  useEffect(() => {
+    function syncFromLocation() {
+      const fromPath = getLocaleFromPath(window.location.pathname);
+      if (fromPath) setLocaleState(fromPath);
     }
+    window.addEventListener("popstate", syncFromLocation);
+    window.addEventListener(LOCATION_CHANGE_EVENT, syncFromLocation);
+    return () => {
+      window.removeEventListener("popstate", syncFromLocation);
+      window.removeEventListener(LOCATION_CHANGE_EVENT, syncFromLocation);
+    };
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    syncLocaleToUrl(locale);
   }, [locale]);
+
+  const localePath = useCallback((path) => localizePath(path, locale), [locale]);
 
   const value = useMemo(
     () => ({
       locale,
       messages,
       setLocale,
+      localePath,
       locales: SUPPORTED_LOCALES,
       localeLabels: LOCALE_LABELS,
       t: (key, params) => {
@@ -66,7 +101,7 @@ export function I18nProvider({ children }) {
         );
       },
     }),
-    [locale, messages, setLocale]
+    [locale, messages, setLocale, localePath]
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

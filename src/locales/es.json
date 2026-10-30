@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "16Launcher — launcher para Minecraft",
-    "description": "16Launcher — la mejor opción para jugar Minecraft: un launcher rápido y moderno con búsqueda de contenido cómoda y descargas seguras de modpacks."
+    "title": "16Launcher — launcher gratuito de Minecraft con mods",
+    "description": "Launcher gratuito de Minecraft para Windows, Linux y macOS. Forge, Fabric, NeoForge y Quilt, mods y modpacks de Modrinth y CurseForge, inicio de sesión con Microsoft, Ely.by o sin conexión."
   },
   "seo": {
     "titleSuffix": " — 16Launcher",
@@ -17,6 +17,7 @@
     "themes": "Temas",
     "features": "Sobre el launcher",
     "screenshots": "Capturas",
+    "capabilities": "Funciones",
     "faq": "FAQ",
     "download": "Descargar",
     "privacy": "Privacidad",
@@ -41,18 +42,213 @@
   },
   "features": [
     {
-      "title": "Optimización",
-      "text": "Máxima optimización: el launcher funciona incluso en PCs modestos."
+      "title": "Rendimiento",
+      "text": "Desarrollado con Rust y Tauri. El launcher se inicia rápido y consume poca memoria, que queda disponible para el juego."
     },
     {
-      "title": "Contenido",
-      "text": "Búsqueda cómoda de contenido en el launcher y creación y gestión sencilla de modpacks."
+      "title": "Gestión de instancias",
+      "text": "Cada instancia tiene su propia versión del juego, mods y ajustes. Los mods de Modrinth y CurseForge se instalan directamente desde el launcher, junto con sus dependencias."
     },
     {
-      "title": "Seguridad",
-      "text": "El launcher es totalmente seguro: sin malware. Además, su código fuente es abierto."
+      "title": "Código abierto",
+      "text": "El código fuente está publicado en GitHub. Cualquiera puede revisarlo o compilar el launcher por su cuenta."
     }
   ],
+  "capabilities": {
+    "title": "Qué sabe hacer 16Launcher",
+    "subtitle": "Todas las funciones, por áreas. El launcher está escrito en Rust y funciona en Windows, Linux y macOS.",
+    "groups": [
+      {
+        "id": "versions",
+        "title": "Versiones y loaders",
+        "items": [
+          "Versiones vanilla, incluidas snapshots y alpha",
+          "Fabric, Quilt, Forge y NeoForge con elección de build y canal: stable, beta, alpha",
+          "Importa tu propia versión desde un .jar",
+          "Comprobación de integridad que reescribe los archivos dañados",
+          "Elimina solo el juego, solo el loader o ambos"
+        ]
+      },
+      {
+        "id": "java",
+        "title": "Java",
+        "items": [
+          "El launcher descarga por sí mismo la versión de Java necesaria",
+          "Encuentra Java instalado o te deja elegir la ruta",
+          "Memoria en GB o MB y argumentos de JVM propios con validación",
+          "Ajustes predefinidos Equilibrado, Máximo rendimiento y Poca memoria",
+          "Ajustes de Java distintos para cada modpack"
+        ]
+      },
+      {
+        "id": "launch",
+        "title": "Inicio del juego",
+        "items": [
+          "El botón Continuar abre tu último mundo o servidor",
+          "Juega sin conexión con cualquier nombre",
+          "Elige la tarjeta gráfica y el tamaño de la ventana",
+          "Inicia un modpack desde un acceso directo del escritorio",
+          "Soporte de proxy"
+        ]
+      },
+      {
+        "id": "diagnostics",
+        "title": "Consola y diagnóstico",
+        "items": [
+          "Consola del juego en ventana aparte con filtros de avisos, errores y cierres",
+          "El analizador de registros lee la consola, el último log y el informe de cierre y señala qué falló",
+          "Arreglos rápidos: desactivar el mod problemático, añadir memoria, volver a la selección automática de Java",
+          "Historial de los últimos 40 inicios con código de salida y duración"
+        ]
+      },
+      {
+        "id": "profiles",
+        "title": "Modpacks",
+        "items": [
+          "Cada modpack tiene su versión, loader, carpeta y ajustes",
+          "Grupos con colores, vista de lista o cuadrícula, fijar en la barra lateral",
+          "Mods, paquetes de recursos y shaders: activar, desactivar, añadir arrastrando",
+          "Conjuntos de mods que se adaptan a la versión y el loader de cada modpack",
+          "Contador de tiempo de juego y tamaño en disco"
+        ]
+      },
+      {
+        "id": "mods",
+        "title": "Mods",
+        "items": [
+          "Catálogos de Modrinth y CurseForge dentro del launcher",
+          "Instalación con dependencias o de varios proyectos a la vez",
+          "Actualiza el contenido por partes o entero y deshaz la última actualización",
+          "Detección de conflictos: duplicados, loader equivocado, dependencias que faltan. Cada uno con su solución"
+        ]
+      },
+      {
+        "id": "worlds",
+        "title": "Mundos, configs y servidores",
+        "items": [
+          "Copias de mundos, manuales y automáticas al terminar de jugar",
+          "Mapa de chunks por dimensión y borrado de los chunks elegidos",
+          "Editor de configs con búsqueda, validación TOML e historial de versiones",
+          "Creación de paquete de servidor: núcleo, Java, memoria, server.properties, mods"
+        ]
+      },
+      {
+        "id": "transfer",
+        "title": "Importación, exportación y copias",
+        "items": [
+          "Importa modpacks de Modrinth y CurseForge, abre .mrpack con doble clic",
+          "Trae modpacks de PrismLauncher, MultiMC, ATLauncher, GDLauncher y CurseForge",
+          "Exporta a .mrpack o ZIP con vista previa del contenido y el tamaño",
+          "Copias de modpacks y restauración de una copia como modpack nuevo"
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "Cuentas y skins",
+        "items": [
+          "Inicio de sesión con Microsoft o Ely.by, cuenta sin conexión",
+          "Varias cuentas y una cuenta propia para cada modpack",
+          "Vista previa 3D del skin con animaciones de caminar, correr y saludar",
+          "Sube un skin, cópialo por nombre, guarda una biblioteca y elige capa"
+        ]
+      },
+      {
+        "id": "platform",
+        "title": "Amigos y salas",
+        "items": [
+          "Salas para jugar con amigos sin IP pública ni redirección de puertos",
+          "Salas públicas y privadas, contraseña, límite de jugadores, entrada por código",
+          "Amigos: búsqueda, solicitudes, estado en línea",
+          "Logros y avisos de invitaciones"
+        ]
+      },
+      {
+        "id": "appearance",
+        "title": "Apariencia",
+        "items": [
+          "Tu propio color de acento y paletas listas",
+          "Imagen de fondo con desenfoque, animaciones desactivables",
+          "Barra lateral a la izquierda, derecha, arriba o abajo",
+          "Dos pestañas a la vez en pantalla dividida",
+          "Temas CSS con editor integrado y recarga en caliente"
+        ]
+      },
+      {
+        "id": "comfort",
+        "title": "Comodidad",
+        "items": [
+          "Paleta de comandos para moverte y jugar rápido",
+          "Atajos de teclado para pestañas e iniciar o detener el juego",
+          "Discord Rich Presence, bandeja del sistema e inicio automático",
+          "Actualizaciones automáticas del launcher",
+          "Traslado de datos desde otro launcher en el primer inicio"
+        ]
+      }
+    ],
+    "searchLabel": "Buscar funciones",
+    "searchPlaceholder": "Busca una función: Ely.by, copias de seguridad, shaders…",
+    "counter": "{{groups}} secciones · {{items}} funciones",
+    "showMore": "{{count}} más",
+    "showLess": "Mostrar menos",
+    "nothingFound": "No hay resultados para «{{query}}». Prueba con otra palabra."
+  },
+  "integrations": {
+    "title": "Con qué funciona 16Launcher",
+    "subtitle": "De dónde salen los mods, cómo inicias sesión y desde qué launchers puedes traer tus instancias.",
+    "groups": {
+      "content": {
+        "title": "Mods y modpacks",
+        "text": "Busca mods, shaders, paquetes de recursos y modpacks dentro del launcher. Las dependencias se instalan solas."
+      },
+      "loaders": {
+        "title": "Loaders de mods",
+        "text": "Se instalan en un par de clics. Puedes elegir un build concreto y el canal: stable, beta o alpha."
+      },
+      "accounts": {
+        "title": "Cuentas",
+        "text": "Licencia de Microsoft, Ely.by con skins o sin conexión con cualquier nombre. Puedes añadir varias y cambiar entre ellas."
+      },
+      "import": {
+        "title": "Mudanza desde otro launcher",
+        "text": "Las instancias se mudan enteras, con mods y ajustes. En el primer inicio el launcher te ofrece hacerlo."
+      },
+      "formats": {
+        "title": "Archivos de modpack",
+        "text": "Un .mrpack se abre con doble clic. Tu propia instancia se puede exportar a .mrpack o ZIP y pasársela a un amigo."
+      },
+      "discord": {
+        "title": "Discord",
+        "text": "Tu perfil de Discord muestra a qué juegas y en qué versión."
+      }
+    }
+  },
+  "community": {
+    "title": "Comunidad",
+    "subtitle": "Si algo no arranca o tienes una idea, escribe en Discord. Los anuncios de versiones salen en Telegram.",
+    "discordStat": "{{members}} miembros · {{online}} conectados",
+    "cards": {
+      "discord": {
+        "title": "Discord",
+        "text": "Ayuda con el launcher, reportes de errores y gente con quien jugar.",
+        "action": "Unirse"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "text": "Anuncios de versiones y noticias del desarrollo.",
+        "action": "Suscribirse"
+      },
+      "github": {
+        "title": "GitHub",
+        "text": "Todo el código es abierto: mira cómo funciona, abre un issue o manda un PR.",
+        "action": "Abrir repositorio"
+      },
+      "boosty": {
+        "title": "Boosty",
+        "text": "El launcher es gratis. Si quieres ayudar, lo que llega por Boosty va a servidores y desarrollo.",
+        "action": "Apoyar"
+      }
+    }
+  },
   "shots": {
     "mods": {
       "lines": [
@@ -92,27 +288,47 @@
     "items": [
       {
         "question": "¿Es seguro?",
-        "answer": "Sí. El launcher no contiene malware y tiene código abierto. Cualquiera puede revisar el código del proyecto y comprobar su seguridad por sí mismo."
+        "answer": "Sí. El código fuente del launcher es abierto y puede revisarse en GitHub. Recomendamos descargar el launcher solo desde el sitio oficial o desde la página de versiones en GitHub."
       },
       {
         "question": "¿Sirve para PCs modestos?",
-        "answer": "Sí. El launcher está muy optimizado y consume un mínimo de recursos del sistema, garantizando un funcionamiento estable incluso en dispositivos débiles."
+        "answer": "Sí. El launcher está escrito en Rust y consume pocos recursos. Los requisitos del equipo dependen de la versión del juego y de los mods instalados; para equipos modestos existe el preset de Java «Poca memoria»."
       },
       {
         "question": "¿Qué versiones de Minecraft se admiten?",
-        "answer": "Se admiten todas las versiones Vanilla de Minecraft, así como los cargadores de mods populares: Forge, Fabric, Quilt y NeoForge. También puedes importar tus propias versiones y modpacks para gestionarlos cómodamente desde el launcher."
+        "answer": "Se admiten todas las versiones oficiales de Minecraft, incluidas las alpha y los snapshots, así como los loaders Forge, NeoForge, Fabric y Quilt. También se puede añadir una versión propia desde un archivo .jar."
       },
       {
         "question": "¿Se pueden instalar mods?",
-        "answer": "Por supuesto. La búsqueda de contenido integrada permite instalar mods con un clic y comprobación automática de compatibilidad. También puedes crear y gestionar tus propios modpacks."
+        "answer": "Sí. Los mods de Modrinth y CurseForge se pueden buscar e instalar directamente en el launcher, y las dependencias se instalan automáticamente. Si hay conflictos entre mods, el launcher lo indica y propone una solución."
       },
       {
         "question": "¿Hay que instalar Java por separado?",
-        "answer": "No. El launcher descargará y configurará automáticamente la versión de Java adecuada cuando sea necesario."
+        "answer": "No. El launcher descarga automáticamente la versión de Java que requiere la versión del juego seleccionada. También se puede indicar una instalación de Java existente."
       },
       {
         "question": "¿Se pueden crear varios perfiles?",
-        "answer": "Sí. Crea perfiles separados para distintas versiones del juego, modpacks y configuraciones."
+        "answer": "Sí. Cada versión del juego o modpack tiene una instancia independiente con sus propios mods, ajustes y carpeta."
+      },
+      {
+        "question": "¿Cuánto cuesta el launcher?",
+        "answer": "El launcher es completamente gratuito. Su código fuente está abierto en GitHub y el desarrollo se puede apoyar en Boosty."
+      },
+      {
+        "question": "¿Necesito una cuenta de Microsoft?",
+        "answer": "No. Puedes iniciar sesión con Microsoft o Ely.by, o crear una cuenta sin conexión con cualquier nombre. Puedes tener varias cuentas y asignar una distinta a cada instancia."
+      },
+      {
+        "question": "¿Puedo jugar con amigos sin IP pública?",
+        "answer": "Sí. Crea una sala en el launcher e invita a tus amigos con un código: no hace falta abrir puertos ni tener IP pública. Las salas pueden ser públicas o privadas, con contraseña y límite de jugadores."
+      },
+      {
+        "question": "¿Cómo traigo instancias de otro launcher?",
+        "answer": "En el primer inicio el launcher te ofrece migrar tus datos. Importa desde PrismLauncher, MultiMC, ATLauncher, GDLauncher y CurseForge, además de modpacks de Modrinth (.mrpack) y CurseForge."
+      },
+      {
+        "question": "¿Qué hago si el juego se cierra?",
+        "answer": "Abre la consola del juego: el analizador de logs lee el informe de error y te dice qué falló. También ofrece arreglos rápidos: desactivar el mod problemático, añadir memoria o volver a la selección automática de Java. Si no ayuda, pregunta en Discord."
       }
     ]
   },
@@ -127,6 +343,7 @@
   "footer": {
     "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft.",
     "privacy": "Política de privacidad",
+    "documentation": "Documentación",
     "status": "Estado de los servicios",
     "statusLabel": {
       "operational": "Todo funciona",
@@ -171,7 +388,9 @@
     "sliderPrev": "Foto anterior",
     "sliderNext": "Foto siguiente",
     "sliderCounter": "{{current}} de {{total}}",
-    "sliderGoTo": "Ir a la foto {{current}}"
+    "sliderGoTo": "Ir a la foto {{current}}",
+    "rss": "Feed RSS",
+    "rssHint": "Suscríbete en un lector RSS para no perderte ninguna actualización"
   },
   "themes": {
     "nav": "Temas",

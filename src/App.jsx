@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import rocketIcon from "../assets/rocket.png";
 import modsIcon from "../assets/mods.png";
@@ -21,25 +21,25 @@ import HeroStats from "./components/HeroStats";
 import HeroTagline from "./components/HeroTagline";
 import HeroTitle from "./components/HeroTitle";
 import LatestNewsSection from "./components/LatestNewsSection";
+import CapabilitiesSection from "./components/CapabilitiesSection";
+import IntegrationsSection from "./components/IntegrationsSection";
+import CommunitySection from "./components/CommunitySection";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
-import NewsMarkdown from "./components/NewsMarkdown";
-import NewsShareQr from "./components/NewsShareQr";
 import NotFoundPage from "./components/NotFoundPage";
-import AccountPage from "./components/pages/AccountPage";
-import PrivacyPage from "./components/pages/PrivacyPage";
-import DocumentationPage from "./components/pages/DocumentationPage";
-import ThemeUploadPage from "./components/pages/ThemeUploadPage";
-import ThemesPage from "./components/pages/ThemesPage";
-import NewsAdminPage from "./components/pages/NewsAdminPage";
-import StatusPage from "./components/pages/StatusPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
 import { useAuth } from "./hooks/useAuth";
 import { usePointerEffects } from "./hooks/usePointerEffects";
 import { useI18n } from "./i18n/I18nProvider";
-import { getRouteKind } from "./routing";
+import { trackPageView } from "./lib/metrika";
+import {
+  changeLocation,
+  getRouteKind,
+  LOCATION_CHANGE_EVENT,
+  splitLocalePath,
+} from "./routing";
 import {
   extractFilenameFromDownloadUrl,
   normalizeReleaseData,
@@ -52,6 +52,16 @@ import {
   mergeReleaseData,
 } from "./api/releases";
 
+const NewsMarkdown = lazy(() => import("./components/NewsMarkdown"));
+const NewsShareQr = lazy(() => import("./components/NewsShareQr"));
+const AccountPage = lazy(() => import("./components/pages/AccountPage"));
+const PrivacyPage = lazy(() => import("./components/pages/PrivacyPage"));
+const DocumentationPage = lazy(() => import("./components/pages/DocumentationPage"));
+const ThemeUploadPage = lazy(() => import("./components/pages/ThemeUploadPage"));
+const ThemesPage = lazy(() => import("./components/pages/ThemesPage"));
+const NewsAdminPage = lazy(() => import("./components/pages/NewsAdminPage"));
+const StatusPage = lazy(() => import("./components/pages/StatusPage"));
+
 const FALLBACK_RELEASES_URL =
   "https://github.com/launcherdev11/rust-launcher/releases";
 const GITHUB_RELEASE_DATA_URL = "/github-release.json";
@@ -63,7 +73,7 @@ const NEWS_RAW_BASE =
 const NEWS_INDEX_PATH = "news/index.json";
 const NEWS_REFRESH_INTERVAL_MS = 1 * 60 * 1000;
 
-const HOME_ANCHOR_SECTIONS = ["features", "screenshots", "faq", "download"];
+const HOME_ANCHOR_SECTIONS = ["features", "screenshots", "capabilities", "faq", "download"];
 
 const OS_NAMES = { windows: "Windows", macos: "macOS", linux: "Linux" };
 
@@ -113,6 +123,13 @@ function ChevronIcon({ className = "" }) {
       <path d="M6 9l6 6 6-6" />
     </svg>
   );
+}
+
+function shotAltText(section) {
+  if (section.lines) {
+    return section.lines.map((line) => `${line.accent} ${line.rest}`).join(" ");
+  }
+  return [section.accentPart, section.restPart].filter(Boolean).join(" ");
 }
 
 function detectOS() {
@@ -187,8 +204,6 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = NEWS_FETCH_TIMEOU
   }
 }
 
-// raw.githubusercontent.com first: its cache lives ~5 min. jsDelivr caches
-// branch refs (@main) for up to 12 h and ignores ?t=, so it is only a fallback.
 function newsSourceCandidates(relativePath) {
   return [
     toAbsoluteUrl(NEWS_RAW_BASE, relativePath),
@@ -288,32 +303,15 @@ function normalizeNewsData(input, sourceUrl = "") {
   return { page, posts };
 }
 
-function HomePage({ onNavigate, news }) {
+function HomePage({ onNavigate, news, release }) {
   const { locale, messages, t } = useI18n();
   const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
   const [userOS, setUserOS] = useState("unknown");
   const lightbox = useImageLightbox();
-  const [links, setLinks] = useState(() => emptyReleaseData().links);
-  const [githubStats, setGithubStats] = useState({ stars: 0, downloads: 0 });
-  const [releaseVersion, setReleaseVersion] = useState("");
+  const { links, stars, downloads, version: releaseVersion } = release;
 
   useEffect(() => {
     setUserOS(detectOS());
-
-    async function loadLatestRelease() {
-      try {
-        const data = await fetchGithubReleaseData();
-        setLinks(data.links);
-        setReleaseVersion(data.version);
-        setGithubStats({ stars: data.stars, downloads: data.downloads });
-      } catch {
-        setLinks(emptyReleaseData().links);
-        setGithubStats({ stars: 0, downloads: 0 });
-        setReleaseVersion("");
-      }
-    }
-
-    loadLatestRelease();
   }, []);
 
   useRevealScroll([locale, news?.posts?.length]);
@@ -380,13 +378,13 @@ function HomePage({ onNavigate, news }) {
     if (section.lines) {
       return section.lines.map((line, i) => (
         <span key={i} className="block">
-          <span className="text-accent-bright">{line.accent}</span> {line.rest}
+          <span className="text-white">{line.accent}</span> {line.rest}
         </span>
       ));
     }
     return (
       <>
-        <span className="text-accent-bright">{section.accentPart}</span> {section.restPart}
+        <span className="text-white">{section.accentPart}</span> {section.restPart}
       </>
     );
   }
@@ -428,8 +426,8 @@ function HomePage({ onNavigate, news }) {
 
         <HeroPreview />
         <HeroStats
-          stars={githubStats.stars}
-          downloads={githubStats.downloads}
+          stars={stars}
+          downloads={downloads}
           version={releaseVersion}
           labels={messages.hero.stats}
         />
@@ -463,7 +461,7 @@ function HomePage({ onNavigate, news }) {
                 characterRight ? "is-right" : "is-left"
               }`}
             >
-              <h2 className="section-title reveal reveal-scroll mx-auto max-w-4xl text-balance text-center">
+              <h2 className="section-title shot-title reveal reveal-scroll mx-auto max-w-4xl text-balance text-center">
                 {renderShotHeadline(section)}
               </h2>
 
@@ -489,7 +487,7 @@ function HomePage({ onNavigate, news }) {
                 >
                   <img
                     src={section.image}
-                    alt=""
+                    alt={shotAltText(section)}
                     loading="lazy"
                     decoding="async"
                     className="block h-auto w-full"
@@ -501,6 +499,9 @@ function HomePage({ onNavigate, news }) {
           );
         })}
       </div>
+
+      <CapabilitiesSection />
+      <IntegrationsSection />
 
       <ImageLightbox
         image={lightbox.image}
@@ -520,6 +521,8 @@ function HomePage({ onNavigate, news }) {
           onNavigate={onNavigate}
         />
 
+        <CommunitySection stars={stars} version={releaseVersion} />
+
         <section id="faq" className="scroll-anchor py-16 md:py-20">
           <h2 className="section-title reveal reveal-scroll text-center">{messages.faq?.title}</h2>
           <div className="mx-auto mt-10 max-w-3xl space-y-3">
@@ -528,30 +531,32 @@ function HomePage({ onNavigate, news }) {
               return (
                 <div
                   key={index}
-                  className={`card faq-item reveal reveal-scroll ${isOpen ? "is-open" : ""}`}
+                  className="reveal reveal-scroll"
                   style={{ animationDelay: `${index * 40}ms` }}
                 >
-                  <button
-                    type="button"
-                    id={`faq-q-${index}`}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left md:px-6"
-                    onClick={() => toggleFaqItem(index)}
-                    aria-expanded={isOpen}
-                    aria-controls={`faq-a-${index}`}
-                  >
-                    <span className="text-base font-semibold text-white md:text-lg">{item.question}</span>
-                    <ChevronIcon
-                      className={`faq-chevron h-5 w-5 shrink-0 text-fg-faint ${isOpen ? "is-open" : ""}`}
-                    />
-                  </button>
-                  <div
-                    id={`faq-a-${index}`}
-                    role="region"
-                    aria-labelledby={`faq-q-${index}`}
-                    className={`faq-answer-wrap${isOpen ? " is-open" : ""}`}
-                  >
-                    <div className="faq-answer-inner">
-                      <p className="px-5 pb-5 leading-relaxed text-fg-muted md:px-6">{item.answer}</p>
+                  <div className={`card faq-item ${isOpen ? "is-open" : ""}`}>
+                    <button
+                      type="button"
+                      id={`faq-q-${index}`}
+                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left md:px-6"
+                      onClick={() => toggleFaqItem(index)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-a-${index}`}
+                    >
+                      <span className="text-base font-semibold text-white md:text-lg">{item.question}</span>
+                      <ChevronIcon
+                        className={`faq-chevron h-5 w-5 shrink-0 text-fg-faint ${isOpen ? "is-open" : ""}`}
+                      />
+                    </button>
+                    <div
+                      id={`faq-a-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-q-${index}`}
+                      className={`faq-answer-wrap${isOpen ? " is-open" : ""}`}
+                    >
+                      <div className="faq-answer-inner">
+                        <p className="px-5 pb-5 leading-relaxed text-fg-muted md:px-6">{item.answer}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -576,47 +581,51 @@ function HomePage({ onNavigate, news }) {
               return (
                 <div
                   key={row.os}
-                  className={`card reveal reveal-scroll flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between ${
-                    isUserOs ? "!border-accent-to/40" : ""
-                  }`}
+                  className="reveal reveal-scroll"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex min-w-0 items-center gap-4">
-                    <img src={row.icon} alt="" className="h-9 w-9 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xl font-semibold text-white">{OS_NAMES[row.os]}</span>
-                        {isUserOs && (
-                          <span className="chip chip-accent">
-                            {row.os === "linux" ? messages.download.recommended : messages.download.forYou}
-                          </span>
-                        )}
+                  <div
+                    className={`card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between ${
+                      isUserOs ? "!border-accent-to/40" : ""
+                    }`}
+                  >
+                    <div className="flex min-w-0 items-center gap-4">
+                      <img src={row.icon} alt="" className="h-9 w-9 shrink-0" />
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-xl font-semibold text-white">{OS_NAMES[row.os]}</span>
+                          {isUserOs && (
+                            <span className="chip chip-accent">
+                              {row.os === "linux" ? messages.download.recommended : messages.download.forYou}
+                            </span>
+                          )}
+                        </div>
+                        {fileName && fileName !== "releases" ? (
+                          <p className="mt-0.5 truncate font-mono text-xs text-fg-faint">{fileName}</p>
+                        ) : null}
                       </div>
-                      {fileName && fileName !== "releases" ? (
-                        <p className="mt-0.5 truncate font-mono text-xs text-fg-faint">{fileName}</p>
-                      ) : null}
                     </div>
-                  </div>
 
-                  {single ? (
-                    <a href={single} className={`btn ${isUserOs ? "btn-accent" : "btn-soft"} sm:min-w-[9rem]`}>
-                      <DownloadIcon className="h-4 w-4" />
-                      {messages.download.install}
-                    </a>
-                  ) : (
-                    <div className="grid grid-cols-3 gap-2 sm:flex">
-                      {row.files.map((file, fileIndex) => (
-                        <a
-                          key={file.key}
-                          href={links[file.key]}
-                          title={extractFilenameFromDownloadUrl(links[file.key])}
-                          className={`btn ${isUserOs && fileIndex === 0 ? "btn-accent" : "btn-soft"} px-3`}
-                        >
-                          {file.label}
-                        </a>
-                      ))}
-                    </div>
-                  )}
+                    {single ? (
+                      <a href={single} className={`btn ${isUserOs ? "btn-accent" : "btn-soft"} sm:min-w-[9rem]`}>
+                        <DownloadIcon className="h-4 w-4" />
+                        {messages.download.install}
+                      </a>
+                    ) : (
+                      <div className="grid grid-cols-3 gap-2 sm:flex">
+                        {row.files.map((file, fileIndex) => (
+                          <a
+                            key={file.key}
+                            href={links[file.key]}
+                            title={extractFilenameFromDownloadUrl(links[file.key])}
+                            className={`btn ${isUserOs && fileIndex === 0 ? "btn-accent" : "btn-soft"} px-3`}
+                          >
+                            {file.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -639,9 +648,10 @@ function HomePage({ onNavigate, news }) {
 }
 
 function BackLink({ href, label, onNavigate }) {
+  const { localePath } = useI18n();
   return (
     <a
-      href={href}
+      href={localePath(href)}
       className="btn btn-ghost btn-sm -ml-2"
       onClick={(event) => {
         event.preventDefault();
@@ -663,10 +673,30 @@ function PostMeta({ post }) {
   );
 }
 
+function RssIcon({ className = "h-4 w-4" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M4 11a9 9 0 0 1 9 9" />
+      <path d="M4 4a16 16 0 0 1 16 16" />
+      <circle cx="5" cy="19" r="1" />
+    </svg>
+  );
+}
+
 function NewsListPage({ onNavigate, news, isLoading, loadError }) {
-  const { messages } = useI18n();
-  const pageTitle = news.page?.title || messages.news.defaultTitle;
-  const pageSubtitle = news.page?.subtitle || messages.news.defaultSubtitle;
+  const { locale, messages, localePath } = useI18n();
+  const remotePage = locale === "ru" ? news.page : null;
+  const pageTitle = remotePage?.title || messages.news.defaultTitle;
+  const pageSubtitle = remotePage?.subtitle || messages.news.defaultSubtitle;
   const posts = Array.isArray(news.posts) ? news.posts : [];
 
   return (
@@ -674,6 +704,10 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
       <section className="text-center">
         <h1 className="page-title">{pageTitle}</h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-muted">{pageSubtitle}</p>
+        <a href="/rss.xml" className="btn btn-soft btn-sm mt-6" title={messages.news.rssHint}>
+          <RssIcon />
+          {messages.news.rss}
+        </a>
         {isLoading && messages.news.loading ? (
           <p className="mt-4 text-fg-faint">{messages.news.loading}</p>
         ) : null}
@@ -686,7 +720,7 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
         {posts.map((post) => (
           <a
             key={post.slug}
-            href={`/news/${post.slug}`}
+            href={localePath(`/news/${post.slug}`)}
             className="news-card group flex flex-col rounded-2xl p-6 md:p-7"
             onClick={(event) => {
               event.preventDefault();
@@ -815,7 +849,9 @@ function NewsArticlePage({ slug, onNavigate, news }) {
       <article className="panel mt-6 p-6 md:p-10">
         <div className="flex items-start justify-between gap-4">
           <PostMeta post={post} />
-          <NewsShareQr slug={post.slug} title={post.title} />
+          <Suspense fallback={null}>
+            <NewsShareQr slug={post.slug} title={post.title} />
+          </Suspense>
         </div>
         <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-white md:text-4xl">
           {post.title}
@@ -830,7 +866,9 @@ function NewsArticlePage({ slug, onNavigate, news }) {
         )}
 
         {articleState.markdown?.trim() ? (
-          <NewsMarkdown markdown={articleState.markdown} assetBaseUrl={markdownAssetBaseUrl} />
+          <Suspense fallback={<p className="mt-8 text-fg-faint">{messages.news.articleLoading}</p>}>
+            <NewsMarkdown markdown={articleState.markdown} assetBaseUrl={markdownAssetBaseUrl} />
+          </Suspense>
         ) : (
           <>
             <section className="mt-8 space-y-4 text-lg leading-relaxed text-fg">
@@ -857,14 +895,16 @@ function NewsArticlePage({ slug, onNavigate, news }) {
 }
 
 export default function App() {
-  const [path, setPath] = useState(window.location.pathname || "/");
+  const [pathname, setPathname] = useState(window.location.pathname || "/");
   const [news, setNews] = useState(() => normalizeNewsData(newsData));
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsLoadError, setNewsLoadError] = useState(false);
-  const [releaseVersion, setReleaseVersion] = useState("");
+  const [release, setRelease] = useState(emptyReleaseData);
   const { user } = useAuth();
-  const { messages } = useI18n();
+  const { messages, localePath } = useI18n();
   usePointerEffects();
+
+  const path = splitLocalePath(pathname).path;
 
   async function refreshNews({ isBackground = false } = {}) {
     if (!isBackground) {
@@ -887,11 +927,15 @@ export default function App() {
   }
 
   useEffect(() => {
-    function handlePopState() {
-      setPath(window.location.pathname || "/");
+    function handleLocationChange() {
+      setPathname(window.location.pathname || "/");
     }
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener(LOCATION_CHANGE_EVENT, handleLocationChange);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener(LOCATION_CHANGE_EVENT, handleLocationChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -918,29 +962,26 @@ export default function App() {
     };
   }, []);
 
+  const lastTrackedUrl = useRef(window.location.href);
+  useEffect(() => {
+    const url = window.location.href;
+    if (url === lastTrackedUrl.current) return;
+    trackPageView(url, lastTrackedUrl.current);
+    lastTrackedUrl.current = url;
+  }, [pathname]);
+
   useEffect(() => {
     fetchGithubReleaseData()
-      .then((data) => {
-        if (data.version) setReleaseVersion(data.version);
-      })
+      .then(setRelease)
       .catch(() => {});
   }, []);
 
   function navigate(nextPath) {
-    const nextUrl = new URL(nextPath, window.location.origin);
-    const currentUrl = new URL(window.location.href);
-    if (
-      nextUrl.pathname === currentUrl.pathname &&
-      nextUrl.search === currentUrl.search
-    ) {
+    const target = localePath(nextPath);
+    if (target === `${window.location.pathname}${window.location.search}`) {
       return;
     }
-    const lang = new URLSearchParams(window.location.search).get("lang");
-    if (lang && !nextUrl.searchParams.has("lang")) {
-      nextUrl.searchParams.set("lang", lang);
-    }
-    window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}`);
-    setPath(nextUrl.pathname);
+    changeLocation(target);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -984,24 +1025,24 @@ export default function App() {
       />
     );
   } else if (route === "article") {
-    page = <NewsArticlePage slug={path.replace("/news/", "")} onNavigate={navigate} news={news} />;
+    page = <NewsArticlePage slug={path.slice("/news/".length)} onNavigate={navigate} news={news} />;
   } else if (route === "not-found") {
     page = <NotFoundPage onNavigate={navigate} />;
   } else {
-    page = <HomePage onNavigate={navigate} news={news} />;
+    page = <HomePage onNavigate={navigate} news={news} release={release} />;
   }
 
   return (
     <div className="flex min-h-screen flex-col">
       <div className="grid-glow" aria-hidden />
-      <AppSeo path={path} news={news} releaseVersion={releaseVersion} />
+      <AppSeo path={path} news={news} releaseVersion={release.version} />
       <SiteHeader
         path={path}
         onNavigate={navigate}
         user={user}
         sections={route === "home" ? homeSections : undefined}
       />
-      {page}
+      <Suspense fallback={<main className="flex-1" />}>{page}</Suspense>
       <SiteFooter onNavigate={navigate} />
     </div>
   );

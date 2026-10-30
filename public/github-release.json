@@ -1,20 +1,20 @@
 {
   "stars": 25,
-  "downloads": 118417,
-  "version": "3.2.12",
+  "downloads": 131681,
+  "version": "3.3.0",
   "links": {
-    "windows": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.12/16Launcher_3.2.12_x64-setup.exe",
-    "macos": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.12/16Launcher_3.2.12_aarch64.dmg",
-    "linuxDeb": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.12/16Launcher_3.2.12_amd64.deb",
-    "linuxRpm": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.12/16Launcher-3.2.12-1.x86_64.rpm",
-    "linuxAppImage": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.2.12/16Launcher_3.2.12_amd64.AppImage"
+    "windows": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.3.0/16Launcher_3.3.0_x64-setup.exe",
+    "macos": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.3.0/16Launcher_3.3.0_aarch64.dmg",
+    "linuxDeb": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.3.0/16Launcher_3.3.0_amd64.deb",
+    "linuxRpm": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.3.0/16Launcher-3.3.0-1.x86_64.rpm",
+    "linuxAppImage": "https://github.com/launcherdev11/rust-launcher/releases/download/v3.3.0/16Launcher_3.3.0_amd64.AppImage"
   },
-  "updatedAt": "2026-10-25T19:14:08.770Z",
+  "updatedAt": "2026-10-30T07:41:43.823Z",
   "mirrors": {
-    "windows": "https://api.16-launcher.ru/releases/v3.2.12/16Launcher_3.2.12_x64-setup.exe",
-    "macos": "https://api.16-launcher.ru/releases/v3.2.12/16Launcher_3.2.12_aarch64.dmg",
-    "linuxDeb": "https://api.16-launcher.ru/releases/v3.2.12/16Launcher_3.2.12_amd64.deb",
-    "linuxRpm": "https://api.16-launcher.ru/releases/v3.2.12/16Launcher-3.2.12-1.x86_64.rpm",
-    "linuxAppImage": "https://api.16-launcher.ru/releases/v3.2.12/16Launcher_3.2.12_amd64.AppImage"
+    "windows": "https://api.16-launcher.ru/releases/v3.3.0/16Launcher_3.3.0_x64-setup.exe",
+    "macos": "https://api.16-launcher.ru/releases/v3.3.0/16Launcher_3.3.0_aarch64.dmg",
+    "linuxDeb": "https://api.16-launcher.ru/releases/v3.3.0/16Launcher_3.3.0_amd64.deb",
+    "linuxRpm": "https://api.16-launcher.ru/releases/v3.3.0/16Launcher-3.3.0-1.x86_64.rpm",
+    "linuxAppImage": "https://api.16-launcher.ru/releases/v3.3.0/16Launcher_3.3.0_amd64.AppImage"
   }
 }

@@ -5,28 +5,28 @@ export default {
     extend: {
       colors: {
         ink: {
-          0: "#0b0910",
-          1: "#14111b",
-          2: "#1b1724",
-          3: "#241e2f",
-          4: "#2e2739",
+          0: "#0a0a0b",
+          1: "#121214",
+          2: "#19191c",
+          3: "#222226",
+          4: "#2b2b30",
         },
         fg: {
-          DEFAULT: "#eee9f6",
-          muted: "#a49cb4",
-          faint: "#716a82",
+          DEFAULT: "#f1f1f3",
+          muted: "#a1a1aa",
+          faint: "#71717a",
         },
         accent: {
-          DEFAULT: "#6a3ad0",
-          from: "#582ec0",
-          to: "#975ade",
-          hi: "#cbb6f5",
-          bright: "#a97ef2",
+          DEFAULT: "#e4e4e7",
+          from: "#f4f4f5",
+          to: "#c9c9cf",
+          hi: "#f4f4f5",
+          bright: "#ffffff",
         },
-        select: "#2468f2",
+        select: "#f4f4f5",
       },
       boxShadow: {
-        glow: "0 10px 30px rgba(88, 46, 192, 0.35)",
+        glow: "0 10px 30px rgba(0, 0, 0, 0.45)",
       },
       fontFamily: {
         sans: ['"Onest Variable"', "Onest", '"Segoe UI"', "system-ui", "sans-serif"],

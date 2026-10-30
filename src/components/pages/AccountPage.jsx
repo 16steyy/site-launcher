@@ -645,7 +645,7 @@ export default function AccountPage({ onNavigate, path, user }) {
               }}
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "login"
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-ink-0"
                   : "border border-white/20 bg-white/5 text-fg-muted"
               }`}
             >
@@ -661,7 +661,7 @@ export default function AccountPage({ onNavigate, path, user }) {
               }}
               className={`rounded-full px-5 py-2 text-sm font-bold transition ${
                 tab === "register"
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-ink-0"
                   : "border border-white/20 bg-white/5 text-fg-muted"
               }`}
             >

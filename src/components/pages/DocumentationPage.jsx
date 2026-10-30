@@ -100,7 +100,7 @@ function TocList({ sections, activeId, activeSectionId, onPick }) {
 }
 
 export default function DocumentationPage({ onNavigate }) {
-  const { locale, messages } = useI18n();
+  const { locale, messages, localePath } = useI18n();
   const copy = messages.documentation || {};
   const markdown = getDocumentationMarkdown(locale);
   const mobileTocRef = useRef(null);
@@ -199,7 +199,7 @@ export default function DocumentationPage({ onNavigate }) {
             </div>
             <div className="flex flex-wrap gap-2">
               <a
-                href="/themes"
+                href={localePath("/themes")}
                 className="btn btn-soft"
                 onClick={(event) => {
                   event.preventDefault();
@@ -209,7 +209,7 @@ export default function DocumentationPage({ onNavigate }) {
                 {copy.browseThemes}
               </a>
               <a
-                href="/themes/upload"
+                href={localePath("/themes/upload")}
                 className="btn btn-accent"
                 onClick={(event) => {
                   event.preventDefault();

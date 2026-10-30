@@ -30,7 +30,7 @@ const SOCIAL_LINKS = [
 ];
 
 export default function SiteFooter({ onNavigate }) {
-  const { messages } = useI18n();
+  const { messages, localePath } = useI18n();
   const nav = messages.nav || {};
   const footer = messages.footer || {};
   const apiStatus = useApiPulse();
@@ -53,7 +53,7 @@ export default function SiteFooter({ onNavigate }) {
           </div>
           <p className="mt-3 text-sm leading-relaxed text-fg-faint">{footer.disclaimer}</p>
           <a
-            href="/status"
+            href={localePath("/status")}
             className="footer-status mt-4"
             onClick={(event) => {
               event.preventDefault();
@@ -69,7 +69,7 @@ export default function SiteFooter({ onNavigate }) {
           {links.map((link) => (
             <a
               key={link.href}
-              href={link.href}
+              href={localePath(link.href)}
               className="text-fg-muted transition hover:text-white"
               onClick={(event) => {
                 event.preventDefault();

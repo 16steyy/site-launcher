@@ -117,7 +117,7 @@ export default function SkinPreview3d({ user, className, interactive = true }) {
       }
     >
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.14),transparent_68%)]"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.08),transparent_68%)]"
         aria-hidden
       />
       <div

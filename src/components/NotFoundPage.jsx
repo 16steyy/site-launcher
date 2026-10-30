@@ -1,7 +1,7 @@
 import { useI18n } from "../i18n/I18nProvider";
 
 export default function NotFoundPage({ onNavigate }) {
-  const { messages } = useI18n();
+  const { messages, localePath } = useI18n();
   const copy = messages.notFoundPage || {};
 
   return (
@@ -10,7 +10,7 @@ export default function NotFoundPage({ onNavigate }) {
       <h1 className="page-title mt-4">{copy.title}</h1>
       <p className="mx-auto mt-4 max-w-xl text-lg text-fg-muted">{copy.description}</p>
       <a
-        href="/"
+        href={localePath("/")}
         className="btn btn-accent btn-lg mt-10"
         onClick={(event) => {
           event.preventDefault();

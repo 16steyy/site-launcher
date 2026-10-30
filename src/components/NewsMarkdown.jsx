@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import ImageLightbox, { useImageLightbox } from "./ImageLightbox";
 import NewsImageSlider from "./NewsImageSlider";
 import { useI18n } from "../i18n/I18nProvider";
+import { changeLocation } from "../routing";
 import { extractHeadings } from "../lib/markdownHeadings";
 
 const IMAGE_LINE_RE =
@@ -207,6 +208,7 @@ function AnchoredHeading({ as: Tag, id, className, children }) {
 }
 
 export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
+  const { localePath } = useI18n();
   const { image, alt, hasGallery, openImage, closeImage, showPrev, showNext } = useImageLightbox();
 
   const normalizedMarkdown = useMemo(() => prepareNewsMarkdown(markdown), [markdown]);
@@ -288,16 +290,12 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
         if (href?.startsWith("/") && !href.startsWith("//")) {
           return (
             <a
-              href={href}
+              href={localePath(href)}
               className={className}
               onClick={(event) => {
                 if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
                 event.preventDefault();
-                const url = new URL(href, window.location.origin);
-                const lang = new URLSearchParams(window.location.search).get("lang");
-                if (lang && !url.searchParams.has("lang")) url.searchParams.set("lang", lang);
-                window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
-                window.dispatchEvent(new PopStateEvent("popstate"));
+                changeLocation(localePath(href));
                 window.scrollTo({ top: 0 });
               }}
             >
@@ -354,7 +352,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
         <td className="px-4 py-3 align-top text-fg-muted">{children}</td>
       ),
     }),
-    [assetBaseUrl, documentMode, headingIds, openImage]
+    [assetBaseUrl, documentMode, headingIds, localePath, openImage]
   );
 
   if (!normalizedMarkdown.trim()) return null;

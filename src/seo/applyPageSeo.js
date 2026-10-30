@@ -3,25 +3,12 @@ import {
   DEFAULT_OG_IMAGE_PATH,
   DEFAULT_OG_IMAGE_HEIGHT,
   DEFAULT_OG_IMAGE_WIDTH,
-  GITHUB_RELEASES_URL,
   JSON_LD_ID,
   OG_LOCALE_MAP,
   SITE_NAME,
-  SITE_URL,
 } from "./config";
-
-function absoluteUrl(path = "/") {
-  if (!path) return SITE_URL;
-  if (/^https?:\/\//i.test(path)) return path;
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${SITE_URL}${normalized}`;
-}
-
-function buildLocalizedUrl(pathname, locale) {
-  const url = new URL(pathname || "/", SITE_URL);
-  url.searchParams.set("lang", locale);
-  return url.toString();
-}
+import { buildJsonLd } from "./jsonLd";
+import { absoluteUrl, hreflangLinks, localizedUrl } from "./urls";
 
 function upsertMeta(selector, attributes) {
   let element = document.head.querySelector(selector);
@@ -50,8 +37,8 @@ function upsertLink(rel, href, extra = {}) {
   return element;
 }
 
-function removeManagedLinks(rel, keepHrefs) {
-  document.head.querySelectorAll(`link[rel="${rel}"]`).forEach((element) => {
+function removeStaleHreflangLinks(keepHrefs) {
+  document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((element) => {
     const href = element.getAttribute("href");
     if (!keepHrefs.has(href)) {
       element.remove();
@@ -70,69 +57,13 @@ function upsertJsonLd(id, data) {
   element.textContent = JSON.stringify(data);
 }
 
-function buildSoftwareApplicationJsonLd({ description, releaseVersion }) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: SITE_NAME,
-    applicationCategory: "GameApplication",
-    operatingSystem: "Windows, macOS, Linux",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    description,
-    url: SITE_URL,
-    downloadUrl: GITHUB_RELEASES_URL,
-    ...(releaseVersion ? { softwareVersion: releaseVersion } : {}),
-  };
-}
-
-function buildNewsArticleJsonLd({ title, description, url, datePublished, version }) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    headline: title,
-    description,
-    url,
-    datePublished: datePublished || undefined,
-    author: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: {
-        "@type": "ImageObject",
-        url: absoluteUrl(DEFAULT_OG_IMAGE_PATH),
-      },
-    },
-    ...(version ? { version } : {}),
-  };
-}
-
-function parseArticleDate(dateStr) {
-  if (!dateStr) return undefined;
-  const parsed = Date.parse(dateStr);
-  if (Number.isNaN(parsed)) return undefined;
-  return new Date(parsed).toISOString();
-}
-
 function applyHreflang(pathname) {
   const keepHrefs = new Set();
-  SUPPORTED_LOCALES.forEach((locale) => {
-    const href = buildLocalizedUrl(pathname, locale);
+  hreflangLinks(pathname).forEach(({ hreflang, href }) => {
     keepHrefs.add(href);
-    upsertLink("alternate", href, { hreflang: locale });
+    upsertLink("alternate", href, { hreflang });
   });
-  const xDefaultHref = buildLocalizedUrl(pathname, DEFAULT_LOCALE);
-  keepHrefs.add(xDefaultHref);
-  upsertLink("alternate", xDefaultHref, { hreflang: "x-default" });
-  removeManagedLinks("alternate", keepHrefs);
+  removeStaleHreflangLinks(keepHrefs);
 }
 
 function applyOpenGraph({
@@ -209,10 +140,12 @@ export function applyPageSeo({
   jsonLdType = "software",
   releaseVersion,
   article,
+  faq,
+  breadcrumbs,
   noindex = false,
 }) {
   const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  const canonicalUrl = buildLocalizedUrl(canonicalPath ?? normalizedPath, locale);
+  const canonicalUrl = localizedUrl(canonicalPath ?? normalizedPath, locale);
 
   document.title = title;
 
@@ -235,21 +168,13 @@ export function applyPageSeo({
   });
   applyTwitterCard({ title, description, image });
 
-  if (jsonLdType === "article" && article) {
-    upsertJsonLd(JSON_LD_ID, buildNewsArticleJsonLd({
-      title: article.title,
-      description: article.description || description,
-      url: canonicalUrl,
-      datePublished: parseArticleDate(article.date),
-      version: article.version,
-    }));
-  } else if (jsonLdType === "software") {
-    upsertJsonLd(JSON_LD_ID, buildSoftwareApplicationJsonLd({
-      description,
-      releaseVersion,
-    }));
+  const jsonLd = buildJsonLd(
+    { locale, jsonLdType, article, description, image, releaseVersion, faq, breadcrumbs },
+    canonicalUrl
+  );
+  if (jsonLd) {
+    upsertJsonLd(JSON_LD_ID, jsonLd);
   } else {
-    const node = document.getElementById(JSON_LD_ID);
-    if (node) node.remove();
+    document.getElementById(JSON_LD_ID)?.remove();
   }
 }
