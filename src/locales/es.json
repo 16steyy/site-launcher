@@ -340,6 +340,48 @@
     "version": "Versión {{version}}",
     "allReleases": "Todas las versiones en GitHub"
   },
+  "thanks": {
+    "toastTitle": "¡Progreso conseguido!",
+    "toastText": "Descargar 16Launcher",
+    "title": "¡Gracias por elegir 16Launcher!",
+    "install": {
+      "windows": "La descarga ya ha empezado. Cuando termine, ejecuta el instalador y sigue los pasos.",
+      "macos": "La descarga ya ha empezado. Abre el .dmg y arrastra 16Launcher a Aplicaciones.",
+      "linux": "La descarga ya ha empezado. Instala el paquete con tu gestor de paquetes o haz ejecutable el AppImage y ábrelo."
+    },
+    "notStarted": "¿No empezó la descarga?",
+    "retry": "Descargar de nuevo",
+    "whileWaiting": "Mientras se descarga",
+    "cards": {
+      "librium": {
+        "title": "Reseña en LibriumHub",
+        "text": "Unas palabras sobre el launcher nos ayudan muchísimo.",
+        "action": "Escribir reseña"
+      },
+      "discord": {
+        "title": "Discord",
+        "text": "¿Algo no funciona? Pregunta aquí. También hay gente buscando con quién jugar.",
+        "action": "Unirse"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "text": "Las novedades de cada actualización llegan aquí primero.",
+        "action": "Suscribirse"
+      },
+      "github": {
+        "title": "GitHub",
+        "text": "El código es abierto. Si te gusta, deja una estrella.",
+        "action": "Dar una estrella"
+      },
+      "news": {
+        "title": "Novedades",
+        "text": "Qué cambió en las últimas versiones.",
+        "action": "Leer"
+      }
+    },
+    "close": "Volver al sitio",
+    "closeLabel": "Cerrar"
+  },
   "footer": {
     "disclaimer": "16Launcher no es un producto oficial de Mojang ni de Microsoft.",
     "privacy": "Política de privacidad",
@@ -388,9 +430,7 @@
     "sliderPrev": "Foto anterior",
     "sliderNext": "Foto siguiente",
     "sliderCounter": "{{current}} de {{total}}",
-    "sliderGoTo": "Ir a la foto {{current}}",
-    "rss": "Feed RSS",
-    "rssHint": "Suscríbete en un lector RSS para no perderte ninguna actualización"
+    "sliderGoTo": "Ir a la foto {{current}}"
   },
   "themes": {
     "nav": "Temas",

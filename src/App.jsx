@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import rocketIcon from "../assets/rocket.png";
 import modsIcon from "../assets/mods.png";
@@ -24,6 +24,7 @@ import LatestNewsSection from "./components/LatestNewsSection";
 import CapabilitiesSection from "./components/CapabilitiesSection";
 import IntegrationsSection from "./components/IntegrationsSection";
 import CommunitySection from "./components/CommunitySection";
+import DownloadThanks from "./components/DownloadThanks";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
@@ -42,6 +43,7 @@ import {
 } from "./routing";
 import {
   extractFilenameFromDownloadUrl,
+  mapOsToReleaseLinkKey,
   normalizeReleaseData,
   pickMainDownloadLink,
   RELEASE_LINK_KEYS,
@@ -307,6 +309,8 @@ function HomePage({ onNavigate, news, release }) {
   const { locale, messages, t } = useI18n();
   const [openFaqItems, setOpenFaqItems] = useState(() => new Set());
   const [userOS, setUserOS] = useState("unknown");
+  const [thanksDownload, setThanksDownload] = useState(null);
+  const closeThanks = useCallback(() => setThanksDownload(null), []);
   const lightbox = useImageLightbox();
   const { links, stars, downloads, version: releaseVersion } = release;
 
@@ -358,6 +362,13 @@ function HomePage({ onNavigate, news, release }) {
     return rows.sort((a, b) => (b.os === userOS) - (a.os === userOS));
   }, [userOS]);
 
+  // Экран благодарности показываем только для прямых ссылок на файл:
+  // ссылка-заглушка на страницу релизов уводит с сайта.
+  function handleDownloadClick(key, href) {
+    if (!extractFilenameFromDownloadUrl(href).includes(".")) return;
+    setThanksDownload({ key, href });
+  }
+
   const faqItems = messages.faq?.items || [];
   const userOsName = OS_NAMES[userOS];
   const heroMeta = [userOsName, releaseVersion && `v${releaseVersion}`].filter(Boolean);
@@ -403,6 +414,7 @@ function HomePage({ onNavigate, news, release }) {
         <div className="reveal mt-10 flex flex-col items-center gap-3" style={{ animationDelay: "120ms" }}>
           <a
             href={mainDownloadLink}
+            onClick={() => handleDownloadClick(mapOsToReleaseLinkKey(userOS), mainDownloadLink)}
             className="btn btn-accent btn-xl w-full max-w-xs sm:w-auto sm:min-w-[18rem]"
             data-magnetic
           >
@@ -502,6 +514,13 @@ function HomePage({ onNavigate, news, release }) {
 
       <CapabilitiesSection />
       <IntegrationsSection />
+
+      <DownloadThanks
+        download={thanksDownload}
+        latestPost={news?.posts?.[0]}
+        onClose={closeThanks}
+        onNavigate={onNavigate}
+      />
 
       <ImageLightbox
         image={lightbox.image}
@@ -607,7 +626,10 @@ function HomePage({ onNavigate, news, release }) {
                     </div>
 
                     {single ? (
-                      <a href={single} className={`btn ${isUserOs ? "btn-accent" : "btn-soft"} sm:min-w-[9rem]`}>
+                      <a
+                        href={single}
+                        onClick={() => handleDownloadClick(row.files[0].key, single)}
+                        className={`btn ${isUserOs ? "btn-accent" : "btn-soft"} sm:min-w-[9rem]`}>
                         <DownloadIcon className="h-4 w-4" />
                         {messages.download.install}
                       </a>
@@ -617,6 +639,7 @@ function HomePage({ onNavigate, news, release }) {
                           <a
                             key={file.key}
                             href={links[file.key]}
+                            onClick={() => handleDownloadClick(file.key, links[file.key])}
                             title={extractFilenameFromDownloadUrl(links[file.key])}
                             className={`btn ${isUserOs && fileIndex === 0 ? "btn-accent" : "btn-soft"} px-3`}
                           >
@@ -673,25 +696,6 @@ function PostMeta({ post }) {
   );
 }
 
-function RssIcon({ className = "h-4 w-4" }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M4 11a9 9 0 0 1 9 9" />
-      <path d="M4 4a16 16 0 0 1 16 16" />
-      <circle cx="5" cy="19" r="1" />
-    </svg>
-  );
-}
-
 function NewsListPage({ onNavigate, news, isLoading, loadError }) {
   const { locale, messages, localePath } = useI18n();
   const remotePage = locale === "ru" ? news.page : null;
@@ -704,10 +708,6 @@ function NewsListPage({ onNavigate, news, isLoading, loadError }) {
       <section className="text-center">
         <h1 className="page-title">{pageTitle}</h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-muted">{pageSubtitle}</p>
-        <a href="/rss.xml" className="btn btn-soft btn-sm mt-6" title={messages.news.rssHint}>
-          <RssIcon />
-          {messages.news.rss}
-        </a>
         {isLoading && messages.news.loading ? (
           <p className="mt-4 text-fg-faint">{messages.news.loading}</p>
         ) : null}

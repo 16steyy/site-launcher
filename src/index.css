@@ -1945,3 +1945,90 @@ body::before {
   padding: 0;
   list-style: none;
 }
+
+/* Экран «Спасибо за загрузку» */
+.thanks-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(60rem 30rem at 50% -10%, rgba(255, 255, 255, 0.06), transparent 70%),
+    rgba(8, 8, 9, 0.97);
+  animation: fadeIn 220ms ease forwards;
+}
+
+.thanks-inner {
+  animation: popIn 260ms ease-out forwards;
+}
+
+.thanks-close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  border: 1px solid var(--seam);
+  background: var(--ink-2);
+}
+
+.thanks-feature {
+  border-color: var(--accent-line);
+}
+
+/* Как тост достижения в игре: выезжает справа, висит и уезжает обратно */
+.mc-toast {
+  position: fixed;
+  top: 1rem;
+  right: 4rem;
+  display: flex;
+  width: max-content;
+  max-width: calc(100vw - 5rem);
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 1.25rem 0.625rem 0.625rem;
+  border-radius: 0.375rem;
+  background: #212121;
+  box-shadow:
+    inset 0 0 0 2px #000,
+    inset 0 0 0 4px #555,
+    0 12px 32px rgba(0, 0, 0, 0.5);
+  animation: mcToastSlide 6s ease-in-out 300ms both;
+}
+
+.mc-toast-title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffff55;
+  text-shadow: 1px 1px 0 #3f3f15;
+}
+
+.mc-toast-text {
+  display: block;
+  font-size: 0.9375rem;
+  color: #fff;
+  text-shadow: 1px 1px 0 #3f3f46;
+}
+
+@keyframes mcToastSlide {
+  0% {
+    transform: translateX(calc(100% + 5rem));
+  }
+  8%,
+  90% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(100% + 5rem));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thanks-screen,
+  .thanks-inner,
+  .mc-toast {
+    animation: none !important;
+  }
+}

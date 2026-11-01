@@ -340,6 +340,48 @@
     "version": "版本 {{version}}",
     "allReleases": "GitHub 上的全部版本"
   },
+  "thanks": {
+    "toastTitle": "已获得进度！",
+    "toastText": "下载 16Launcher",
+    "title": "感谢选择 16Launcher！",
+    "install": {
+      "windows": "下载已开始。下载完成后运行安装程序并按提示操作。",
+      "macos": "下载已开始。打开 .dmg 并将 16Launcher 拖入“应用程序”文件夹。",
+      "linux": "下载已开始。使用包管理器安装软件包，或为 AppImage 添加可执行权限后运行。"
+    },
+    "notStarted": "下载没有开始？",
+    "retry": "重新下载",
+    "whileWaiting": "下载期间",
+    "cards": {
+      "librium": {
+        "title": "在 LibriumHub 评价",
+        "text": "说几句对启动器的看法，对我们帮助很大。",
+        "action": "写评价"
+      },
+      "discord": {
+        "title": "Discord",
+        "text": "遇到问题就来这里问，也可以找人一起玩。",
+        "action": "加入"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "text": "更新消息会最先发在这里。",
+        "action": "订阅"
+      },
+      "github": {
+        "title": "GitHub",
+        "text": "代码是开源的。喜欢的话点个星吧。",
+        "action": "点个星"
+      },
+      "news": {
+        "title": "最新动态",
+        "text": "最近几个版本改了什么。",
+        "action": "阅读"
+      }
+    },
+    "close": "返回网站",
+    "closeLabel": "关闭"
+  },
   "footer": {
     "disclaimer": "16Launcher 不是 Mojang 或 Microsoft 的官方产品。",
     "privacy": "隐私政策",
@@ -388,9 +430,7 @@
     "sliderPrev": "上一张",
     "sliderNext": "下一张",
     "sliderCounter": "{{current}} / {{total}}",
-    "sliderGoTo": "查看第 {{current}} 张",
-    "rss": "RSS 订阅",
-    "rssHint": "在 RSS 阅读器中订阅，不错过任何更新"
+    "sliderGoTo": "查看第 {{current}} 张"
   },
   "themes": {
     "nav": "主题",

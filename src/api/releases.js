@@ -2,6 +2,7 @@ import { getApiBaseUrl } from "./client";
 import {
   buildGithubLinksFromApiManifest,
   buildMirrorLinks,
+  extractFilenameFromDownloadUrl,
   getDownloadMirrorBase,
   normalizeReleaseData,
   RELEASE_LINK_KEYS,
@@ -83,8 +84,64 @@ export async function fetchReleaseDataFromApi(options = {}) {
   );
 }
 
+function parseVersion(version) {
+  return String(version || "")
+    .replace(/^v/i, "")
+    .split(/[.+-]/)
+    .map((part) => Number.parseInt(part, 10) || 0);
+}
+
+export function compareVersions(a, b) {
+  const left = parseVersion(a);
+  const right = parseVersion(b);
+  const length = Math.max(left.length, right.length);
+  for (let i = 0; i < length; i += 1) {
+    const diff = (left[i] || 0) - (right[i] || 0);
+    if (diff !== 0) return diff > 0 ? 1 : -1;
+  }
+  return 0;
+}
+
+function isFileLink(url) {
+  return extractFilenameFromDownloadUrl(url).includes(".");
+}
+
+// Ссылка на файл прошлой версии → та же ссылка на новую версию
+// (".../v3.3.2/16Launcher_3.3.2_aarch64.dmg" → ".../v3.3.3/16Launcher_3.3.3_aarch64.dmg").
+function retargetLink(url, fromVersion, toVersion) {
+  if (!fromVersion || !toVersion || !isFileLink(url) || !url.includes(fromVersion)) return "";
+  return url.split(fromVersion).join(toVersion);
+}
+
 export function mergeReleaseData(primary, apiFallback) {
   if (!apiFallback) return primary;
+
+  // github-release.json собирается только при деплое (крон GitHub Actions
+  // срабатывает с большими задержками), а API знает о релизе сразу.
+  // Если в API версия новее, берём из него версию и ссылки, а из статики
+  // только звёзды и скачивания.
+  if (compareVersions(apiFallback.version, primary.version) > 0) {
+    const version = apiFallback.version;
+    const mirrorBase = getReleaseMirrorBase();
+    const githubLinks = {};
+    for (const key of RELEASE_LINK_KEYS) {
+      const apiLink = apiFallback.githubLinks?.[key];
+      githubLinks[key] = isFileLink(apiLink)
+        ? apiLink
+        : retargetLink(primary.githubLinks?.[key], primary.version, version) || apiLink || "";
+    }
+
+    return normalizeReleaseData(
+      {
+        stars: primary.stars || apiFallback.stars,
+        downloads: primary.downloads || apiFallback.downloads,
+        version,
+        links: githubLinks,
+        mirrors: buildMirrorLinks(githubLinks, version, mirrorBase),
+      },
+      { fallbackLinks: apiFallback.githubLinks, runtimeMirrorBase: mirrorBase }
+    );
+  }
 
   const mergedGithubLinks = { ...apiFallback.githubLinks };
   for (const key of RELEASE_LINK_KEYS) {

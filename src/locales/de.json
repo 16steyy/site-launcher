@@ -340,6 +340,48 @@
     "version": "Version {{version}}",
     "allReleases": "Alle Releases auf GitHub"
   },
+  "thanks": {
+    "toastTitle": "Fortschritt erzielt!",
+    "toastText": "16Launcher herunterladen",
+    "title": "Danke, dass du 16Launcher gewählt hast!",
+    "install": {
+      "windows": "Der Download hat begonnen. Starte danach das Installationsprogramm und folge den Hinweisen.",
+      "macos": "Der Download hat begonnen. Öffne die .dmg und ziehe 16Launcher in den Ordner „Programme“.",
+      "linux": "Der Download hat begonnen. Installiere das Paket mit deinem Paketmanager oder mache das AppImage ausführbar und starte es."
+    },
+    "notStarted": "Download nicht gestartet?",
+    "retry": "Erneut herunterladen",
+    "whileWaiting": "Während der Download läuft",
+    "cards": {
+      "librium": {
+        "title": "Bewertung auf LibriumHub",
+        "text": "Ein paar Worte zum Launcher helfen uns sehr.",
+        "action": "Bewertung schreiben"
+      },
+      "discord": {
+        "title": "Discord",
+        "text": "Etwas klappt nicht? Frag hier. Mitspieler findest du hier auch.",
+        "action": "Beitreten"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "text": "Neuigkeiten zu Updates gibt es hier zuerst.",
+        "action": "Abonnieren"
+      },
+      "github": {
+        "title": "GitHub",
+        "text": "Der Code ist offen. Wenn er dir gefällt, lass einen Stern da.",
+        "action": "Stern vergeben"
+      },
+      "news": {
+        "title": "Was ist neu",
+        "text": "Was sich in den letzten Versionen geändert hat.",
+        "action": "Lesen"
+      }
+    },
+    "close": "Zurück zur Website",
+    "closeLabel": "Schließen"
+  },
   "footer": {
     "disclaimer": "16Launcher ist kein offizielles Produkt von Mojang oder Microsoft.",
     "privacy": "Datenschutzerklärung",
@@ -388,9 +430,7 @@
     "sliderPrev": "Vorheriges Foto",
     "sliderNext": "Nächstes Foto",
     "sliderCounter": "{{current}} von {{total}}",
-    "sliderGoTo": "Zu Foto {{current}} wechseln",
-    "rss": "RSS-Feed",
-    "rssHint": "Im RSS-Reader abonnieren und kein Update verpassen"
+    "sliderGoTo": "Zu Foto {{current}} wechseln"
   },
   "themes": {
     "nav": "Themes",

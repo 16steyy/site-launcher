@@ -340,6 +340,48 @@
     "version": "Version {{version}}",
     "allReleases": "All releases on GitHub"
   },
+  "thanks": {
+    "toastTitle": "Advancement Made!",
+    "toastText": "Download 16Launcher",
+    "title": "Thanks for choosing 16Launcher!",
+    "install": {
+      "windows": "Your download has started. Once it finishes, run the installer and follow the prompts.",
+      "macos": "Your download has started. Open the .dmg and drag 16Launcher into Applications.",
+      "linux": "Your download has started. Install the package with your package manager, or make the AppImage executable and run it."
+    },
+    "notStarted": "Download didn't start?",
+    "retry": "Try again",
+    "whileWaiting": "While it downloads",
+    "cards": {
+      "librium": {
+        "title": "Review on LibriumHub",
+        "text": "A few words about the launcher would help us a lot.",
+        "action": "Write a review"
+      },
+      "discord": {
+        "title": "Discord",
+        "text": "Something broken? Ask here. People also look for someone to play with.",
+        "action": "Join"
+      },
+      "telegram": {
+        "title": "Telegram",
+        "text": "Update news lands here first.",
+        "action": "Subscribe"
+      },
+      "github": {
+        "title": "GitHub",
+        "text": "The code is open. Spare a star if you like it.",
+        "action": "Give a star"
+      },
+      "news": {
+        "title": "What's new",
+        "text": "What changed in recent versions.",
+        "action": "Read"
+      }
+    },
+    "close": "Back to the site",
+    "closeLabel": "Close"
+  },
   "footer": {
     "disclaimer": "16Launcher is not an official product of Mojang or Microsoft.",
     "privacy": "Privacy Policy",
@@ -388,9 +430,7 @@
     "sliderPrev": "Previous photo",
     "sliderNext": "Next photo",
     "sliderCounter": "{{current}} of {{total}}",
-    "sliderGoTo": "Go to photo {{current}}",
-    "rss": "RSS feed",
-    "rssHint": "Subscribe in an RSS reader so you never miss an update"
+    "sliderGoTo": "Go to photo {{current}}"
   },
   "themes": {
     "nav": "Themes",
