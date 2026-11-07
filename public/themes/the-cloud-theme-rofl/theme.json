@@ -1,0 +1,19 @@
+{
+  "author": "Cat Memes",
+  "description": "!!!ROFL!!!",
+  "name": "The cloud theme (!!!ROFL!!!)",
+  "variables": {
+    "--accent-color": "#db4200",
+    "--accent-from": "#100f0f",
+    "--accent-to": "#0b0a0a",
+    "--glass-bg": "#141010",
+    "--glass-bg-strong": "#af360e",
+    "--ink-1": "#000000",
+    "--ink-2": "#000000",
+    "--ink-3": "#000000",
+    "--launcher-bg-image": "url(assets/d.jpg)",
+    "--seam": "#000000",
+    "--seam-strong": "#000000"
+  },
+  "version": "1.0.0"
+}

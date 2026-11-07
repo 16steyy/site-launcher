@@ -1,0 +1,9 @@
+/* Ваш CSS-код здесь / Your CSS code here
+ *
+ * Цвета, скругления и шрифт удобнее менять в редакторе темы (вкладка «Оформление»):
+ * они сохраняются в theme.json → "variables" и подставляются перед этим файлом.
+ *
+ * Примеры / Examples:
+ * .glass-panel { border-color: var(--accent-line); }
+ * [data-launcher-tab="play"] .launcher-gradient { background: url(assets/bg.jpg) center / cover; }
+ */

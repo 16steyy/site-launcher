@@ -2,6 +2,25 @@
   "version": 1,
   "themes": [
     {
+      "id": "the-cloud-theme-rofl",
+      "name": "The cloud theme (!!!ROFL!!!)",
+      "author": "Cat Memes",
+      "description": "!!!ROFL!!!",
+      "version": "1.0.0",
+      "preview": null,
+      "download": "/themes/the-cloud-theme-rofl/download.zip",
+      "files": [
+        "assets/d.jpg",
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-11-07",
+      "published_at": "2026-11-07",
+      "updated_at": "2026-11-07"
+    },
+    {
       "id": "femboy-theme",
       "name": "Femboy-Theme",
       "author": "Melkyy",
