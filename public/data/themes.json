@@ -2,6 +2,24 @@
   "version": 1,
   "themes": [
     {
+      "id": "red-theme",
+      "name": "Red Theme",
+      "author": "Yusafus",
+      "description": "Тема дополняющая интерфейс 16launcher добавляя красный цвет с его оттенками делая интерфейс жутким но одновременно красивым",
+      "version": "1.0",
+      "preview": null,
+      "download": "/themes/red-theme/download.zip",
+      "files": [
+        "download.zip",
+        "style.css",
+        "theme.json"
+      ],
+      "history": [],
+      "first_published_at": "2026-11-14",
+      "published_at": "2026-11-14",
+      "updated_at": "2026-11-14"
+    },
+    {
       "id": "the-cloud-theme-rofl",
       "name": "The cloud theme (!!!ROFL!!!)",
       "author": "Cat Memes",

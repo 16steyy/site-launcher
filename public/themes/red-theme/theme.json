@@ -1,0 +1,16 @@
+{
+  "author": "Yusafus",
+  "description": "Тема дополняющая интерфейс 16launcher добавляя красный цвет с его оттенками делая интерфейс жутким но одновременно красивым",
+  "name": "Red Theme",
+  "variables": {
+    "--accent-color": "#ff0000",
+    "--accent-from": "#3b1212",
+    "--accent-hi": "#ffffff",
+    "--accent-to": "#ca0202",
+    "--fg": "#f1f1f3",
+    "--ink-0": "#4d0000",
+    "--ink-1": "#6b6b6b",
+    "--r-badge": "6px"
+  },
+  "version": "1.0"
+}
