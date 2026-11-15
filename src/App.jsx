@@ -31,6 +31,7 @@ import ImageLightbox, { useImageLightbox } from "./components/ImageLightbox";
 import NotFoundPage from "./components/NotFoundPage";
 import AppSeo from "./seo/AppSeo";
 import { useRevealScroll } from "./hooks/useRevealScroll";
+import { initSmoothScroll, smoothScrollTo } from "./lib/smoothScroll";
 import { useAuth } from "./hooks/useAuth";
 import { usePointerEffects } from "./hooks/usePointerEffects";
 import { useI18n } from "./i18n/I18nProvider";
@@ -82,11 +83,11 @@ const OS_NAMES = { windows: "Windows", macos: "macOS", linux: "Linux" };
 const FEATURE_ICONS = [rocketIcon, modsIcon, shieldIcon];
 
 const SHOT_LAYOUT = [
-  { id: "mods", image: modsShot, character: coolCharacter },
-  { id: "settings", image: settingsShot, character: styleCharacter },
-  { id: "modpacks", image: modpacksShot, character: armCharacter },
-  { id: "java", image: javaShot, character: runCharacter },
-  { id: "rooms", image: roomsShot, character: runCharacter },
+  { id: "mods", image: modsShot, character: coolCharacter, characterSize: [488, 720] },
+  { id: "settings", image: settingsShot, character: styleCharacter, characterSize: [676, 548] },
+  { id: "modpacks", image: modpacksShot, character: armCharacter, characterSize: [517, 698] },
+  { id: "java", image: javaShot, character: runCharacter, characterSize: [712, 693] },
+  { id: "rooms", image: roomsShot, character: runCharacter, characterSize: [712, 693] },
 ];
 
 function DownloadIcon({ className = "h-5 w-5" }) {
@@ -428,7 +429,7 @@ function HomePage({ onNavigate, news, release }) {
               className="text-fg-muted underline decoration-white/20 underline-offset-4 transition hover:text-white"
               onClick={(event) => {
                 event.preventDefault();
-                document.getElementById("download")?.scrollIntoView({ behavior: "smooth" });
+                smoothScrollTo(document.getElementById("download"));
               }}
             >
               {messages.hero.otherPlatforms}
@@ -487,9 +488,11 @@ function HomePage({ onNavigate, news, release }) {
                   <img
                     src={section.character}
                     alt=""
+                    width={section.characterSize[0]}
+                    height={section.characterSize[1]}
                     loading="lazy"
                     decoding="async"
-                    className="shot-character h-auto max-h-[200px] w-auto object-contain object-bottom md:max-h-[460px] md:w-full"
+                    className="shot-character h-[200px] w-auto object-contain object-bottom md:h-auto md:max-h-[460px] md:w-full"
                   />
                 </div>
                 <button
@@ -502,6 +505,8 @@ function HomePage({ onNavigate, news, release }) {
                     alt={shotAltText(section)}
                     loading="lazy"
                     decoding="async"
+                    width={1268}
+                    height={715}
                     className="block h-auto w-full"
                   />
                   <span className="shot-zoom-hint">{messages.gallery?.zoom}</span>
@@ -904,6 +909,8 @@ export default function App() {
   const { messages, localePath } = useI18n();
   usePointerEffects();
 
+  useEffect(() => initSmoothScroll(), []);
+
   const path = splitLocalePath(pathname).path;
 
   async function refreshNews({ isBackground = false } = {}) {
@@ -982,7 +989,7 @@ export default function App() {
       return;
     }
     changeLocation(target);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    smoothScrollTo(0, { immediate: true });
   }
 
   const route = getRouteKind(path);

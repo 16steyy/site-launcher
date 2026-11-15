@@ -4,6 +4,7 @@ import NewsMarkdown, { prepareNewsMarkdown } from "../NewsMarkdown";
 import { getDocumentationMarkdown } from "../../content/documentation";
 import { useI18n } from "../../i18n/I18nProvider";
 import { extractHeadings } from "../../lib/markdownHeadings";
+import { smoothScrollTo } from "../../lib/smoothScroll";
 
 const ACTIVE_LINE_PX = 160;
 
@@ -51,7 +52,7 @@ function scrollToHeading(event, id) {
   const url = new URL(window.location.href);
   url.hash = id;
   window.history.replaceState(window.history.state, "", url);
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  smoothScrollTo(document.getElementById(id));
 }
 
 function TocList({ sections, activeId, activeSectionId, onPick }) {
@@ -159,7 +160,7 @@ export default function DocumentationPage({ onNavigate }) {
               onClick={(event) => {
                 event.preventDefault();
                 window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                smoothScrollTo(0);
               }}
             >
               ↑ {copy.backToTop}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { smoothScrollTo } from "../lib/smoothScroll";
 
 export default function SectionNav({ sections, ariaLabel, className = "" }) {
   const itemRefs = useRef({});
@@ -42,7 +43,7 @@ export default function SectionNav({ sections, ariaLabel, className = "" }) {
 
   function handleClick(event, id) {
     event.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    smoothScrollTo(document.getElementById(id));
     setActiveSection(id);
   }
 

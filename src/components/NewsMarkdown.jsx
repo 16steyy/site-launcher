@@ -1,4 +1,4 @@
-import { Children, useEffect, useMemo, useRef, useState } from "react";
+import { Children, memo, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ImageLightbox, { useImageLightbox } from "./ImageLightbox";
@@ -6,6 +6,7 @@ import NewsImageSlider from "./NewsImageSlider";
 import { useI18n } from "../i18n/I18nProvider";
 import { changeLocation } from "../routing";
 import { extractHeadings } from "../lib/markdownHeadings";
+import { smoothScrollTo } from "../lib/smoothScroll";
 
 const IMAGE_LINE_RE =
   /^\s*!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)\s*$/;
@@ -185,7 +186,7 @@ function AnchoredHeading({ as: Tag, id, className, children }) {
     const url = new URL(window.location.href);
     url.hash = id;
     window.history.replaceState(window.history.state, "", url);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    smoothScrollTo(document.getElementById(id));
     copyText(url.toString());
   }
 
@@ -207,7 +208,9 @@ function AnchoredHeading({ as: Tag, id, className, children }) {
   );
 }
 
-export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
+// memo: страница документации обновляет состояние на каждом кадре прокрутки,
+// а без него весь текст пересоздавался бы вместе с ней.
+export default memo(function NewsMarkdown({ markdown, assetBaseUrl, documentMode = false }) {
   const { localePath } = useI18n();
   const { image, alt, hasGallery, openImage, closeImage, showPrev, showNext } = useImageLightbox();
 
@@ -296,7 +299,7 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
                 if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
                 event.preventDefault();
                 changeLocation(localePath(href));
-                window.scrollTo({ top: 0 });
+                smoothScrollTo(0, { immediate: true });
               }}
             >
               {children}
@@ -376,4 +379,4 @@ export default function NewsMarkdown({ markdown, assetBaseUrl, documentMode = fa
       />
     </>
   );
-}
+});

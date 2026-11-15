@@ -36,7 +36,7 @@ export function useRevealScroll(deps = []) {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
     );
 
     nodes.forEach((node) => io.observe(node));

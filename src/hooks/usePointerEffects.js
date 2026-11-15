@@ -94,11 +94,21 @@ export function usePointerEffects() {
       releaseMagnets(null);
     }
 
+    // Под неподвижным курсором страница уезжает: не оставляем подсветку и
+    // притянутые кнопки на элементах, которые из-под него ушли.
+    function onScroll() {
+      spotlit?.classList.remove("is-spotlit");
+      spotlit = null;
+      releaseMagnets(null);
+    }
+
     document.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", onPointerLeave);
     return () => {
       window.cancelAnimationFrame(frame);
       document.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
       document.documentElement.removeEventListener("pointerleave", onPointerLeave);
       onPointerLeave();
     };

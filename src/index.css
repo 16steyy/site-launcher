@@ -42,10 +42,6 @@ body {
   margin: 0;
   min-width: 320px;
   background-color: var(--ink-0);
-  background-image:
-    radial-gradient(1200px 620px at 50% -14%, rgba(255, 255, 255, 0.07), transparent 70%),
-    radial-gradient(900px 500px at 50% 110%, rgba(255, 255, 255, 0.042), transparent 70%);
-  background-attachment: fixed;
   color: var(--fg);
   font-family: "Onest Variable", Onest, "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -67,6 +63,20 @@ body::before {
     transparent 100%
   );
 }
+
+/* Отдельный слой вместо background-attachment: fixed, который перерисовывал
+   весь экран на каждом кадре прокрутки. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1200px 620px at 50% -14%, rgba(255, 255, 255, 0.07), transparent 70%),
+    radial-gradient(900px 500px at 50% 110%, rgba(255, 255, 255, 0.042), transparent 70%);
+}
+
 .grid-glow {
   position: fixed;
   top: 0;
@@ -718,12 +728,16 @@ body::before {
   animation: revealUp 420ms cubic-bezier(0.22, 0.85, 0.22, 1) both;
 }
 
+.reveal-scroll {
+  transform: translateY(24px);
+}
+
 .reveal-scroll:not(.is-in-view) {
   animation: none;
 }
 
 .reveal-scroll.is-in-view {
-  animation: revealUp 420ms cubic-bezier(0.22, 0.85, 0.22, 1) both;
+  animation: revealUp 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes revealUp {
